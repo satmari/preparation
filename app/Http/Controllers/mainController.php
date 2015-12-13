@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
-use App\MainModel;
+use App\Po;
 use Gbrock\Table\Facades\Table;
 
 use DB;
@@ -33,7 +33,7 @@ class mainController extends Controller {
 
 	public function anyData()
     {
-        return Datatables::of(MainModel::select('*'))->make(true);
+        return Datatables::of(Po::select('*'))->make(true);
     
     }
 

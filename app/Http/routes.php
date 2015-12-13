@@ -21,6 +21,17 @@ Route::controllers([
 ]);
 
 Route::get('/maintable', 'maintableController@index');
+Route::get('/barcodestocktable', 'barcodestocktableController@index');
+
+Route::get('/barcodestock', 'BarcodeStockController@index');
+Route::get('/barcodestockcreatenew', 'BarcodeStockController@createnew');
+Route::get('/barcodestockcreatefrommodule', 'BarcodeStockController@createfrommodule');
+Route::get('/barcodestockcreateundo', 'BarcodeStockController@createundo');
+
+Route::post('/barcodestockstorenew', 'BarcodeStockController@storenew');
+Route::post('/barcodestockstorefrommodule', 'BarcodeStockController@storefrommodule');
+Route::post('/barcodestockstoreundo', 'BarcodeStockController@storeundo');
+
 
 Route::get('/import', 'importController@index');
 Route::post('/import', 'importController@postImportPo');
@@ -30,3 +41,14 @@ Route::controller('datatables', 'DatatablesController', [
     'anyData'  => 'datatables.data',
     'getIndex' => 'datatables',
 ]);
+
+
+Route::any('getpodata', function() {
+	$term = Input::get('term');
+
+	$data = DB::table('pos')->distinct()->select('po')->where('po', 'LIKE' , $term.'%')->groupBy('po')->take(10)->get();
+	foreach ($data as $v) {
+		$retun_array[] = array('value' => $v->po);
+	}
+return Response::json($retun_array);
+});

@@ -1,0 +1,14 @@
+td.highlight {
+        font-weight: bold !important;
+        color: red !important;
+}
+.important {
+    color: #0f0 !important; 
+}
+.important2 {
+    color: #f00 !important; 
+}
+table.dataTable tbody th,
+table.dataTable tbody td {
+    white-space: nowrap;
+}

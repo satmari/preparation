@@ -5,7 +5,7 @@ use App\User;
 use yajra\Datatables\Datatables;
 
 use Request;
-use App\MainModel;
+use App\Po;
 use DB;
 
 class DatatablesController extends Controller
@@ -27,26 +27,29 @@ class DatatablesController extends Controller
      */
     public function anyData()
     {
-        //return Datatables::of(User::select('*'))->make(true);
-        //return Datatables::of(MainModel::all())->make(true);
-
-        $table = MainModel::select([
+        
+        $table = Po::select([
             //'id',
-            //'po_size',
+            //'po_key',
             //'order_code',
-            'po',
-            'size',
-            'style',
-            'color',
-            'color_desc',
-            'season',
-            'total_order_qty',
-            'flash',
-            'closed_po',
-            //'created_at',
-            //'updated_at'
-        ]);
+            'pos.po',
+            'pos.size',
+            'pos.style',
+            'pos.color',
+            'pos.color_desc',
+            'pos.season',
+            'pos.total_order_qty',
+            //\DB::raw('count(barcode_stocks.po_id) as count'),
+            \DB::raw('sum(barcode_stocks.qty) as stock_qty'),
+            'pos.flash',
+            'pos.closed_po',
+            'pos.created_at',
+            //'pos.updated_at'
+        ])->leftJoin('barcode_stocks','barcode_stocks.po_id','=','pos.id')
+        ->groupBy('pos.po','pos.size','pos.style','pos.color','pos.color_desc','pos.season','pos.total_order_qty','pos.flash','pos.closed_po','pos.created_at');
 
-        return Datatables::of($table)->make(true);
+        return Datatables::of($table)
+        ->editColumn('created_at', '{!! $total_order_qty-$stock_qty !!}')
+        ->make(true);
     }
 }

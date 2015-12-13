@@ -4,18 +4,19 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use Gbrock\Table\Facades\Table;
 
-use App\User;
-use App\Po;
+use Gbrock\Table\Facades\Table;
+//use Gbrock\Traits\Sortable;
+
 use App\BarcodeStock;
 use DB;
 
+use App\User;
 use Bican\Roles\Models\Role;
 use Bican\Roles\Models\Permission;
 use Auth;
 
-class maintableController extends Controller {
+class barcodestocktableController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
@@ -24,33 +25,19 @@ class maintableController extends Controller {
 	 */
 	public function index()
 	{
+		//
 		//$table;
+
 		//$user = User::find(Auth::id());
 		//if ($user->level() == 1) {
-			$pos = Po::all(); 
-			//po = Po::find(35); 
+			$rows = BarcodeStock::all();
+			//$rows = BarcodeStock::sorted()->get();
 			//$rows = MainModel::sorted()->get(); 
- 			$table = Table::create($pos); // Generate a Table based on these "rows"
- 			//$barcode = BarcodeStock::all();
- 			//$test = $comment->$rows;
- 			$potest = Po::find(1)->barcode_stocks;
- 			//$test = $rowss;
- 			//$comments = Post::find(1)->comments;
+ 			//$table = Table::create($rows); // Generate a Table based on these "rows"
+ 			$table = Table::create($rows, ['id','po_id','user_id','ponum','size','qty','module',/*'status',*/'type','comment','created_at']);
 
- 			$test=0;
- 			foreach (Po::find(1)->barcode_stocks as $line) {
- 				$test = $test + $line->qty;
- 			}
-
- 			$sum = Po::find(1)->barcode_stocks->sum('qty');
-
- 			$bartest = BarcodeStock::find(1)->user->name;
- 			$bartest1 = BarcodeStock::find(1)->po->order_code;
-
-
-
-  		//}
- 		return view('maintable.index', compact('table','potest','test','sum','bartest','bartest1'));
+ 		//}
+ 		return view('barcodestocktable.index', compact('table'));
 	}
 
 	/**
@@ -79,7 +66,7 @@ class maintableController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show()
+	public function show($id)
 	{
 		//
 	}
@@ -118,5 +105,3 @@ class maintableController extends Controller {
 	}
 
 }
-
-

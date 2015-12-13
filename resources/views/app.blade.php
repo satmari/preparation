@@ -7,13 +7,17 @@
 	<title>Preparation Application</title>
 
 	
-	<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css">
-	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
-	
-	<!-- Fonts -->
-	<link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
+	<!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel='stylesheet' type='text/css' > -->
+    <!-- <link href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css" rel='stylesheet' type='text/css'> -->
+    <!-- <link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css' > -->
 
+	<link href="{{ asset('/css/custom.css') }}" rel='stylesheet' type='text/css'>
+	<link href="{{ asset('/css/app.css') }}" rel='stylesheet' type='text/css'>
+	<link href="{{ asset('/css/font.css') }}" rel='stylesheet' type='text/css'>
+	<link href="{{ asset('/css/bootstrap.min.css') }}" rel='stylesheet' type='text/css'>
+	<link href="{{ asset('/css/jquery.dataTables.min.css') }}" rel='stylesheet' type='text/css'>
+	<link href="{{ asset('/css/jquery-ui.min.css') }}" rel='stylesheet' type='text/css'>
+		
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
@@ -38,6 +42,12 @@
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/') }}">Home</a></li>
 				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/datatables') }}">Main Table</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/barcodestock') }}">Barcode Stock</a></li>
+				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
 					@if (Auth::guest())
@@ -58,79 +68,101 @@
 
 	@yield('content')
 
-	<!-- Scripts 
-	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
-	-->
-	<!--<script type="text/javascript" src="//code.jquery.com/jquery.js"></script>-->
-	<script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+	<!-- Scripts -->
+	<!--<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>-->
+	<!--<script src="//code.jquery.com/jquery.js type="text/javascript""></script>-->
+	<!--<script src="//code.jquery.com/jquery-1.11.3.min.js type="text/javascript""></script>-->
 
-	<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-	<!--
-	<script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
-	-->
+	<!--<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js" type="text/javascript"></script>-->
+	<!--<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>-->
 	
-	<!--<script stype="text/javascript" src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.js"></script>-->
-	<script stype="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
-    <!-- App scripts 
-    <script src="{{ asset('/js/file.js') }}"></script>-->
+	<!--<script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js" type="text/javascript"></script>-->
+	<!--<script src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.js" type="text/javascript"></script>-->
+	<!--<script src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js" type="text/javascript"></script>-->
 
-    <script type="text/javascript">
-    	$(function() {
-    		$('#users-table').dataTable({
-    			createdRow: function( row, data, dataIndex ) {
-         		   	if ( data['total_order_qty'] >= 5000 ) {
-                		$('td', row).eq(6).addClass('highlight');
-                		//$(row).addClass( 'important2' );
-            		}
-            		if (data['size'] == "S" ) {
-      					$(row).addClass( 'important' );
-    				}
-        		},
-        		
-    	    	processing: true,
-    	    	serverSide: false,
-    	    	ajax: "{!! route('datatables.data') !!}",
-    	    	columns: [
-    	        	// { data: 'id'},
-    	        	// { data: 'po_size'},
-    	        	// { data: 'order_code'},
-    	        	{ data: 'po'},
-    	        	{ data: 'size'},
-    	        	{ data: 'style'},
-    	        	{ data: 'color', orderable: false},
-    	        	{ data: 'color_desc', orderable: false},
-    	        	{ data: 'season'},
-    	        	{ data: 'total_order_qty' },
-    	        	{ data: 'flash' , searchable: false},
-    	        	{ data: 'closed_po', searchable: false},
-    	        	// { data: 'created_at'},
-            		// { data: 'updated_at'}
-    	        ],
-    	        aLengthMenu: [
-        			[25, 50, 100, 200, -1],
-        			[25, 50, 100, 200, "All"]
-    			],
-    			//iDisplayLength: 50,
-    			iDisplayLength: -1,
+    <!-- App scripts -->
 
-    			scrollY:        '600px',
-        		scrollCollapse: true,
-        		paging:         false,
-        		
-        		initComplete: function () {
-            		this.api().columns().every(function () {
-                	var column = this;
-                	var input = document.createElement("input");
-                		$(input).appendTo($(column.footer()).empty())
-                			.on('change', function () {
-                    			column.search($(this).val(), false, false, true).draw();
-                		});
-            		});
-        		}
+    
+    <script src="{{ asset('/js/jquery.min.js') }}" type="text/javascript" ></script>
+    <script src="{{ asset('/js/bootstrap.min.js') }}" type="text/javascript" ></script>
+	<script src="{{ asset('/js/jquery.dataTables.min.js') }}" type="text/javascript" ></script>
+	<script src="{{ asset('/js/jquery-ui.min.js') }}" type="text/javascript" ></script>
+	<!--<script src="{{ asset('/js/custom.js') }}" type="text/javascript" ></script>-->
+    
+<script type="text/javascript">
+$(function() {
+    $('#users-table').dataTable({
+    	createdRow: function( row, data, dataIndex ) {
+           	if ( data['pos.total_order_qty'] >= 5000 ) {
+       	    	$('td', row).eq(6).addClass('highlight');
+           		//$(row).addClass( 'important2' );
+       		}
+       		if (data['pos.size'] == "S" ) {
+    			$(row).addClass( 'important' );
+    		}
+    	},
+        
+        processing: true,
+    	serverSide: false,
+    	ajax: "{!! route('datatables.data') !!}",
+    	columns: [
+    	    // { data: 'po_size'},
+    	    // { data: 'order_code'},
+    	    { data: 'po', name: 'po'},
+    	    { data: 'size', name: 'size'},
+    	    { data: 'style', name: 'style'},
+    	    { data: 'color', name: 'color', orderable: false},
+    	    { data: 'color_desc', name: 'color_desc', orderable: false},
+    	    { data: 'season', name: 'season'},
+    	    { data: 'total_order_qty', name: 'total_order_qty'},
+    	    //{ data: 'count', name: 'count', searchable: false},
+    	    { data: 'stock_qty', name: 'stock_qty', searchable: false},
+    	    { data: 'created_at', name: 'created_at', searchable: false},
+    	    //{ data: 'comment', name: 'comment', searchable: false},
+    	    { data: 'flash', name: 'flash', searchable: false},
+    	    { data: 'closed_po', name: 'closed_po', searchable: false},
+    	    
+            // { data: 'updated_at'}
+    	],
+    	aLengthMenu: [
+        	[25, 50, 100, 200, -1],
+            [25, 50, 100, 200, "All"]
+    	],
+    	//iDisplayLength: 50,
+    	iDisplayLength: -1,
+		scrollY:        '420px',
+   		scrollCollapse: true,
+   		paging:         false,
+       		
+   		/*initComplete: function () {
+      		this.api().columns().every(function () {
+              	var column = this;
+               	var input = document.createElement("input");
+               		$(input).appendTo($(column.footer()).empty())
+               			.on('change', function () {
+                   			column.search($(this).val(), false, false, true).draw();
+               		});
+           		});
+    	},*/
 
-    		});
-		});
-	</script>
+    	 "columnDefs": [ {
+            "visible": false,
+            //"targets": -1
+        } ]
+        
+   	});
+	$('input:text').bind ({
+
+	});
+
+	$('#po').autocomplete({
+		minLength: 3,
+		autoFocus: true,
+		source: '{{ URL('getpodata')}}'
+	});
+});
+</script>
+
 </body>
 </html>
+

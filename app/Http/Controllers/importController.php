@@ -4,12 +4,10 @@ use App\Http\Requests;
 
 use App\Http\Controllers\Controller;
 
-//use Illuminate\Http\Request;
-
 use Maatwebsite\Excel\Facades\Excel;
 
 use Request;
-use App\MainModel;
+use App\Po;
 use DB;
 
 class importController extends Controller {
@@ -22,8 +20,7 @@ class importController extends Controller {
 	
 	public function postImportPo(Request $request)
 	{
-	 //$getSheetName = Excel::load($request->file('file'))->getSheetNames();
-	    //$getSheetName = Excel::load(Input::file('file'))->getSheetNames();
+	 
 	    $getSheetName = Excel::load(Request::file('file'))->getSheetNames();
 	    
 	    foreach($getSheetName as $sheetName)
@@ -31,7 +28,7 @@ class importController extends Controller {
 	        //if ($sheetName === 'Product-General-Table')  {
 	    	//selectSheetsByIndex(0)
 	           	//DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-	            DB::table('main')->truncate();
+	            DB::table('pos')->truncate();
 	
 	            //Excel::selectSheets($sheetName)->load($request->file('file'), function ($reader)
 	            //Excel::selectSheets($sheetName)->load(Input::file('file'), function ($reader)
@@ -52,7 +49,7 @@ class importController extends Controller {
 	                foreach($readerarray as $row)
 	                {
 
-	                	//var_dump($row['po_size']);
+	                	//var_dump($row['po_key']);
 	                	//var_dump($row['po']);
 
 	                	//$order_code = $row->order_code;
@@ -74,7 +71,7 @@ class importController extends Controller {
 						$style = substr($product, 0, 8);
 						$color = substr($product, 9, 4);
 
-						$po_size = $po ."-".$size;
+						$po_key = $po ."-".$size;
 
 						if ($flash == 'F') {
 							$flash = True;
@@ -88,8 +85,8 @@ class importController extends Controller {
 						$size = str_replace(' ', '', $size);
 						$color = str_replace(' ', '', $color);
 
-						$porder = new MainModel;
-						$porder->po_size = $po_size;
+						$porder = new Po;
+						$porder->po_key = $po_key;
 						$porder->po = $po;
 						$porder->order_code = $order_code;
 						$porder->size = $size;
@@ -107,7 +104,7 @@ class importController extends Controller {
 
 	                }
 	                
-	                //po_size	po	order_code	size	style	color	color_desc	season	total_order_qty	flash	closed_po	status	comment
+	                //po_key	po	order_code	size	style	color	color_desc	season	total_order_qty	flash	closed_po	status	comment
 
 
 				    // Loop through all sheets
@@ -125,8 +122,8 @@ class importController extends Controller {
 
 
 								
-					// 			$porder = new MainModel;
-					// 			$porder->po_size = $po;
+					// 			$porder = new PoModel;
+					// 			$porder->po_key = $po;
 					// 			$porder->order_code = $order_code;
 					// 			$porder->save();
 
@@ -134,7 +131,7 @@ class importController extends Controller {
 					//     });
 					// });
 
-				    //$reader->get(array('po_size', 'po'));
+				    //$reader->get(array('po_key', 'po'));
 					
 
 	            });
@@ -162,7 +159,7 @@ class importController extends Controller {
 	    }
 		
 	    //Session::flash('file_uploaded_successfully', 'File has been uploaded successfully and has also updated the database.');
-	    return redirect('/maintable');
+	    return redirect('/datatables');
 	    //return view('import.importresult', compact('reader'));
 
 	}

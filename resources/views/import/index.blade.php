@@ -4,9 +4,9 @@
 
 <div class="container container-table">
 	<div class="row vertical-center-row">
-		<div class="text-center col-md-12 col-md-offset-0">
+		<div class="text-center col-md-4 col-md-offset-4">
 			<div class="panel panel-default">
-				<div class="panel-heading">Import PO</div>
+				<div class="panel-heading">Import PO form Excel file</div>
 				<br>
 				
 				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportPo']]) !!}
