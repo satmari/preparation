@@ -11,12 +11,13 @@
     <!-- <link href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css" rel='stylesheet' type='text/css'> -->
     <!-- <link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css' > -->
 
-	<link href="{{ asset('/css/custom.css') }}" rel='stylesheet' type='text/css'>
+	
 	<link href="{{ asset('/css/app.css') }}" rel='stylesheet' type='text/css'>
 	<link href="{{ asset('/css/font.css') }}" rel='stylesheet' type='text/css'>
 	<link href="{{ asset('/css/bootstrap.min.css') }}" rel='stylesheet' type='text/css'>
 	<link href="{{ asset('/css/jquery.dataTables.min.css') }}" rel='stylesheet' type='text/css'>
 	<link href="{{ asset('/css/jquery-ui.min.css') }}" rel='stylesheet' type='text/css'>
+	<link href="{{ asset('/css/custom.css') }}" rel='stylesheet' type='text/css'>
 		
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -68,45 +69,23 @@
 
 	@yield('content')
 
-	<!-- Scripts -->
-	<!--<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>-->
-	<!--<script src="//code.jquery.com/jquery.js type="text/javascript""></script>-->
-	<!--<script src="//code.jquery.com/jquery-1.11.3.min.js type="text/javascript""></script>-->
+	<!-- App scripts -->
 
-	<!--<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js" type="text/javascript"></script>-->
-	<!--<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>-->
-	
-	<!--<script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js" type="text/javascript"></script>-->
-	<!--<script src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.js" type="text/javascript"></script>-->
-	<!--<script src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js" type="text/javascript"></script>-->
-
-    <!-- App scripts -->
-
-    
     <script src="{{ asset('/js/jquery.min.js') }}" type="text/javascript" ></script>
     <script src="{{ asset('/js/bootstrap.min.js') }}" type="text/javascript" ></script>
-	<script src="{{ asset('/js/jquery.dataTables.min.js') }}" type="text/javascript" ></script>
 	<script src="{{ asset('/js/jquery-ui.min.js') }}" type="text/javascript" ></script>
+	<script src="{{ asset('/js/jquery.dataTables.min.js') }}" type="text/javascript" ></script>
 	<!--<script src="{{ asset('/js/custom.js') }}" type="text/javascript" ></script>-->
     
 <script type="text/javascript">
 $(function() {
     $('#users-table').dataTable({
-    	createdRow: function( row, data, dataIndex ) {
-           	if ( data['pos.total_order_qty'] >= 5000 ) {
-       	    	$('td', row).eq(6).addClass('highlight');
-           		//$(row).addClass( 'important2' );
-       		}
-       		if (data['pos.size'] == "S" ) {
-    			$(row).addClass( 'important' );
-    		}
-    	},
-        
-        processing: true,
+    	processing: true,
     	serverSide: false,
     	ajax: "{!! route('datatables.data') !!}",
     	columns: [
-    	    // { data: 'po_size'},
+    		// {data: 'id'},
+    	    // { data: 'po_key'},
     	    // { data: 'order_code'},
     	    { data: 'po', name: 'po'},
     	    { data: 'size', name: 'size'},
@@ -114,15 +93,25 @@ $(function() {
     	    { data: 'color', name: 'color', orderable: false},
     	    { data: 'color_desc', name: 'color_desc', orderable: false},
     	    { data: 'season', name: 'season'},
-    	    { data: 'total_order_qty', name: 'total_order_qty'},
-    	    //{ data: 'count', name: 'count', searchable: false},
-    	    { data: 'stock_qty', name: 'stock_qty', searchable: false},
-    	    { data: 'created_at', name: 'created_at', searchable: false},
-    	    //{ data: 'comment', name: 'comment', searchable: false},
-    	    { data: 'flash', name: 'flash', searchable: false},
-    	    { data: 'closed_po', name: 'closed_po', searchable: false},
+    	    { data: 'total_order_qty', name: 'total_order_qty', searchable: false},
     	    
-            // { data: 'updated_at'}
+    	    { data: 'stock_qty', name: 'stock_qty', searchable: false},
+    	    { data: 'b_stock', name: 'b_stock', searchable: false},
+
+    	    { data: 'b_request', name: 'b_request', searchable: false},
+			{ data: 'request_qty', name: 'request_qty', searchable: false},
+
+    	    //{ data: 'updated_at', name: 'updated_at'},
+			
+
+    	    //{ data: 'flash', name: 'flash', searchable: false},
+    	    //{ data: 'closed_po', name: 'closed_po', searchable: false},
+    	    //{ data: 'brand', name: 'brand', searchable: false},
+    	    //{ data: 'status', name: 'status', searchable: false},
+    	    //{ data: 'type', name: 'type', searchable: false},
+    	    //{ data: 'comment', name: 'comment', searchable: false},
+    	    
+            
     	],
     	aLengthMenu: [
         	[25, 50, 100, 200, -1],
@@ -130,10 +119,35 @@ $(function() {
     	],
     	//iDisplayLength: 50,
     	iDisplayLength: -1,
-		scrollY:        '420px',
+		scrollY:        '380px',
    		scrollCollapse: true,
    		paging:         false,
-       		
+
+       	createdRow: function( row, data, dataIndex ) {
+           	//if ( data['total_order_qty'] < 1000 ) {
+           	if ( data['b_request'] == 0 ) {
+       	    	$('td', row).eq(9).addClass('highlightred');
+           		//$(row).addClass( 'important2' );
+       		}
+       		if ( data['b_request'] > 100 ) {
+       	    	$('td', row).eq(9).addClass('highlightgreen');
+           		//$(row).addClass( 'important2' );
+       		}
+       		if (data['size'] == "S" ) {
+    			$(row).addClass('important');
+    		}
+    	},
+    	/*columnDefs: [{
+            "targets": [ 11 ],
+            "visible": false,
+            "searchable": false
+        }],*/
+        /*
+        "columnDefs": [{
+            "visible": false,
+            //"targets": -1
+        }],
+		*/
    		/*initComplete: function () {
       		this.api().columns().every(function () {
               	var column = this;
@@ -145,21 +159,22 @@ $(function() {
            		});
     	},*/
 
-    	 "columnDefs": [ {
-            "visible": false,
-            //"targets": -1
-        } ]
+    	
         
    	});
 	$('input:text').bind ({
-
 	});
-
 	$('#po').autocomplete({
 		minLength: 3,
 		autoFocus: true,
 		source: '{{ URL('getpodata')}}'
 	});
+	$('#module').autocomplete({
+		minLength: 1,
+		autoFocus: true,
+		source: '{{ URL('getmoduledata')}}'
+	});
+	$('#size').val();
 });
 </script>
 

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBarcodeStocksTable extends Migration {
+class CreateBarcodeRequestsTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,7 +12,7 @@ class CreateBarcodeStocksTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('barcode_stocks', function(Blueprint $table)
+		Schema::create('barcode_requests', function(Blueprint $table)
 		{
 			$table->increments('id');
 			$table->integer('po_id')->unsigned();
@@ -21,10 +21,11 @@ class CreateBarcodeStocksTable extends Migration {
             $table->string('size', 3)->nullable();
             $table->integer('qty')->nullable();
             $table->string('module', 20)->nullable();
+            $table->string('leader', 30)->nullable();
             $table->string('status', 12)->nullable();
             $table->string('type', 12)->nullable();
-            $table->text('comment')->nullable();
-            $table->timestamps();
+            $table->text('comment')->nullable();;
+			$table->timestamps();
 		});
 	}
 
@@ -35,7 +36,7 @@ class CreateBarcodeStocksTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('barcode_stocks');
+		Schema::drop('barcode_requests');
 	}
 
 }

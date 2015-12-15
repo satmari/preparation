@@ -22,6 +22,7 @@ Route::controllers([
 
 Route::get('/maintable', 'maintableController@index');
 Route::get('/barcodestocktable', 'barcodestocktableController@index');
+Route::get('/barcoderequesttable', 'barcoderequesttableController@index');
 
 Route::get('/barcodestock', 'BarcodeStockController@index');
 Route::get('/barcodestockcreatenew', 'BarcodeStockController@createnew');
@@ -46,9 +47,18 @@ Route::controller('datatables', 'DatatablesController', [
 Route::any('getpodata', function() {
 	$term = Input::get('term');
 
-	$data = DB::table('pos')->distinct()->select('po')->where('po', 'LIKE' , $term.'%')->groupBy('po')->take(10)->get();
+	$data = DB::table('pos')->distinct()->select('po')->where('po','LIKE', $term.'%')->where('closed_po','=',0)->groupBy('po')->take(10)->get();
 	foreach ($data as $v) {
 		$retun_array[] = array('value' => $v->po);
+	}
+return Response::json($retun_array);
+});
+Route::any('getmoduledata', function() {
+	$term = Input::get('term');
+
+	$data = DB::table('modules')->distinct()->select('name')->where('name','LIKE', $term.'%')->groupBy('name')->take(15)->get();
+	foreach ($data as $v) {
+		$retun_array[] = array('value' => $v->name);
 	}
 return Response::json($retun_array);
 });

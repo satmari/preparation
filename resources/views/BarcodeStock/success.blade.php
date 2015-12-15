@@ -9,7 +9,6 @@
 				<h3 style="color:green;">Success</h3>
 
 				<p style="color:green;">Succesfuly added to Barcode stock</p>
-
 				<div class="panel-body">
 					<div class="">
 						<a href="{{url('/barcodestock')}}" class="btn btn-default center-block">Back to Barcode stock</a>

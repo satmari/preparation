@@ -1,6 +1,16 @@
-td.highlight {
+body {
+	font-size: 12px !important;
+}
+.dataTables_wrapper .dataTables_filter {
+    float: left;
+}
+.highlightred {
         font-weight: bold !important;
         color: red !important;
+}
+.highlightgreen {
+        font-weight: bold !important;
+        color: green !important;
 }
 .important {
     color: #0f0 !important; 

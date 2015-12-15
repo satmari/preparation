@@ -87,8 +87,8 @@ class importController extends Controller {
 
 						$porder = new Po;
 						$porder->po_key = $po_key;
-						$porder->po = $po;
 						$porder->order_code = $order_code;
+						$porder->po = $po;
 						$porder->size = $size;
 						$porder->style = $style;
 						$porder->color = $color;
@@ -97,7 +97,9 @@ class importController extends Controller {
 						$porder->total_order_qty = $qty;
 						$porder->flash = $flash;
 						$porder->closed_po = $closed;
+						$porder->brand;
 						$porder->status;
+						$porder->type;
 						$porder->comment;
 
 						$porder->save();

@@ -86,8 +86,15 @@ class BarcodeStockController extends Controller {
 		// verify po_id
 		try {
 		    $poid = Po::where('po_key', $key)->firstOrFail()->id;
+		    $po_closed = Po::where('po_key', $key)->firstOrFail()->closed_po;
 		} catch (ModelNotFoundException $e) {
-		    $msg = 'Po and size not exist in Po table';
+		    $msg = 'Komesa and size not exist in Po table';
+		    return view('BarcodeStock.error',compact('msg'));
+		}
+		
+		// verify po is closed
+		if($po_closed == True) {
+			$msg = 'Komesa is Closed';
 		    return view('BarcodeStock.error',compact('msg'));
 		}
 
@@ -143,8 +150,15 @@ class BarcodeStockController extends Controller {
 		// verify po_id
 		try {
 		    $poid = Po::where('po_key', $key)->firstOrFail()->id;
+		    $po_closed = Po::where('po_key', $key)->firstOrFail()->closed_po;
 		} catch (ModelNotFoundException $e) {
 		    $msg = 'Po and size not exist in Po table';
+		    return view('BarcodeStock.error',compact('msg'));
+		}
+
+		// verify po is closed
+		if($po_closed == True) {
+			$msg = 'Po is Closed';
 		    return view('BarcodeStock.error',compact('msg'));
 		}
 
@@ -200,8 +214,15 @@ class BarcodeStockController extends Controller {
 		// verify po_id
 		try {
 		    $poid = Po::where('po_key', $key)->firstOrFail()->id;
+		    $po_closed = Po::where('po_key', $key)->firstOrFail()->closed_po;
 		} catch (ModelNotFoundException $e) {
 		    $msg = 'Po and size not exist in Po table';
+		    return view('BarcodeStock.error',compact('msg'));
+		}
+
+		// verify po is closed
+		if($po_closed == True) {
+			$msg = 'Po is Closed';
 		    return view('BarcodeStock.error',compact('msg'));
 		}
 

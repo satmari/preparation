@@ -15,7 +15,6 @@
 						<a href="{{url('/barcodestock')}}" class="btn btn-default center-block">Back to Barcode stock</a>
 					</div>
 				</div>
-
 			</div>
 		</div>
 	</div>

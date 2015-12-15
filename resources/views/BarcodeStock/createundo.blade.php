@@ -33,8 +33,7 @@
 
 				@include('errors.list')
 				{!! Form::close() !!}
-
-				
+		
 			</div>
 		</div>
 	</div>
