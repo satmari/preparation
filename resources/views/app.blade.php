@@ -6,12 +6,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Preparation Application</title>
 
-	
 	<!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel='stylesheet' type='text/css' > -->
     <!-- <link href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css" rel='stylesheet' type='text/css'> -->
     <!-- <link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css' > -->
 
-	
 	<link href="{{ asset('/css/app.css') }}" rel='stylesheet' type='text/css'>
 	<link href="{{ asset('/css/font.css') }}" rel='stylesheet' type='text/css'>
 	<link href="{{ asset('/css/bootstrap.min.css') }}" rel='stylesheet' type='text/css'>
@@ -49,6 +47,20 @@
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/barcodestock') }}">Barcode Stock</a></li>
 				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/barcodestocktable') }}">Barcode Stock Log</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/barcoderequest') }}">Barcode Request</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/barcoderequesttable') }}">Barcode Request Log</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/importmodules') }}">Import Modules form Inteos</a></li>
+				</ul>
+				
+				
 
 				<ul class="nav navbar-nav navbar-right">
 					@if (Auth::guest())
@@ -102,7 +114,6 @@ $(function() {
 			{ data: 'request_qty', name: 'request_qty', searchable: false},
 
     	    //{ data: 'updated_at', name: 'updated_at'},
-			
 
     	    //{ data: 'flash', name: 'flash', searchable: false},
     	    //{ data: 'closed_po', name: 'closed_po', searchable: false},
@@ -110,8 +121,7 @@ $(function() {
     	    //{ data: 'status', name: 'status', searchable: false},
     	    //{ data: 'type', name: 'type', searchable: false},
     	    //{ data: 'comment', name: 'comment', searchable: false},
-    	    
-            
+  
     	],
     	aLengthMenu: [
         	[25, 50, 100, 200, -1],
@@ -158,9 +168,7 @@ $(function() {
                		});
            		});
     	},*/
-
-    	
-        
+    
    	});
 	$('input:text').bind ({
 	});
@@ -174,7 +182,7 @@ $(function() {
 		autoFocus: true,
 		source: '{{ URL('getmoduledata')}}'
 	});
-	$('#size').val();
+	
 });
 </script>
 

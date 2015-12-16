@@ -20,6 +20,4 @@ class BarcodeStock extends Model {
         return $this->belongsTo('App\User');
     }
 
-    //use Gbrock\Traits\Sortable;
-    //protected $sortable = ['ponum', 'size','module', 'type', 'created_at'];
 }

@@ -14,13 +14,10 @@ class Po extends Model {
         return $this->hasMany('App\BarcodeStock');
     }
 
-    // use Sortable;
-
-    // /**
-    //  * The attributes which may be used for sorting dynamically.
-    //  *
-    //  * @var array
-    //  */
-    // protected $sortable = ['po_size','order_code','po','size','style','color','color_desc','season','total_order_qty','flash','closed_po','status','comment'];
+    public function barcode_requests()
+    {
+        //return $this->hasMany('App\BarcodeRequests','po_id');
+        return $this->hasMany('App\BarcodeRequests');
+    }
 
 }

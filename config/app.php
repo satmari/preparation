@@ -146,6 +146,8 @@ return [
 		'App\Providers\EventServiceProvider',
 		'App\Providers\RouteServiceProvider',
 
+		//'Illuminate\Html\HtmlServiceProvider',
+
 		'Collective\Html\HtmlServiceProvider',
 
 		'Bican\Roles\RolesServiceProvider',	
@@ -207,7 +209,7 @@ return [
 
 		'Form' 		=> 'Collective\Html\FormFacade',
       	'Html' 		=> 'Collective\Html\HtmlFacade',
-
+      	
       	'Datatables' => 'yajra\Datatables\Datatables',
 	],
 

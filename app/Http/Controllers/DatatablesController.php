@@ -53,8 +53,7 @@ class DatatablesController extends Controller
             //'pos.status',
             //'pos.type',
             //'pos.comment',
-            
-            
+                   
         ])
         ->leftJoin('barcode_stocks','barcode_stocks.po_id','=','pos.id')
         ->leftJoin('barcode_requests','barcode_requests.po_id','=','pos.id')

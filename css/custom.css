@@ -5,12 +5,12 @@ body {
     float: left;
 }
 .highlightred {
-        font-weight: bold !important;
-        color: red !important;
+    font-weight: bold !important;
+    color: red !important;
 }
 .highlightgreen {
-        font-weight: bold !important;
-        color: green !important;
+    font-weight: bold !important;
+    color: green !important;
 }
 .important {
     color: #0f0 !important; 
