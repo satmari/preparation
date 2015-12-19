@@ -34,7 +34,7 @@ class barcoderequesttableController extends Controller {
 			//$rows = BarcodeStock::sorted()->get();
 			//$rows = MainModel::sorted()->get(); 
  			//$table = Table::create($rows); // Generate a Table based on these "rows"
- 			$table = Table::create($rows, ['id','po_id','user_id','ponum','size','qty','module','leader',/*'status',*/'type','comment','created_at','updated_at']);
+ 			$table = Table::create($rows, ['id','po_id','user_id','ponum','size','qty','module','leader','status','type','comment','created_at','updated_at']);
 
  		//}
  		return view('barcoderequesttable.index', compact('table'));

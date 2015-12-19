@@ -51,7 +51,7 @@
 					<li><a href="{{ url('/barcodestocktable') }}">Barcode Stock Log</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/barcoderequest') }}">Barcode Request</a></li>
+					<li><a href="{{ url('/request') }}">Barcode Request</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/barcoderequesttable') }}">Barcode Request Log</a></li>
