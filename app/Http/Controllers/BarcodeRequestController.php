@@ -36,9 +36,14 @@ class BarcodeRequestController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		//
+		$this->validate($request, ['pin'=>'required|min:4|max:5']);
+		$forminput = $request->all(); 
+
+		$pin = $forminput['pin'];
+		//dd($pin);
 		return view('BarcodeRequest.create');
 	}
 

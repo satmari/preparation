@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Illuminate\Http;
-//use Request;
+use Gbrock\Table\Facades\Table;
 
 use App\Module;
 
@@ -23,8 +23,15 @@ class importModulesController extends Controller {
 	 */
 	public function index()	{
 
-        //return view('bbstock.index', compact('bbstock'));
-        return view('importmodules.index');
+      
+
+		$rows = Module::all();
+		//$rows = BarcodeStock::sorted()->get();
+		//$rows = MainModel::sorted()->get(); 
+ 		$table = Table::create($rows); // Generate a Table based on these "rows"
+ 		//$table = Table::create($rows, ['id','po_id','user_id','ponum','size','qty','module',/*'status',*/'type','comment','created_at']);
+
+ 		return view('importmodules.index', compact('table'));
 	}
 
 	/**
@@ -52,17 +59,19 @@ class importModulesController extends Controller {
 
 		DB::table('modules')->truncate();
 
-		$inteosmodules = DB::connection('sqlsrv2')->select(DB::raw("SELECT DISTINCT mod.ModNam,per.Name,per.BadgeNum FROM [BdkCLZG].[dbo].[CNF_Operators] as op JOIN [BdkCLZG].[dbo].[WEA_PersData] as per ON op.IntKeyPers = per.PersNum JOIN [BdkCLZG].[dbo].[CNF_Modules] as mod ON op.Module = mod.Module WHERE  (op.PersTyp = 2) ORDER BY mod.ModNam"));
+		$inteosmodules = DB::connection('sqlsrv2')->select(DB::raw("SELECT DISTINCT mod.ModNam,per.Name,per.BadgeNum,per.PinCode FROM [BdkCLZG].[dbo].[CNF_Operators] as op JOIN [BdkCLZG].[dbo].[WEA_PersData] as per ON op.IntKeyPers = per.PersNum JOIN [BdkCLZG].[dbo].[CNF_Modules] as mod ON op.Module = mod.Module WHERE  (op.PersTyp = 2) and (per.FlgAct = 1) ORDER BY mod.ModNam"));
 
 		foreach ($inteosmodules as $row) {
     		$modName = $row->ModNam;
     		$modName = str_replace(' ', '', $modName);
     		$group = substr($modName, 0, 1);
-
+    		$leader_num = $row->BadgeNum;
+    		$pin = $row->PinCode;
 
 
     		$leader = $row->Name;
     		$badge = $row->BadgeNum;
+
     		
     		//echo $modName." ".$leader." ".$badge."<br />";
     		//dd($modName." ".$leader." ".$badge);
@@ -71,7 +80,9 @@ class importModulesController extends Controller {
     			$module = new Module;
     			$module->module=$modName;
     			$module->group=$group;
-    			$module->line_leader=$leader;
+    			$module->leader=$leader;
+    			$module->leader_num=$leader_num;
+    			$module->leader_pin=$pin;
 	
 	   			$module->save();	
 	   		//}
@@ -80,10 +91,12 @@ class importModulesController extends Controller {
 				//$msg = "Problem to save in database";
 				//return view('BarcodeRequest.error',compact('msg'));			
 			}
+			*/
 			
-			return view('importmodules.success');
-   			*/
+   			
     	}
+
+    	return view('importmodules.success');
 
 		/*
 		if ($inteosmodules) {
@@ -98,4 +111,5 @@ class importModulesController extends Controller {
     }	
 
 }
+
 

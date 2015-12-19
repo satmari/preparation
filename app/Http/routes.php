@@ -34,10 +34,11 @@ Route::post('/barcodestockstorenew', 'BarcodeStockController@storenew');
 Route::post('/barcodestockstorefrommodule', 'BarcodeStockController@storefrommodule');
 Route::post('/barcodestockstoreundo', 'BarcodeStockController@storeundo');
 
-// BarcodeRequest
+// Request
 Route::get('/barcoderequest', 'BarcodeRequestController@index');
 Route::get('/barcoderequestcreate', 'BarcodeRequestController@create');
 
+Route::post('/barcoderequestcreate', 'BarcodeRequestController@create');
 Route::post('/barcoderequeststore', 'BarcodeRequestController@store');
 
 // Import
