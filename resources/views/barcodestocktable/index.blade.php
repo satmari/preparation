@@ -9,11 +9,11 @@
 				<br>
 				<p>{{-- $allpo --}}</p>
 
-				@if(Auth::check() && Auth::user()->level() <= 2)
+				{{--@if(Auth::check() && Auth::user()->level() <= 2) --}}
 			
 				{!! $table->render() !!}
 				
-				@endif
+				{{-- @endif --}}
 
 				<hr>
 					

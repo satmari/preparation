@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http;
 use Gbrock\Table\Facades\Table;
+use Gbrock\Table\Traits\Sortable;
 
 use App\Module;
 
@@ -23,14 +24,10 @@ class importModulesController extends Controller {
 	 */
 	public function index()	{
 
-      
-
 		$rows = Module::all();
-		//$rows = BarcodeStock::sorted()->get();
-		//$rows = MainModel::sorted()->get(); 
- 		$table = Table::create($rows); // Generate a Table based on these "rows"
- 		//$table = Table::create($rows, ['id','po_id','user_id','ponum','size','qty','module',/*'status',*/'type','comment','created_at']);
-
+		//$rows = Module::get()->sorted()->paginate();
+		$table = Table::create($rows); // Generate a Table based on these "rows"
+ 		
  		return view('importmodules.index', compact('table'));
 	}
 
