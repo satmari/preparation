@@ -19,6 +19,8 @@ use Bican\Roles\Models\Role;
 use Bican\Roles\Models\Permission;
 use Auth;
 
+use Validator;
+
 class RequestController extends Controller {
 
 	/**
@@ -62,12 +64,24 @@ class RequestController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store(Request $request)
+	public function store(Request $request2)
 	{
 		//
 		//validation
-		$this->validate($request, ['po'=>'required|min:5|max:5','size'=>'required','qty'=>'required'/*,'module'=>'min:4|max:10'*/]);
-		$forminput = $request->all(); 
+		//$this->validate($request2, ['po'=>'required|min:5|max:5','size'=>'required|min:1|max:2','qty'=>'required'/*,'module'=>'min:4|max:10'*/]);
+		
+		$validator = Validator::make($request2->all(), [
+            'po' => 'required|min:5|max:5',
+            'size' => 'required|min:1|max:2',
+            'qty'=>'required'
+        ]);
+		if ($validator->fails()) {
+            return redirect('/request')
+                ->withErrors($validator)
+                ->withInput();
+        }
+		
+		$forminput = $request2->all(); 
 
 		$ponum = $forminput['po'];
 		$size = $forminput['size'];
@@ -76,11 +90,10 @@ class RequestController extends Controller {
 		$leader = $forminput['leader'];
 		$comment = $forminput['comment'];
 		$key = $ponum.'-'.$size;
-		//dd($key);
 
 		//$type = "";
 		$status = "pending";
-
+		
 		// virfy userId
 		if (Auth::check())
 		{
@@ -128,6 +141,7 @@ class RequestController extends Controller {
 		}
 		
 		return view('Request.success');
+
 	}
 
 	/**

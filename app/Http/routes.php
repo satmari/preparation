@@ -29,7 +29,6 @@ Route::get('/barcodestock', 'BarcodeStockController@index');
 Route::get('/barcodestockcreatenew', 'BarcodeStockController@createnew');
 Route::get('/barcodestockcreatefrommodule', 'BarcodeStockController@createfrommodule');
 Route::get('/barcodestockcreateundo', 'BarcodeStockController@createundo');
-
 Route::post('/barcodestockstorenew', 'BarcodeStockController@storenew');
 Route::post('/barcodestockstorefrommodule', 'BarcodeStockController@storefrommodule');
 Route::post('/barcodestockstoreundo', 'BarcodeStockController@storeundo');
@@ -37,14 +36,14 @@ Route::post('/barcodestockstoreundo', 'BarcodeStockController@storeundo');
 // Request
 Route::get('/request', 'RequestController@index');
 Route::get('/requestcreate', 'RequestController@create');
-
+Route::get('/requeststore', 'RequestController@store');
 Route::post('/requestcreate', 'RequestController@create');
 Route::post('/requeststore', 'RequestController@store');
+
 
 // Import
 Route::get('/import', 'importController@index');
 Route::get('/importresult', 'importController@show');
-
 Route::post('/import', 'importController@postImportPo');
 
  // Import Modules

@@ -11,7 +11,7 @@
 
 				<div class="panel-body">
 					<p>LineLeader PIN code (Inteos)</p>
-					{!! Form::text('pin', null, ['id' => 'pin', 'class' => 'form-control', 'autofocus' => 'autofocus']) !!}
+					{!! Form::number('pin', null, ['id' => 'pin', 'class' => 'form-control', 'autofocus' => 'autofocus']) !!}
 				</div>
 				
 				<div class="panel-body">
