@@ -14,7 +14,7 @@
 						{!! Form::file('file', ['class' => 'center-block']) !!}
 					</div>
 					<div class="panel-body">
-						{!! Form::submit('Import', ['class' => 'btn btn-warning btn-lg center-block']) !!}
+						{!! Form::submit('Import', ['class' => 'btn btn-warning center-block']) !!}
 					</div>
 					@include('errors.list')
 				{!! Form::close() !!}

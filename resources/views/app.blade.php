@@ -34,13 +34,11 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Preparation Application</a>
+				<a class="navbar-brand" href="{{ url('/') }}">Preparation Application</a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/') }}">Home</a></li>
-				</ul>
+				
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/datatables') }}">Main Table</a></li>
 				</ul>
@@ -51,10 +49,22 @@
 					<li><a href="{{ url('/barcodestocktable') }}">Barcode Stock Log</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/request') }}">Barcode Request</a></li>
+					<li><a href="{{ url('/carelabelstock') }}">Carelabel Stock</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/carelabelstocktable') }}">Carelabel Stock Log</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/request') }}">Request from Modul</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/barcoderequesttable') }}">Barcode Request Log</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/carelabelrequesttable') }}">Carelabel Request Log</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/import') }}">Import PO</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/importmodules') }}">Import Modules form Inteos</a></li>
@@ -107,11 +117,17 @@ $(function() {
     	    { data: 'season', name: 'season'},
     	    { data: 'total_order_qty', name: 'total_order_qty', searchable: false},
     	    
-    	    { data: 'stock_qty', name: 'stock_qty', searchable: false},
+    	    { data: 'stock_b_qty', name: 'stock_b_qty', searchable: false},
     	    { data: 'b_stock', name: 'b_stock', searchable: false},
 
     	    { data: 'b_request', name: 'b_request', searchable: false},
-			{ data: 'request_qty', name: 'request_qty', searchable: false},
+			{ data: 'request_b_qty', name: 'request_b_qty', searchable: false},
+
+			{ data: 'stock_c_qty', name: 'stock_c_qty', searchable: false},
+    	    { data: 'c_stock', name: 'c_stock', searchable: false},
+
+    	    { data: 'c_request', name: 'c_request', searchable: false},
+			{ data: 'request_c_qty', name: 'request_c_qty', searchable: false},
 
     	    //{ data: 'updated_at', name: 'updated_at'},
 

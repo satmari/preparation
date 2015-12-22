@@ -21,8 +21,12 @@ Route::controllers([
 ]);
 
 Route::get('/maintable', 'maintableController@index');
+
+// Log table
 Route::get('/barcodestocktable', 'barcodestocktableController@index');
+Route::get('/carelabelstocktable', 'carelabelstocktableController@index');
 Route::get('/barcoderequesttable', 'barcoderequesttableController@index');
+Route::get('/carelabelrequesttable', 'carelabelrequesttableController@index');
 
 // BarcodeStock
 Route::get('/barcodestock', 'BarcodeStockController@index');
@@ -33,6 +37,15 @@ Route::post('/barcodestockstorenew', 'BarcodeStockController@storenew');
 Route::post('/barcodestockstorefrommodule', 'BarcodeStockController@storefrommodule');
 Route::post('/barcodestockstoreundo', 'BarcodeStockController@storeundo');
 
+// CarelabelStock
+Route::get('/carelabelstock', 'CarelabelStockController@index');
+Route::get('/carelabelstockcreatenew', 'CarelabelStockController@createnew');
+Route::get('/carelabelstockcreatefrommodule', 'CarelabelStockController@createfrommodule');
+Route::get('/carelabelstockcreateundo', 'CarelabelStockController@createundo');
+Route::post('/carelabelstockstorenew', 'CarelabelStockController@storenew');
+Route::post('/carelabelstockstorefrommodule', 'CarelabelStockController@storefrommodule');
+Route::post('/carelabelstockstoreundo', 'CarelabelStockController@storeundo');
+
 // Request
 Route::get('/request', 'RequestController@index');
 Route::get('/requestcreate', 'RequestController@create');
@@ -40,8 +53,7 @@ Route::get('/requeststore', 'RequestController@store');
 Route::post('/requestcreate', 'RequestController@create');
 Route::post('/requeststore', 'RequestController@store');
 
-
-// Import
+// Import Po
 Route::get('/import', 'importController@index');
 Route::get('/importresult', 'importController@show');
 Route::post('/import', 'importController@postImportPo');
@@ -50,7 +62,7 @@ Route::post('/import', 'importController@postImportPo');
 Route::get('/importmodules', 'importModulesController@index');
 Route::post('/importmodulesimport', 'importModulesController@create');
 
-//Datatables
+// Datatables
 Route::controller('datatables', 'DatatablesController', [
     'anyData'  => 'datatables.data',
     'getIndex' => 'datatables',

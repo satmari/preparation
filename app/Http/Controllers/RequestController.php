@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 //use Gbrock\Table\Facades\Table;
 
 use App\BarcodeRequest;
+use App\CarelabelRequest;
 use App\Po;
 use App\Module;
 use DB;
@@ -48,6 +49,7 @@ class RequestController extends Controller {
 		$pin = $forminput['pin'];
 		//dd($pin);
 
+		/*
 		try {
 		    $leader = Module::where('leader_pin', $pin)->firstOrFail();
 			//dd($leader->leader);
@@ -55,8 +57,21 @@ class RequestController extends Controller {
 		    $msg = 'LineLeader with this PIN not exist';
 		    return view('Request.error',compact('msg'));
 		}
+		*/
+		$inteosleaders = DB::connection('sqlsrv2')->select(DB::raw("SELECT Name FROM BdkCLZG.dbo.WEA_PersData WHERE (Func = 23) and (FlgAct = 1) and (PinCode = ".$pin.")"));
 
-		return view('Request.create', compact('leader'));
+		if (empty($inteosleaders)) {
+			$msg = 'LineLeader with this PIN not exist';
+		    return view('Request.error',compact('msg'));
+		
+		} else {
+			foreach ($inteosleaders as $row) {
+    			$leader = $row->Name;		
+    		}
+    		//dd($leader);
+    		return view('Request.create', compact('leader'));
+    	} 
+
 	}
 
 	/**
@@ -73,7 +88,8 @@ class RequestController extends Controller {
 		$validator = Validator::make($request2->all(), [
             'po' => 'required|min:5|max:5',
             'size' => 'required|min:1|max:2',
-            'qty'=>'required'
+            'qty' => 'required',
+            'leader' => 'required'
         ]);
 		if ($validator->fails()) {
             return redirect('/request')
@@ -82,6 +98,7 @@ class RequestController extends Controller {
         }
 		
 		$forminput = $request2->all(); 
+		//dd($forminput);
 
 		$ponum = $forminput['po'];
 		$size = $forminput['size'];
@@ -90,6 +107,19 @@ class RequestController extends Controller {
 		$leader = $forminput['leader'];
 		$comment = $forminput['comment'];
 		$key = $ponum.'-'.$size;
+
+		if (isset($forminput['barcode'])) {
+			$barcode = $forminput['barcode'];	
+		} else {
+			$barcode = '0';
+		}
+		if (isset($forminput['carelabel'])) {
+			$carelabel = $forminput['carelabel'];
+		} else {
+			$carelabel = '0';
+		}
+
+		//dd("B: ".$barcode." C: ".$carelabel);
 
 		//$type = "";
 		$status = "pending";
@@ -119,29 +149,66 @@ class RequestController extends Controller {
 		    return view('Request.error',compact('msg'));
 		}
 
-		try {
-			$barcode = new BarcodeRequest;
+		$msg = "";
 
-			$barcode->po_id = $poid;
-			$barcode->user_id = $userId;
-			$barcode->ponum = $ponum;
-			$barcode->size = $size;
-			$barcode->qty = $qty;
-			$barcode->module = $module;
-			$barcode->leader = $leader;
-			$barcode->status = $status;
-			$barcode->type;
-			$barcode->comment = $comment;
+		if ($barcode == '1') {
+
+			try {
+				$barcode = new BarcodeRequest;
+
+				$barcode->po_id = $poid;
+				$barcode->user_id = $userId;
+				$barcode->ponum = $ponum;
+				$barcode->size = $size;
+				$barcode->qty = $qty;
+				$barcode->module = $module;
+				$barcode->leader = $leader;
+				$barcode->status = $status;
+				$barcode->type;
+				$barcode->comment = $comment;
 			
-			$barcode->save();
+				$barcode->save();
+			}
+			catch (\Illuminate\Database\QueryException $e) {
+				$msg = "Problem to save in barcode request table";
+				return view('Request.error',compact('msg'));			
+			}
+		//return view('Request.success');
+		$msg = '<p style="color:green;">Barcode request successfully saved</p>';
 		}
-		catch (\Illuminate\Database\QueryException $e) {
-			$msg = "Problem to save in database";
-			return view('Request.error',compact('msg'));			
-		}
-		
-		return view('Request.success');
 
+		if ($carelabel == '1') {
+			
+			try {
+				$carelabel = new CarelabelRequest;
+
+				$carelabel->po_id = $poid;
+				$carelabel->user_id = $userId;
+				$carelabel->ponum = $ponum;
+				$carelabel->size = $size;
+				$carelabel->qty = $qty;
+				$carelabel->module = $module;
+				$carelabel->leader = $leader;
+				$carelabel->status = $status;
+				$carelabel->type;
+				$carelabel->comment = $comment;
+			
+				$carelabel->save();
+			}
+			catch (\Illuminate\Database\QueryException $e) {
+				$msg = "Problem to save in carelabel request table";
+				return view('Request.error',compact('msg'));			
+			}
+		//return view('Request.success');
+		
+		$msg = $msg. '<p style="color:green;">Carelabel request successfully saved</p>';
+		}
+
+		if ($msg == "") {
+			$msg = '<p style="color:red;"><big>BARCODE AND CARELABEL NOT SELECTED !!!</big></p>';
+		}
+
+		return view('Request.success', compact('msg'));
 	}
 
 	/**

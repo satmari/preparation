@@ -72,6 +72,17 @@ class importController extends Controller {
 						$color = substr($product, 9, 4);
 
 						$po_key = $po ."-".$size;
+						$brand = substr($order_code, 2, 1);
+
+						if ($brand == "T") {
+							$brand	= "TEZENIS";
+						} elseif ($brand == "I") {
+							$brand	= "INTIMISSIMI";
+						} elseif ($brand == "C") {
+							$brand	= "CALZEDONIA";
+						} else {
+							$brand = "";
+						}
 
 						if ($flash == 'F') {
 							$flash = True;
@@ -97,7 +108,7 @@ class importController extends Controller {
 						$porder->total_order_qty = $qty;
 						$porder->flash = $flash;
 						$porder->closed_po = $closed;
-						$porder->brand;
+						$porder->brand = $brand;
 						$porder->status;
 						$porder->type;
 						$porder->comment;

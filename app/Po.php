@@ -20,4 +20,16 @@ class Po extends Model {
         return $this->hasMany('App\BarcodeRequests');
     }
 
+    public function carelabel_stocks()
+    {
+        //return $this->hasMany('App\CarelabelStock','po_id');
+        return $this->hasMany('App\CarelabelStock');
+    }
+
+    public function carelabel_requests()
+    {
+        //return $this->hasMany('App\CarelabelRequests','po_id');
+        return $this->hasMany('App\CarelabelRequests');
+    }
+
 }
