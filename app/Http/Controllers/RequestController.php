@@ -88,7 +88,7 @@ class RequestController extends Controller {
 		$validator = Validator::make($request2->all(), [
             'po' => 'required|min:5|max:5',
             'size' => 'required|min:1|max:2',
-            'qty' => 'required',
+            //'qty' => 'required',
             'leader' => 'required'
         ]);
 		if ($validator->fails()) {
@@ -102,7 +102,7 @@ class RequestController extends Controller {
 
 		$ponum = $forminput['po'];
 		$size = $forminput['size'];
-		$qty = $forminput['qty'];
+		//$qty = $forminput['qty'];
 		//$module = $forminput['module'];
 		$leader = $forminput['leader'];
 		$comment = $forminput['comment'];
@@ -160,7 +160,7 @@ class RequestController extends Controller {
 				$barcode->user_id = $userId;
 				$barcode->ponum = $ponum;
 				$barcode->size = $size;
-				$barcode->qty = $qty;
+				$barcode->qty ;		//= $qty;
 				$barcode->module = $module;
 				$barcode->leader = $leader;
 				$barcode->status = $status;
@@ -186,7 +186,7 @@ class RequestController extends Controller {
 				$carelabel->user_id = $userId;
 				$carelabel->ponum = $ponum;
 				$carelabel->size = $size;
-				$carelabel->qty = $qty;
+				$carelabel->qty ;	//= $qty;
 				$carelabel->module = $module;
 				$carelabel->leader = $leader;
 				$carelabel->status = $status;

@@ -23,10 +23,12 @@
 					<p>Size/Velicina: </p>
 					{!! Form::select('size', array(''=>'','S'=>'S','M'=>'M','L'=>'L','XL'=>'XL','XXL'=>'XXL'), '', array('class' => 'form-control')) !!} 
 				</div>
+				{{--
 				<div class="panel-body">
 					<p>Qty/Kolicina: </p>
 					{!! Form::number('qty', null, ['class' => 'form-control']) !!}
 				</div>
+				--}}
 				{{--
 				<div class="panel-body">
 					<p>Module: </p>

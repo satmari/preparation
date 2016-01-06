@@ -13,6 +13,7 @@
 	<link href="{{ asset('/css/app.css') }}" rel='stylesheet' type='text/css'>
 	<link href="{{ asset('/css/font.css') }}" rel='stylesheet' type='text/css'>
 	<link href="{{ asset('/css/bootstrap.min.css') }}" rel='stylesheet' type='text/css'>
+	<link href="{{ asset('/css/bootstrap-table.css') }}" rel='stylesheet' type='text/css'>
 	<link href="{{ asset('/css/jquery.dataTables.min.css') }}" rel='stylesheet' type='text/css'>
 	<link href="{{ asset('/css/jquery-ui.min.css') }}" rel='stylesheet' type='text/css'>
 	<link href="{{ asset('/css/custom.css') }}" rel='stylesheet' type='text/css'>
@@ -40,7 +41,10 @@
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				
 				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/datatables') }}">Main Table</a></li>
+					<li><a href="{{ url('/maintable') }}">Main Table</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/main') }}">Po Table</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/barcodestock') }}">Barcode Stock</a></li>
@@ -95,9 +99,16 @@
 
     <script src="{{ asset('/js/jquery.min.js') }}" type="text/javascript" ></script>
     <script src="{{ asset('/js/bootstrap.min.js') }}" type="text/javascript" ></script>
+    <script src="{{ asset('/js/bootstrap-table.js') }}" type="text/javascript" ></script>
 	<script src="{{ asset('/js/jquery-ui.min.js') }}" type="text/javascript" ></script>
 	<script src="{{ asset('/js/jquery.dataTables.min.js') }}" type="text/javascript" ></script>
+	<!--<script src="{{ asset('/js/jquery.tablesorter.min.js') }}" type="text/javascript" ></script>-->
 	<!--<script src="{{ asset('/js/custom.js') }}" type="text/javascript" ></script>-->
+	<script src="{{ asset('/js/tableExport.js') }}" type="text/javascript" ></script>
+	<script src="{{ asset('/js/jspdf.plugin.autotable.js') }}" type="text/javascript" ></script>
+	<script src="{{ asset('/js/jspdf.min.js') }}" type="text/javascript" ></script>
+	<script src="{{ asset('/js/FileSaver.min.js') }}" type="text/javascript" ></script>
+	<script src="{{ asset('/js/bootstrap-table-export.js') }}" type="text/javascript" ></script>
     
 <script type="text/javascript">
 $(function() {
@@ -106,10 +117,10 @@ $(function() {
     	serverSide: false,
     	ajax: "{!! route('datatables.data') !!}",
     	columns: [
-    		// {data: 'id'},
+    		{ data: 'id', name: 'id'},
     	    // { data: 'po_key'},
     	    // { data: 'order_code'},
-    	    { data: 'po', name: 'po'},
+    	    //{ data: 'po', name: 'po'},
     	    { data: 'size', name: 'size'},
     	    { data: 'style', name: 'style'},
     	    { data: 'color', name: 'color', orderable: false},
@@ -198,7 +209,41 @@ $(function() {
 		autoFocus: true,
 		source: '{{ URL('getmoduledata')}}'
 	});
-	
+	$('#filter').keyup(function () {
+
+        var rex = new RegExp($(this).val(), 'i');
+        $('.searchable tr').hide();
+        $('.searchable tr').filter(function () {
+            return rex.test($(this).text());
+        }).show();
+	});
+
+	//$(".sort").tablesorter(
+	//{
+		//theme : 'blue',
+	 	//sortList : [[1,0],[2,0],[3,0]],
+	    // header layout template; {icon} needed for some themes
+	    //headerTemplate : '{content}{icon}',
+	 
+		// initialize column styling of the table
+	    //widgets : ["columns"],
+		//widgetOptions : {
+	      // change the default column class names
+	      // primary is the first column sorted, secondary is the second, etc
+	      //columns : [ "primary", "secondary", "tertiary" ]
+		//}
+	//});
+
+	$('#sort').bootstrapTable({
+    
+	});
+	// function starsSorter(a, b) {
+	//     if (a < b) return 1;
+	//     if (a > b) return -1;
+	//     return 0;
+	// }
+
+
 });
 </script>
 

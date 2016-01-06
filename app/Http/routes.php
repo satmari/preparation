@@ -22,11 +22,21 @@ Route::controllers([
 
 Route::get('/maintable', 'maintableController@index');
 
+Route::get('/main', 'mainController@index');
+Route::get('/main/edit/{id}', 'mainController@edit');
+Route::patch('/main/{id}', 'mainController@update');
+
 // Log table
 Route::get('/barcodestocktable', 'barcodestocktableController@index');
 Route::get('/carelabelstocktable', 'carelabelstocktableController@index');
+
 Route::get('/barcoderequesttable', 'barcoderequesttableController@index');
+Route::get('/barcoderequesttable/edit/{id}', 'barcoderequesttableController@edit');
+Route::patch('/barcoderequesttable/{id}', 'barcoderequesttableController@update');
+
 Route::get('/carelabelrequesttable', 'carelabelrequesttableController@index');
+Route::get('/carelabelrequesttable/edit/{id}', 'carelabelrequesttableController@edit');
+Route::patch('/carelabelrequesttable/{id}', 'carelabelrequesttableController@update');
 
 // BarcodeStock
 Route::get('/barcodestock', 'BarcodeStockController@index');

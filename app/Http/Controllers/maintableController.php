@@ -4,11 +4,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use Gbrock\Table\Facades\Table;
 
 use App\User;
-use App\Po;
-use App\BarcodeStock;
 use DB;
 
 use Bican\Roles\Models\Role;
@@ -24,33 +21,37 @@ class maintableController extends Controller {
 	 */
 	public function index()
 	{
-		//$table;
-		//$user = User::find(Auth::id());
-		//if ($user->level() == 1) {
-			$pos = Po::all(); 
-			//po = Po::find(35); 
-			//$rows = MainModel::sorted()->get(); 
- 			$table = Table::create($pos); // Generate a Table based on these "rows"
- 			//$barcode = BarcodeStock::all();
- 			//$test = $comment->$rows;
- 			$potest = Po::find(1)->barcode_stocks;
- 			//$test = $rowss;
- 			//$comments = Post::find(1)->comments;
+		
+		$postable = DB::connection('sqlsrv')->select(DB::raw("SELECT  pos.id,
+		pos.po,
+		pos.size,
+		pos.style,
+		pos.color,
+		pos.color_desc,
+		pos.season,
+		pos.total_order_qty,
+		(SELECT SUM(barcode_stocks.qty)  FROM barcode_stocks WHERE barcode_stocks.po_id = pos.id ) stock_b,
+		(SELECT SUM(barcode_requests.qty)  FROM barcode_requests WHERE barcode_requests.po_id = pos.id ) request_b,
+		(SELECT SUM(carelabel_stocks.qty)  FROM carelabel_stocks WHERE carelabel_stocks.po_id = pos.id ) stock_c,
+		(SELECT SUM(carelabel_requests.qty)  FROM carelabel_requests WHERE carelabel_requests.po_id = pos.id ) request_c
+		FROM pos
+		LEFT JOIN barcode_stocks ON barcode_stocks.po_id = pos.id
+		LEFT JOIN barcode_requests ON barcode_requests.po_id = pos.id
+		LEFT JOIN carelabel_stocks ON carelabel_stocks.po_id = pos.id
+		LEFT JOIN carelabel_requests ON carelabel_requests.po_id = pos.id
+		GROUP BY	pos.id,
+					pos.po,
+					pos.size,
+					pos.style,
+					pos.color,
+					pos.color_desc,
+					pos.season,
+					pos.total_order_qty"
+		));
 
- 			$test=0;
- 			foreach (Po::find(1)->barcode_stocks as $line) {
- 				$test = $test + $line->qty;
- 			}
+		//dd($postable);
 
- 			$sum = Po::find(1)->barcode_stocks->sum('qty');
-
- 			$bartest = BarcodeStock::find(1)->user->name;
- 			$bartest1 = BarcodeStock::find(1)->po->order_code;
-
-
-
-  		//}
- 		return view('maintable.index', compact('table','potest','test','sum','bartest','bartest1'));
+		return view('maintable.index',compact('postable'));
 	}
 
 	/**
