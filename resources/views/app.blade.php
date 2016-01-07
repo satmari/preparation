@@ -14,7 +14,7 @@
 	<link href="{{ asset('/css/font.css') }}" rel='stylesheet' type='text/css'>
 	<link href="{{ asset('/css/bootstrap.min.css') }}" rel='stylesheet' type='text/css'>
 	<link href="{{ asset('/css/bootstrap-table.css') }}" rel='stylesheet' type='text/css'>
-	<link href="{{ asset('/css/jquery.dataTables.min.css') }}" rel='stylesheet' type='text/css'>
+	<!-- <link href="{{ asset('/css/jquery.dataTables.min.css') }}" rel='stylesheet' type='text/css'> -->
 	<link href="{{ asset('/css/jquery-ui.min.css') }}" rel='stylesheet' type='text/css'>
 	<link href="{{ asset('/css/custom.css') }}" rel='stylesheet' type='text/css'>
 		
@@ -70,9 +70,9 @@
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/import') }}">Import PO</a></li>
 				</ul>
-				<ul class="nav navbar-nav">
+				<!-- <ul class="nav navbar-nav">
 					<li><a href="{{ url('/importmodules') }}">Import Modules form Inteos</a></li>
-				</ul>
+				</ul> -->
 				
 				
 
@@ -101,7 +101,7 @@
     <script src="{{ asset('/js/bootstrap.min.js') }}" type="text/javascript" ></script>
     <script src="{{ asset('/js/bootstrap-table.js') }}" type="text/javascript" ></script>
 	<script src="{{ asset('/js/jquery-ui.min.js') }}" type="text/javascript" ></script>
-	<script src="{{ asset('/js/jquery.dataTables.min.js') }}" type="text/javascript" ></script>
+	<!-- <script src="{{ asset('/js/jquery.dataTables.min.js') }}" type="text/javascript" ></script>-->
 	<!--<script src="{{ asset('/js/jquery.tablesorter.min.js') }}" type="text/javascript" ></script>-->
 	<!--<script src="{{ asset('/js/custom.js') }}" type="text/javascript" ></script>-->
 	<script src="{{ asset('/js/tableExport.js') }}" type="text/javascript" ></script>
@@ -112,93 +112,7 @@
     
 <script type="text/javascript">
 $(function() {
-    $('#users-table').dataTable({
-    	processing: true,
-    	serverSide: false,
-    	ajax: "{!! route('datatables.data') !!}",
-    	columns: [
-    		{ data: 'id', name: 'id'},
-    	    // { data: 'po_key'},
-    	    // { data: 'order_code'},
-    	    //{ data: 'po', name: 'po'},
-    	    { data: 'size', name: 'size'},
-    	    { data: 'style', name: 'style'},
-    	    { data: 'color', name: 'color', orderable: false},
-    	    { data: 'color_desc', name: 'color_desc', orderable: false},
-    	    { data: 'season', name: 'season'},
-    	    { data: 'total_order_qty', name: 'total_order_qty', searchable: false},
-    	    
-    	    { data: 'stock_b_qty', name: 'stock_b_qty', searchable: false},
-    	    { data: 'b_stock', name: 'b_stock', searchable: false},
-
-    	    { data: 'b_request', name: 'b_request', searchable: false},
-			{ data: 'request_b_qty', name: 'request_b_qty', searchable: false},
-
-			{ data: 'stock_c_qty', name: 'stock_c_qty', searchable: false},
-    	    { data: 'c_stock', name: 'c_stock', searchable: false},
-
-    	    { data: 'c_request', name: 'c_request', searchable: false},
-			{ data: 'request_c_qty', name: 'request_c_qty', searchable: false},
-
-    	    //{ data: 'updated_at', name: 'updated_at'},
-
-    	    //{ data: 'flash', name: 'flash', searchable: false},
-    	    //{ data: 'closed_po', name: 'closed_po', searchable: false},
-    	    //{ data: 'brand', name: 'brand', searchable: false},
-    	    //{ data: 'status', name: 'status', searchable: false},
-    	    //{ data: 'type', name: 'type', searchable: false},
-    	    //{ data: 'comment', name: 'comment', searchable: false},
-  
-    	],
-    	aLengthMenu: [
-        	[25, 50, 100, 200, -1],
-            [25, 50, 100, 200, "All"]
-    	],
-    	//iDisplayLength: 50,
-    	iDisplayLength: -1,
-		scrollY:        '380px',
-   		scrollCollapse: true,
-   		paging:         false,
-
-       	createdRow: function( row, data, dataIndex ) {
-           	//if ( data['total_order_qty'] < 1000 ) {
-           	if ( data['b_request'] == 0 ) {
-       	    	$('td', row).eq(9).addClass('highlightred');
-           		//$(row).addClass( 'important2' );
-       		}
-       		if ( data['b_request'] > 100 ) {
-       	    	$('td', row).eq(9).addClass('highlightgreen');
-           		//$(row).addClass( 'important2' );
-       		}
-       		if (data['size'] == "S" ) {
-    			$(row).addClass('important');
-    		}
-    	},
-    	/*columnDefs: [{
-            "targets": [ 11 ],
-            "visible": false,
-            "searchable": false
-        }],*/
-        /*
-        "columnDefs": [{
-            "visible": false,
-            //"targets": -1
-        }],
-		*/
-   		/*initComplete: function () {
-      		this.api().columns().every(function () {
-              	var column = this;
-               	var input = document.createElement("input");
-               		$(input).appendTo($(column.footer()).empty())
-               			.on('change', function () {
-                   			column.search($(this).val(), false, false, true).draw();
-               		});
-           		});
-    	},*/
-    
-   	});
-	$('input:text').bind ({
-	});
+    	
 	$('#po').autocomplete({
 		minLength: 3,
 		autoFocus: true,
@@ -217,22 +131,6 @@ $(function() {
             return rex.test($(this).text());
         }).show();
 	});
-
-	//$(".sort").tablesorter(
-	//{
-		//theme : 'blue',
-	 	//sortList : [[1,0],[2,0],[3,0]],
-	    // header layout template; {icon} needed for some themes
-	    //headerTemplate : '{content}{icon}',
-	 
-		// initialize column styling of the table
-	    //widgets : ["columns"],
-		//widgetOptions : {
-	      // change the default column class names
-	      // primary is the first column sorted, secondary is the second, etc
-	      //columns : [ "primary", "secondary", "tertiary" ]
-		//}
-	//});
 
 	$('#sort').bootstrapTable({
     

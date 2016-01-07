@@ -9,9 +9,8 @@
 		"laravelcollective/html": "~5.0",
 		"illuminate/html": "^5.0",
 		"bican/roles": "1.7.*",
-		"maatwebsite/excel": "~2.0",
-		"gbrock/laravel-table": "dev-master",
-		"yajra/laravel-datatables-oracle": "^5.12"
+		"maatwebsite/excel": "~2.0.0",
+		"gbrock/laravel-table": "dev-master"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",

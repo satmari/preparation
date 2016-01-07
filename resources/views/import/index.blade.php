@@ -14,7 +14,19 @@
 						{!! Form::file('file', ['class' => 'center-block']) !!}
 					</div>
 					<div class="panel-body">
-						{!! Form::submit('Import', ['class' => 'btn btn-warning center-block']) !!}
+						{!! Form::submit('Import Po', ['class' => 'btn btn-warning center-block']) !!}
+					</div>
+					@include('errors.list')
+				{!! Form::close() !!}
+
+				<hr>
+
+				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportUser']]) !!}
+					<div class="panel-body">
+						{!! Form::file('file2', ['class' => 'center-block']) !!}
+					</div>
+					<div class="panel-body">
+						{!! Form::submit('Import User', ['class' => 'btn btn-warning center-block']) !!}
 					</div>
 					@include('errors.list')
 				{!! Form::close() !!}

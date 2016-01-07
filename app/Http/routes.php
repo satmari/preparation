@@ -67,16 +67,12 @@ Route::post('/requeststore', 'RequestController@store');
 Route::get('/import', 'importController@index');
 Route::get('/importresult', 'importController@show');
 Route::post('/import', 'importController@postImportPo');
+Route::post('/import2', 'importController@postImportUser');
 
  // Import Modules
 Route::get('/importmodules', 'importModulesController@index');
 Route::post('/importmodulesimport', 'importModulesController@create');
 
-// Datatables
-Route::controller('datatables', 'DatatablesController', [
-    'anyData'  => 'datatables.data',
-    'getIndex' => 'datatables',
-]);
 
 Route::any('getpodata', function() {
 	$term = Input::get('term');

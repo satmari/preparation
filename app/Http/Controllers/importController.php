@@ -1,13 +1,15 @@
-<?php namespace App\Http\Controllers;
+<?php 
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
-
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Redirect;
 
 use Maatwebsite\Excel\Facades\Excel;
 
 use Request;
 use App\Po;
+use App\User;
 use DB;
 
 class importController extends Controller {
@@ -116,64 +118,67 @@ class importController extends Controller {
 						$porder->save();
 
 	                }
-	                
-	                //po_key	po	order_code	size	style	color	color_desc	season	total_order_qty	flash	closed_po	status	comment
-
-
-				    // Loop through all sheets
-					// $reader->each(function($sheet) {
-					
-					//     // Loop through all rows
-					//     $sheet->each(function($rows) {
-
-					//     	// Loop through all cells
-					// 		//$rows->each(function($row) {
-
-					// 			$order_code = $rows['order_code'];
-					// 			$po = substr($order_code, 4,5);
-					// 			//$rest = substr("abcdef", -3, 1); // returns "d" 16IC5800050656::00102::M
-
-
-								
-					// 			$porder = new PoModel;
-					// 			$porder->po_key = $po;
-					// 			$porder->order_code = $order_code;
-					// 			$porder->save();
-
-					// 		//});
-					//     });
-					// });
-
-				    //$reader->get(array('po_key', 'po'));
-					
-
 	            });
-
-	         
-	
-	            //DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-	            //var_dump('product general done');
-	        //}
-	
-	        // if ($sheetName === 'Product-Meta-Table')  {
-	        //     // dd('loading meta');
-	        //     DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-	        //     DB::table('product_metas')->truncate();
-	        //     Excel::selectSheets($sheetName)->load($request->file('productsFile'), function ($reader)
-	        //     {    
-	        //         foreach($reader->toArray() as $sheet)
-	        //         {
-	        //             ProductMeta::create($sheet);
-	        //         }
-	        //     });
-	        //     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-	        //     //var_dump('product meta done');
-	        // }
+	       
 	    }
 		
 	    //Session::flash('file_uploaded_successfully', 'File has been uploaded successfully and has also updated the database.');
-	    return redirect('/datatables');
+	    return redirect('/');
 	    //return view('import.importresult', compact('reader'));
+
+	}
+
+	public function postImportUser(Request $request)
+	{
+	 
+	    $getSheetName = Excel::load(Request::file('file2'))->getSheetNames();
+	    
+	    foreach($getSheetName as $sheetName)
+	    {
+	        //if ($sheetName === 'Product-General-Table')  {
+	    	//selectSheetsByIndex(0)
+	           	//DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+	            //DB::table('users')->truncate();
+	
+	            //Excel::selectSheets($sheetName)->load($request->file('file'), function ($reader)
+	            //Excel::selectSheets($sheetName)->load(Input::file('file'), function ($reader)
+	            //Excel::filter('chunk')->selectSheetsByIndex(0)->load(Request::file('file'))->chunk(50, function ($reader)
+	            Excel::filter('chunk')->selectSheets($sheetName)->load(Request::file('file2'))->chunk(50, function ($reader)
+	            
+	            {
+	                foreach($reader->toArray() as $sheet)
+	                {
+	                    //MainModel::create($sheet);
+	                    //$sheet->dump();
+
+	                }
+
+	                $readerarray = $reader->toArray();
+	                //var_dump($readerarray);
+
+	                foreach($readerarray as $row)
+	                {
+
+	                	
+
+
+	                	
+
+						$userbulk = new User;
+
+						$userbulk->name = $row['user'];;
+						$userbulk->email = $row['email'];
+						$userbulk->password = bcrypt($row['pass']);
+						//$userbulk->created_at = date(2015-12-22);
+						//$userbulk->updated_at = date(2015-12-22);
+												
+						$userbulk->save();
+
+	                }
+	            });
+
+	    }
+		return redirect('/');
 
 	}
 
@@ -250,5 +255,3 @@ class importController extends Controller {
 	}
 
 }
-
-

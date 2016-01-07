@@ -155,7 +155,7 @@ return [
 		'Bican\Roles\RolesServiceProvider',	
 		'Maatwebsite\Excel\ExcelServiceProvider',
 		'Gbrock\Table\Providers\TableServiceProvider',
-		'yajra\Datatables\DatatablesServiceProvider',
+		// 'yajra\Datatables\DatatablesServiceProvider',
 
 
 	],
@@ -212,7 +212,7 @@ return [
 		'Form' 		=> 'Collective\Html\FormFacade',
       	'Html' 		=> 'Collective\Html\HtmlFacade',
       	
-      	'Datatables' => 'yajra\Datatables\Datatables',
+      	// 'Datatables' => 'yajra\Datatables\Datatables',
 	],
 
 ];
