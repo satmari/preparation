@@ -7,9 +7,7 @@
 			<div class="panel panel-default">
 				{{--<div class="panel-heading">Create new Request<span class="pull-right">Majstorica: <b>{{$leader->leader}}</b></span></div>--}}
 				<div class="panel-heading">Create new Request - Preparation</div>
-				{{--<div class="panel-heading"><span>Majstorica: <b>Preparation</b></span></div>--}}
-
-				
+				{{--<div class="panel-heading"><span>Majstorica: <b>Preparation</b></span></div>--}}	
 
 				{!! Form::open(['method'=>'GET', 'url'=>'/requeststorep']) !!}
 

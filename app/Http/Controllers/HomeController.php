@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Bican\Roles\Models\Role;
 use Bican\Roles\Models\Permission;
+use Illuminate\Support\Facades\Redirect;
 use Auth;
 
 class HomeController extends Controller {
@@ -38,13 +39,13 @@ class HomeController extends Controller {
 	{
 		
 		// Roles
-		//admin
-		//preparacija
-		//pogon
-		//modul
+
+		//admin 1
+		//preparacija 2
+		//pogon 3 
+		//modul 4
 
 		$msg = '';
-
 		$user = User::find(Auth::id());
 
 		// if ($user->is('admin')) { // you can pass an id or slug
@@ -55,16 +56,22 @@ class HomeController extends Controller {
 		// if ($user->isAdmin()) {
 		//     $msg = $msg + " admin";
 		// }
-		if ($user->is('admin|pogon')) { 
-		    /*
-		    | Or alternatively:
-		    | $user->is('admin, moderator'), $user->is(['admin', 'moderator']),
-		    | $user->isOne('admin|moderator'), $user->isOne('admin, moderator'), $user->isOne(['admin', 'moderator'])
-		    */
-		
+
+		if ($user->is('admin')) { 
 		    // if user has at least one role
-		    $msg = "admin or pogon";
+		    $msg = "Hi admin";
 		}
+		if ($user->is('preparacija')) { 
+		    // if user has at least one role
+		    $msg = "Pa gde ste preparacija?";
+		    //return redirect('/maintable');
+		}
+		if ($user->is('modul')) { 
+		    // if user has at least one role
+		    $msg = "Hi modul";
+		    return redirect('/request');
+		}
+
 		// if ($user->is('admin|moderator', true)) {
 		//     /*
 		//     | Or alternatively:
@@ -97,6 +104,11 @@ class HomeController extends Controller {
 
 		return view('home', compact('msg'));
 		
+	}
+
+	public function log()
+	{
+		return view('log');
 	}
 
 }

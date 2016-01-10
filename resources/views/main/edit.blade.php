@@ -11,6 +11,7 @@
 
 				{!! Form::model($po , ['method' => 'PATCH', 'url' => 'main/'.$po->id /*, 'class' => 'form-inline'*/]) !!}
 
+				@if(Auth::check() && Auth::user()->level() == 1)
 				<div class="panel-body">
 					<span>Po Id:</span>
 					{!! Form::input('number', 'id', null, ['class' => 'form-control']) !!}
@@ -47,10 +48,16 @@
 					<span>Flash:</span>
 					{!! Form::input('boolean', 'flash', null, ['class' => 'form-control']) !!}
 				</div>
+				@endif
 				<div class="panel-body">
 					<span>Closed Po:</span>
 					{!! Form::input('boolean', 'closed_po', null, ['class' => 'form-control']) !!}
+					{{-- {!! Form::select('closed_po', array(0=>'Open',1=>'Closed'), 'closed_po', array('class' => 'form-control')) !!}  --}}
+					<div class="alert alert-info">
+  							0 ---> Open   ;  1 ---> Closed
+					</div>
 				</div>
+				@if(Auth::check() && Auth::user()->level() == 1)
 				<div class="panel-body">
 					<span>Brand:</span>
 					{!! Form::input('string', 'brand', null, ['class' => 'form-control']) !!}
@@ -63,6 +70,7 @@
 					<span>Type:</span>
 					{!! Form::input('string', 'type', null, ['class' => 'form-control']) !!}
 				</div>
+				@endif
 				<div class="panel-body">
 					<span>Comment:</span>
 					{!! Form::input('text', 'comment', null, ['class' => 'form-control']) !!}

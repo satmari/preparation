@@ -9,8 +9,6 @@
 				<div class="panel-heading">Create new Request</div>
 				<div class="panel-heading"><span>Majstorica: <b>{{$leader}}</b></span></div>
 
-				
-
 				{!! Form::open(['method'=>'GET', 'url'=>'/requeststore']) !!}
 
 				{!! Form::hidden('leader', $leader, ['class' => 'form-control']) !!}

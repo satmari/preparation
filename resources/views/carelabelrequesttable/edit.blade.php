@@ -65,6 +65,7 @@
 					{!! Form::input('date', 'updated_at', null, ['class' => 'form-control']) !!}
 				</div>
 				
+
 				<div class="panel-body">
 					{!! Form::submit('Edit Request', ['class' => 'btn btn-warning center-block']) !!}
 				</div>

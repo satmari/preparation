@@ -8,8 +8,8 @@
 				<div class="panel-heading h-b">Edit Barcode Request: Id:<b>{{$request_b->id}}</b> Po:<b>{{$request_b->ponum}}</b> Size:<b>{{$request_b->size}}</b> Module:<b>{{$request_b->module}}</b></div>
 				<br>
 				
-
 				{!! Form::model($request_b , ['method' => 'PATCH', 'url' => 'barcoderequesttable/'.$request_b->id /*, 'class' => 'form-inline'*/]) !!}
+
 
 				<div class="panel-body">
 					<span>Id:</span>
@@ -64,6 +64,7 @@
 					<span>updated_at:</span>
 					{!! Form::input('date', 'updated_at', null, ['class' => 'form-control']) !!}
 				</div>
+				
 				
 				<div class="panel-body">
 					{!! Form::submit('Edit Request', ['class' => 'btn btn-warning center-block']) !!}

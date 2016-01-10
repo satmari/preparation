@@ -17,6 +17,7 @@ Route::get('/addmodule', 'addRollController@addmodule');
 
 Route::get('/', 'HomeController@index');
 Route::get('home', 'HomeController@index');
+Route::get('log', 'HomeController@log');
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',
@@ -35,11 +36,17 @@ Route::get('/carelabelstocktable', 'carelabelstocktableController@index');
 
 Route::get('/barcoderequesttable', 'barcoderequesttableController@index');
 Route::get('/barcoderequesttable/edit/{id}', 'barcoderequesttableController@edit');
+Route::get('/barcoderequesttablep/edit/{id}', 'barcoderequesttableController@editp');
 Route::patch('/barcoderequesttable/{id}', 'barcoderequesttableController@update');
+Route::patch('/barcoderequesttablep/{id}', 'barcoderequesttableController@updatep');
+Route::get('/barcoderequesttablelog', 'barcoderequesttableController@log');
+Route::get('/barcoderequesttablelogmodule', 'barcoderequesttableController@logmodule');
 
 Route::get('/carelabelrequesttable', 'carelabelrequesttableController@index');
 Route::get('/carelabelrequesttable/edit/{id}', 'carelabelrequesttableController@edit');
 Route::patch('/carelabelrequesttable/{id}', 'carelabelrequesttableController@update');
+Route::get('/carelabelrequesttablelog', 'carelabelrequesttableController@log');
+Route::get('/carelabelrequesttablelogmodule', 'carelabelrequesttableController@logmodule');
 
 // BarcodeStock
 Route::get('/barcodestock', 'BarcodeStockController@index');

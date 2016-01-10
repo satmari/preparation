@@ -40,6 +40,8 @@
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				
+				@if(Auth::check() && Auth::user()->level() <= 3)
+								
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/maintable') }}">Main Table</a></li>
 				</ul>
@@ -50,16 +52,7 @@
 					<li><a href="{{ url('/barcodestock') }}">Barcode Stock</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/barcodestocktable') }}">Barcode Stock Log</a></li>
-				</ul>
-				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/carelabelstock') }}">Carelabel Stock</a></li>
-				</ul>
-				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/carelabelstocktable') }}">Carelabel Stock Log</a></li>
-				</ul>
-				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/request') }}">Request from Modul</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/barcoderequesttable') }}">Barcode Requests</a></li>
@@ -67,13 +60,38 @@
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/carelabelrequesttable') }}">Carelabel Requests</a></li>
 				</ul>
+				
+				@if(Auth::check() && Auth::user()->level() <= 3)
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/requestp') }}">Request from Modul by mail</a></li>
+				</ul>
+				@endif
+				@if(Auth::check() && Auth::user()->level() <= 1)
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/request') }}">Request from Modul</a></li>
+				</ul>
+				@endif
+				@if(Auth::check() && Auth::user()->level() <= 3)
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/log') }}">Log</a></li>
+				</ul>
+				@endif
+				@if(Auth::check() && Auth::user()->level() <= 1)
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/import') }}">Import</a></li>
 				</ul>
-				<!-- <ul class="nav navbar-nav">
-					<li><a href="{{ url('/importmodules') }}">Import Modules form Inteos</a></li>
-				</ul> -->
-				
+				@endif
+
+				@endif
+
+				@if(Auth::check() && Auth::user()->level() == 4)
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/barcoderequesttablelogmodule') }}">Barcode request history</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/carelabelrequesttablelogmodule') }}">Carelabel request history</a></li>
+				</ul>
+				@endif
 				
 
 				<ul class="nav navbar-nav navbar-right">

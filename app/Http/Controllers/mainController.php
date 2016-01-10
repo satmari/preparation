@@ -78,6 +78,9 @@ class mainController extends Controller {
 	}
 	public function update($id, Request $request) {
 
+		// $input = $request->all(); 
+		// dd($input);
+		
 		$po = Po::findOrFail($id);		
 		$po->update($request->all());
 

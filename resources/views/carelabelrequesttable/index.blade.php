@@ -76,7 +76,15 @@
                             <td>{{ $req->comment }}</td>
                             <td>{{ $req->created_at }}</td>
                             <td>{{ $req->updated_at }}</td>
+
+                            @if(Auth::check() && Auth::user()->level() == 1)
                             <td><a href="{{ url('/carelabelrequesttable/edit/'.$req->id) }}" class="btn btn-info btn-xs center-block">Edit</a></td>
+                            @endif
+
+                            @if(Auth::check() && Auth::user()->level() == 2)
+                            <td><a href="{{ url('/carelabelrequesttablep/edit/'.$req->id) }}" class="btn btn-info btn-xs center-block">Edit</a></td>
+                            @endif
+                            
 
                         </tr>
                     

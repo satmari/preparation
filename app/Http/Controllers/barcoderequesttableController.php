@@ -50,50 +50,32 @@ class barcoderequesttableController extends Controller {
 		return view('barcoderequesttable.index', compact('request_b'));
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
+	public function log()
 	{
-		//
+		$request_b = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM barcode_requests ORDER BY created_at desc"));
+ 		return view('barcoderequesttable.log', compact('request_b'));
+	}
+	public function logmodule()
+	{
+		$module = Auth::user()->name;
+		$request_b = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM barcode_requests
+															   WHERE module = '".$module."'
+															   ORDER BY created_at desc
+     														"));
+ 		return view('barcoderequesttable.log', compact('request_b'));
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
 	public function edit($id) {
 
 		$request_b = BarcodeRequest::findOrFail($id);		
-
 		return view('barcoderequesttable.edit', compact('request_b'));
-
 	}
+	public function editp($id) {
+
+		$request_b = BarcodeRequest::findOrFail($id);		
+		return view('barcoderequesttable.editp', compact('request_b'));
+	}
+	
 	public function update($id, Request $request) {
 
 		$request_b = BarcodeRequest::findOrFail($id);		
@@ -143,15 +125,52 @@ class barcoderequesttableController extends Controller {
 		return Redirect::to('/barcoderequesttable');
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
+	public function updatep($id, Request $request) {
+
+		$request_b = BarcodeRequest::findOrFail($id);		
+		//$request_b->update($request->all());
+
+		$input = $request->all(); 
+		//dd($input);
+
+		$request_b->id = $input['id'];
+		//$request_b->po_id = $input['po_id'];
+		//$request_b->user_id = $input['user_id'];
+		//$request_b->ponum = $input['ponum'];
+		//$request_b->size = $input['size'];
+		
+		$qty = $input['qty'];
+		$status = $input['status'];
+
+		if (($qty <= 0) OR ($qty == NULL)) {
+
+			if ($status == 'error'){
+				$request_b->qty = NULL;			
+				$request_b->status = 'error';	
+			} else {
+				$request_b->qty = NULL;			
+				$request_b->status = 'pending';	
+			}
+
+		} else if ($qty > 0) {				
+
+			if ($status == 'error'){
+				$request_b->qty = $qty;			
+				$request_b->status = 'error';	
+			} else {
+				$request_b->qty = $qty;			
+				$request_b->status = 'confirmed';	
+			}
+		}
+	
+		//$request_b->module = $input['module'];
+		//$request_b->leader = $input['leader'];
+		//$request_b->type = $input['type'];
+		$request_b->comment = $input['comment'];
+		$request_b->save();
+
+		//return view('main.index');
+		return Redirect::to('/barcoderequesttable');
 	}
 
 }
