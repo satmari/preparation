@@ -5,36 +5,75 @@ use App\User;
 use Bican\Roles\Models\Role;
 use Auth;
 
-class WelcomeController extends Controller {
+class addRollController extends Controller {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Welcome Controller
+	| addRoll Controller
 	|--------------------------------------------------------------------------
 	|
-	| This controller renders the "marketing page" for the application and
-	| is configured to only allow guests. Like most of the other sample
-	| controllers, you are free to modify or remove it as you desire.
+	| 
 	|
 	*/
 
-	/**
-	 * Create a new controller instance.
-	 *
-	 * @return void
-	 */
-	/*
-	public function __construct()
-	{
-		$this->middleware('guest');
+	public function addadmin()
+	{	
+		
+		$role = Role::where('level', 1)->first(); // when you want to find
+
+		//Admin 1
+		//Preparacija 2
+		//Pogon 3
+		//Modul 4
+
+		$id = Auth::id();
+		$user = User::find($id);
+
+		$user->detachAllRoles();
+		$user->attachRole($role); // you can pass whole object, or just an id
+
+		return view('addRoll.index');
 	}
-	*/
+	
+	public function addpreparation()
+	{	
+		
+		$role = Role::where('level', 2)->first(); // when you want to find
 
-	/**
-	 * Show the application welcome screen to the user.
-	 *
-	 * @return Response
-	 */
+		//Admin 1
+		//Preparacija 2
+		//Pogon 3
+		//Modul 4
+
+		$id = Auth::id();
+		$user = User::find($id);
+
+		$user->detachAllRoles();
+		$user->attachRole($role); // you can pass whole object, or just an id
+
+		return view('addRoll.index');
+	}
+	
+	public function addmodule()
+	{	
+		
+		$role = Role::where('level', 4)->first(); // when you want to find
+
+		//Admin 1
+		//Preparacija 2
+		//Pogon 3
+		//Modul 4
+
+		$id = Auth::id();
+		$user = User::find($id);
+		
+		$user->detachAllRoles();
+		$user->attachRole($role); // you can pass whole object, or just an id
+
+		return view('addRoll.index');
+	}
+
+
 	public function index()
 	{	
 		//add roles
@@ -90,7 +129,7 @@ class WelcomeController extends Controller {
 		//$user->detachAllRoles(); // in case you want to detach all roles
 
 
-		return view('welcome');
+		return view('addRoll.index');
 	}
 
 }

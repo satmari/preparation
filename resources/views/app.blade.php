@@ -62,13 +62,13 @@
 					<li><a href="{{ url('/request') }}">Request from Modul</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/barcoderequesttable') }}">Barcode Request Log</a></li>
+					<li><a href="{{ url('/barcoderequesttable') }}">Barcode Requests</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/carelabelrequesttable') }}">Carelabel Request Log</a></li>
+					<li><a href="{{ url('/carelabelrequesttable') }}">Carelabel Requests</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/import') }}">Import PO</a></li>
+					<li><a href="{{ url('/import') }}">Import</a></li>
 				</ul>
 				<!-- <ul class="nav navbar-nav">
 					<li><a href="{{ url('/importmodules') }}">Import Modules form Inteos</a></li>
@@ -105,8 +105,8 @@
 	<!--<script src="{{ asset('/js/jquery.tablesorter.min.js') }}" type="text/javascript" ></script>-->
 	<!--<script src="{{ asset('/js/custom.js') }}" type="text/javascript" ></script>-->
 	<script src="{{ asset('/js/tableExport.js') }}" type="text/javascript" ></script>
-	<script src="{{ asset('/js/jspdf.plugin.autotable.js') }}" type="text/javascript" ></script>
-	<script src="{{ asset('/js/jspdf.min.js') }}" type="text/javascript" ></script>
+	<!--<script src="{{ asset('/js/jspdf.plugin.autotable.js') }}" type="text/javascript" ></script>-->
+	<!--<script src="{{ asset('/js/jspdf.min.js') }}" type="text/javascript" ></script>-->
 	<script src="{{ asset('/js/FileSaver.min.js') }}" type="text/javascript" ></script>
 	<script src="{{ asset('/js/bootstrap-table-export.js') }}" type="text/javascript" ></script>
     

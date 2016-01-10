@@ -3,9 +3,9 @@
 @section('content')
 <div class="container-table">
 	<div class="row vertical-center-row">
-		<div class="text-center col-md-8 col-md-offset-2">
+		<div class="text-center col-md-6 col-md-offset-3">
 			<div class="panel panel-default">
-				<div class="panel-heading">Edit Po: {{$po->po}}</div>
+				<div class="panel-heading">Edit Po: <big><b>{{$po->po}}</b></big> Size: <big><b>{{$po->size}}</b></big></div>
 				<br>
 				
 

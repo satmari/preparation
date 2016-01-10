@@ -5,14 +5,14 @@
 	<div class="row vertical-center-row">
 		<div class="text-center col-md-4 col-md-offset-4">
 			<div class="panel panel-default">
-				<div class="panel-heading h-b">Barcode Stock</div>
+				<div class="panel-heading">Request from module - Preparation</div>
 				<h3 style="color:red;">Error!</h3>
 
 				<p style="color:red;">{{ $msg }}</p>
 
 				<div class="panel-body">
 					<div class="">
-						<a href="{{url('/barcodestock')}}" class="btn btn-default center-block">Back to Barcode stock</a>
+						<a href="{{url('/requestp')}}" class="btn btn-default center-block">Back</a>
 					</div>
 				</div>
 			</div>

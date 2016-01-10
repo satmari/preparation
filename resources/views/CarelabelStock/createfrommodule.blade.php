@@ -5,7 +5,7 @@
 	<div class="row vertical-center-row">
 		<div class="text-center col-md-4 col-md-offset-4">
 			<div class="panel panel-default">
-				<div class="panel-heading">Returned Carelabels from module add to Carelabel Stock</div>
+				<div class="panel-heading h-c">Returned Carelabels from module add to Carelabel Stock</div>
 
 				{!! Form::open(['method'=>'POST', 'url'=>'/carelabelstockstorefrommodule']) !!}
 

@@ -5,7 +5,7 @@
 	<div class="row vertical-center-row">
 		<div class="text-center col-md-4 col-md-offset-4">
 			<div class="panel panel-default">
-				<div class="panel-heading">Barcode Stock</div>
+				<div class="panel-heading h-b">Barcode Stock</div>
 				<h3 style="color:green;">Success</h3>
 
 				<p style="color:green;">Succesfuly added to Barcode stock</p>

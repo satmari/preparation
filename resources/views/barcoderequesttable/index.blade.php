@@ -5,7 +5,7 @@
     <div class="row vertical-center-row">
         <div class="text-center">
             <div class="panel panel-default">
-				<div class="panel-heading">Barcode Request Table</div>
+				<div class="panel-heading h-b">Barcode Request Table</div>
 				<br>
 				
 				{{-- @if(Auth::check() && Auth::user()->level() <= 2) --}}

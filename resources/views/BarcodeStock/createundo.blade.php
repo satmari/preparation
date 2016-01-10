@@ -4,8 +4,8 @@
 <div class="container container-table">
 	<div class="row vertical-center-row">
 		<div class="text-center col-md-4 col-md-offset-4">
-			<div class="panel panel-default">
-				<div class="panel-heading">Reduce Barcode from Stock</div>
+			<div class="panel panel-default" >
+				<div class="panel-heading h-b">Reduce Barcode from Stock</div>
 
 				{!! Form::open(['method'=>'POST', 'url'=>'/barcodestockstoreundo']) !!}
 
@@ -20,6 +20,9 @@
 				<div class="panel-body">
 					<p>Qty/Kolicina: </p>
 					{!! Form::number('qty', null, ['class' => 'form-control']) !!}
+					<div class="alert alert-success">
+  							Insert positive number and application will reduce form barcode stock.
+					</div>
 				</div>
 				<div class="panel-body">
 					<p>Comment: </p>

@@ -5,7 +5,7 @@
 	<div class="row vertical-center-row">
 		<div class="text-center col-md-4 col-md-offset-4">
 			<div class="panel panel-default">
-				<div class="panel-heading">Reduce Carelabel from Stock</div>
+				<div class="panel-heading h-c">Reduce Carelabel from Stock</div>
 
 				{!! Form::open(['method'=>'POST', 'url'=>'/carelabelstockstoreundo']) !!}
 
@@ -20,6 +20,9 @@
 				<div class="panel-body">
 					<p>Qty/Kolicina: </p>
 					{!! Form::number('qty', null, ['class' => 'form-control']) !!}
+					<div class="alert alert-info">
+  							Insert positive number and application will reduce form barcode stock.
+					</div>
 				</div>
 				<div class="panel-body">
 					<p>Comment: </p>

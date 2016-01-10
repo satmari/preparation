@@ -11,7 +11,10 @@
 |
 */
 
-Route::get('/add', 'WelcomeController@index');
+Route::get('/addadmin', 'addRollController@addadmin');
+Route::get('/addpreparation', 'addRollController@addpreparation');
+Route::get('/addmodule', 'addRollController@addmodule');
+
 Route::get('/', 'HomeController@index');
 Route::get('home', 'HomeController@index');
 
@@ -58,18 +61,22 @@ Route::post('/carelabelstockstoreundo', 'CarelabelStockController@storeundo');
 
 // Request
 Route::get('/request', 'RequestController@index');
+Route::get('/requestp', 'RequestController@createp');
 Route::get('/requestcreate', 'RequestController@create');
 Route::get('/requeststore', 'RequestController@store');
+Route::get('/requeststorep', 'RequestController@storep');
 Route::post('/requestcreate', 'RequestController@create');
 Route::post('/requeststore', 'RequestController@store');
+Route::post('/requeststorep', 'RequestController@storep');
 
 // Import Po
 Route::get('/import', 'importController@index');
 Route::get('/importresult', 'importController@show');
 Route::post('/import', 'importController@postImportPo');
 Route::post('/import2', 'importController@postImportUser');
+Route::post('/import3', 'importController@postImportRoll');
 
- // Import Modules
+// Import Modules
 Route::get('/importmodules', 'importModulesController@index');
 Route::post('/importmodulesimport', 'importModulesController@create');
 

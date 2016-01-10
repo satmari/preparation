@@ -43,15 +43,17 @@
 				            <th>Color</th>
 				            <th>Color desc</th>
 				            <th data-sortable="true">Season</th>
-				            <th data-sortable="true">Total Order Qty</th>
-				            <th data-sortable="true">B. printed</th>
-				            <th data-sortable="true">B. to print</th>
-				            <th data-sortable="true">B. on stock</th>
-				            <th data-sortable="true">B. in modules</th>
-				            <th data-sortable="true">C. printed</th>
-				            <th data-sortable="true">C. to print</th>
-				            <th data-sortable="true">C. on stock</th>
-				            <th data-sortable="true">C. in modules</th>
+				            <th data-sortable="true">Flash</th>
+				            <th data-sortable="true">Brand</th>
+				            <th data-sortable="true">Order Qty</th>
+				            <th data-sortable="true" class="h-bt">B. printed</th>
+				            <th data-sortable="true" class="h-bt">B. to print</th>
+				            <th data-sortable="true" class="h-bt">B. on stock</th>
+				            <th data-sortable="true" class="h-bt">B. in modules</th>
+				            <th data-sortable="true" class="h-ct">C. printed</th>
+				            <th data-sortable="true" class="h-ct">C. to print</th>
+				            <th data-sortable="true" class="h-ct">C. on stock</th>
+				            <th data-sortable="true" class="h-ct">C. in modules</th>
 				        </tr>
 				    </thead>
 				    <tbody class="searchable">
@@ -66,6 +68,8 @@
 				        	<td>{{ $po->color }}</td>
 				        	<td>{{ $po->color_desc }}</td>
 				        	<td>{{ $po->season }}</td>
+				        	<td>{{ $po->flash }}</td>
+				        	<td>{{ $po->brand }}</td>
 				        	<td>{{ $po->total_order_qty }}</td>
 
 				        	<td>{{ $po->stock_b }}</td>

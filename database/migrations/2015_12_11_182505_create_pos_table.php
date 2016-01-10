@@ -12,6 +12,9 @@ class CreatePosTable extends Migration {
 	 */
 	public function up()
 	{
+
+		Schema::dropIfExists('pos');
+
 		Schema::create('pos', function(Blueprint $table)
 		{
 			$table->increments('id');
@@ -24,7 +27,7 @@ class CreatePosTable extends Migration {
             $table->string('color_desc', 30)->nullable();
             $table->string('season', 4)->nullable();
             $table->integer('total_order_qty')->nullable(); 
-            $table->boolean('flash')->nullable();
+            $table->string('flash', 12)->nullable();
             $table->boolean('closed_po')->nullable();
             $table->string('brand', 12)->nullable();
             $table->string('status', 12)->nullable();

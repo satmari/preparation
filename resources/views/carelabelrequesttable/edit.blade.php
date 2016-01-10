@@ -5,7 +5,7 @@
 	<div class="row vertical-center-row">
 		<div class="text-center col-md-8 col-md-offset-2">
 			<div class="panel panel-default">
-				<div class="panel-heading">Edit Carelabel Request: {{$request_c->id}}</div>
+				<div class="panel-heading h-c">Edit Carelabel Request: {{$request_c->id}}</div>
 				<br>
 				
 
@@ -45,7 +45,8 @@
 				</div>
 				<div class="panel-body">
 					<span>Status:</span>
-					{!! Form::input('string', 'status', null, ['class' => 'form-control']) !!}
+					{{-- {!! Form::input('string', 'status', null, ['class' => 'form-control']) !!} --}}
+					{!! Form::select('status', array('pending'=>'Pending','confirmed'=>'Confirmed','error'=>'Error'), null, array('class' => 'form-control')); !!} 
 				</div>
 				<div class="panel-body">
 					<span>Type:</span>

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Redirect;
 
 use Illuminate\Http\Request;
 
-use Gbrock\Table\Facades\Table;
+//use Gbrock\Table\Facades\Table;
 //use Gbrock\Traits\Sortable;
 
 use App\CarelabelRequest;
@@ -40,7 +40,14 @@ class carelabelrequesttableController extends Controller {
  			//$table = Table::create($rows, ['id','po_id','user_id','ponum','size','qty','module','leader','status','type','comment','created_at','updated_at']);
 
  		//}
- 		$request_c = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM carelabel_requests"));
+ 		//$request_c = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM carelabel_requests"));
+ 		$request_c = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM carelabel_requests
+																WHERE 
+																(CAST(created_at AS DATE) = CAST(GETDATE() AS DATE) AND status != 'error')
+																OR
+    															status = 'pending'
+    															ORDER BY status desc,created_at asc"
+    														  ));
 
 		return view('carelabelrequesttable.index', compact('request_c'));
 	}
@@ -104,15 +111,31 @@ class carelabelrequesttableController extends Controller {
 		$request_c->size = $input['size'];
 		
 		$qty = $input['qty'];
+		$status = $input['status'];
+
 		if (($qty <= 0) OR ($qty == NULL)) {
-			$request_c->qty = NULL;			
-			$request_c->status = 'pending';
+
+			if ($status == 'error'){
+				$request_c->qty = NULL;			
+				$request_c->status = 'error';	
+			} else {
+				$request_c->qty = NULL;			
+				$request_c->status = 'pending';	
+			}
+
 		} else if ($qty > 0) {				
-			$request_c->qty = $qty;
-			$request_c->status = 'confirmed';
+
+			if ($status == 'error'){
+				$request_c->qty = $qty;			
+				$request_c->status = 'error';	
+			} else {
+				$request_c->qty = $qty;			
+				$request_c->status = 'confirmed';	
+			}
 		}
 	
 		$request_c->module = $input['module'];
+		
 		$request_c->leader = $input['leader'];
 		$request_c->type = $input['type'];
 		$request_c->comment = $input['comment'];

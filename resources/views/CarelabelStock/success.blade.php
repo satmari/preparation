@@ -5,7 +5,7 @@
 	<div class="row vertical-center-row">
 		<div class="text-center col-md-4 col-md-offset-4">
 			<div class="panel panel-default">
-				<div class="panel-heading">Carelabel Stock</div>
+				<div class="panel-heading h-c">Carelabel Stock</div>
 				<h3 style="color:green;">Success</h3>
 
 				<p style="color:green;">Succesfuly added to Carelabel stock</p>

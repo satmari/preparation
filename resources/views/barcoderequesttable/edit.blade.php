@@ -5,7 +5,7 @@
 	<div class="row vertical-center-row">
 		<div class="text-center col-md-8 col-md-offset-2">
 			<div class="panel panel-default">
-				<div class="panel-heading">Edit Barcode Request: {{$request_b->id}}</div>
+				<div class="panel-heading h-b">Edit Barcode Request: Id:<b>{{$request_b->id}}</b> Po:<b>{{$request_b->ponum}}</b> Size:<b>{{$request_b->size}}</b> Module:<b>{{$request_b->module}}</b></div>
 				<br>
 				
 
@@ -45,7 +45,8 @@
 				</div>
 				<div class="panel-body">
 					<span>Status:</span>
-					{!! Form::input('string', 'status', null, ['class' => 'form-control']) !!}
+					{{-- {!! Form::input('string', 'status', null, ['class' => 'form-control']) !!} --}}
+					{!! Form::select('status', array('pending'=>'Pending','confirmed'=>'Confirmed','error'=>'Error'), null, array('class' => 'form-control')); !!} 
 				</div>
 				<div class="panel-body">
 					<span>Type:</span>

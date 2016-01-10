@@ -5,7 +5,7 @@
 	<div class="row vertical-center-row">
 		<div class="text-center col-md-4 col-md-offset-4">
 			<div class="panel panel-default">
-				<div class="panel-heading">Add Carelabel to Stock</div>
+				<div class="panel-heading h-c">Add Carelabel to Stock</div>
 
 				{!! Form::open(['method'=>'POST', 'url'=>'/carelabelstockstorenew']) !!}
 
