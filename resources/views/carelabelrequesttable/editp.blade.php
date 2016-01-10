@@ -8,7 +8,7 @@
 				<div class="panel-heading h-c">Edit Carelabel Request: {{$request_c->id}}</div>
 				<br>
 				
-				{!! Form::model($request_c , ['method' => 'PATCH', 'url' => 'carelabelrequesttable/'.$request_c->id /*, 'class' => 'form-inline'*/]) !!}
+				{!! Form::model($request_c , ['method' => 'PATCH', 'url' => 'carelabelrequesttablep/'.$request_c->id /*, 'class' => 'form-inline'*/]) !!}
 
 				{!! Form::hidden('id', $request_c->id, ['class' => 'form-control']) !!}
 				{!! Form::hidden('status', $request_c->status, ['class' => 'form-control']) !!}

@@ -44,7 +44,9 @@ Route::get('/barcoderequesttablelogmodule', 'barcoderequesttableController@logmo
 
 Route::get('/carelabelrequesttable', 'carelabelrequesttableController@index');
 Route::get('/carelabelrequesttable/edit/{id}', 'carelabelrequesttableController@edit');
+Route::get('/carelabelrequesttablep/edit/{id}', 'carelabelrequesttableController@editp');
 Route::patch('/carelabelrequesttable/{id}', 'carelabelrequesttableController@update');
+Route::patch('/carelabelrequesttablep/{id}', 'carelabelrequesttableController@updatep');
 Route::get('/carelabelrequesttablelog', 'carelabelrequesttableController@log');
 Route::get('/carelabelrequesttablelogmodule', 'carelabelrequesttableController@logmodule');
 
@@ -105,4 +107,4 @@ Route::any('getmoduledata', function() {
 		$retun_array[] = array('value' => $v->module);
 	}
 return Response::json($retun_array);
-});
+}); 
