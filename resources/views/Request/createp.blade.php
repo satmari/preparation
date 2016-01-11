@@ -34,11 +34,11 @@
 					{!! Form::text('leader', null, ['class' => 'form-control']) !!} 
 				</div>
 				<div class="panel-body">
-					<div class="col-lg-5">
+					<div class="col-md-6">
 						<span><b>Barcode</b></span>
 						{!! Form::checkbox('barcode', 1 , null, ['id' => 'check', 'class' => 'form-control']); !!}
 					</div>
-					<div class="col-lg-5 pull-right">
+					<div class="col-md-6">
 						<span><b>Carelabel</b></span>
 						{!! Form::checkbox('carelabel', 1 ,null , ['id' => 'check', 'class' => 'form-control']); !!}
 					</div>

@@ -174,6 +174,23 @@ class carelabelrequesttableController extends Controller {
 		//return view('main.index');
 		return Redirect::to('/carelabelrequesttable');
 	}
+
+	public function error($id, Request $request) {
+
+		$request_c = CarelabelRequest::findOrFail($id);
+		//$request_b->update($request->all());
+
+		$input = $request->all(); 
+		//dd($input);
+
+		$request_c->id = $input['id'];
+		$request_c->qty = NULL;
+		$request_c->status = 'error';
+		$request_c->save();
+
+		//return view('main.index');
+		return Redirect::to('/carelabelrequesttable');
+	}
 	
 
 }

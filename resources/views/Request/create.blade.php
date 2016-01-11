@@ -34,14 +34,21 @@
 				</div>
 				--}}
 				<div class="panel-body">
-					<div class="col-lg-5">
-						<span><b>Barcode</b></span>
-						{!! Form::checkbox('barcode', 1 , null, ['id' => 'check', 'class' => 'form-control']); !!}
-					</div>
-					<div class="col-lg-5 pull-right">
-						<span><b>Carelabel</b></span>
-						{!! Form::checkbox('carelabel', 1 ,null , ['id' => 'check', 'class' => 'form-control']); !!}
-					</div>
+					<table>
+						<!-- <th> -->
+						<div class="col-md-6">
+							<span><b>Barcode</b></span>
+							{!! Form::checkbox('barcode', 1 , null, ['id' => 'check', 'class' => 'form-control']); !!}
+						</div>
+						<!-- </th> -->
+						<!-- <th> -->
+						<div class="col-md-6">
+							<span><b>Carelabel</b></span>
+							{!! Form::checkbox('carelabel', 1 ,null , ['id' => 'check', 'class' => 'form-control']); !!}
+						</div>
+						<!-- </th> -->
+					</table>
+
 				</div>
 				<div class="panel-body">
 					<p>Comment: </p>

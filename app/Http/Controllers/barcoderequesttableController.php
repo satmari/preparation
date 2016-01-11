@@ -127,7 +127,7 @@ class barcoderequesttableController extends Controller {
 
 	public function updatep($id, Request $request) {
 
-		$request_b = BarcodeRequest::findOrFail($id);		
+		$request_b = BarcodeRequest::findOrFail($id);
 		//$request_b->update($request->all());
 
 		$input = $request->all(); 
@@ -167,6 +167,23 @@ class barcoderequesttableController extends Controller {
 		//$request_b->leader = $input['leader'];
 		//$request_b->type = $input['type'];
 		$request_b->comment = $input['comment'];
+		$request_b->save();
+
+		//return view('main.index');
+		return Redirect::to('/barcoderequesttable');
+	}
+
+	public function error($id, Request $request) {
+
+		$request_b = BarcodeRequest::findOrFail($id);
+		//$request_b->update($request->all());
+
+		$input = $request->all(); 
+		//dd($input);
+
+		$request_b->id = $input['id'];
+		$request_b->qty = NULL;
+		$request_b->status = 'error';
 		$request_b->save();
 
 		//return view('main.index');

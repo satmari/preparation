@@ -37,6 +37,7 @@ Route::get('/carelabelstocktable', 'carelabelstocktableController@index');
 Route::get('/barcoderequesttable', 'barcoderequesttableController@index');
 Route::get('/barcoderequesttable/edit/{id}', 'barcoderequesttableController@edit');
 Route::get('/barcoderequesttablep/edit/{id}', 'barcoderequesttableController@editp');
+Route::post('/barcoderequesttable-error/{id}', 'barcoderequesttableController@error');
 Route::patch('/barcoderequesttable/{id}', 'barcoderequesttableController@update');
 Route::patch('/barcoderequesttablep/{id}', 'barcoderequesttableController@updatep');
 Route::get('/barcoderequesttablelog', 'barcoderequesttableController@log');
@@ -45,6 +46,7 @@ Route::get('/barcoderequesttablelogmodule', 'barcoderequesttableController@logmo
 Route::get('/carelabelrequesttable', 'carelabelrequesttableController@index');
 Route::get('/carelabelrequesttable/edit/{id}', 'carelabelrequesttableController@edit');
 Route::get('/carelabelrequesttablep/edit/{id}', 'carelabelrequesttableController@editp');
+Route::post('/carelabelrequesttable-error/{id}', 'carelabelrequesttableController@error');
 Route::patch('/carelabelrequesttable/{id}', 'carelabelrequesttableController@update');
 Route::patch('/carelabelrequesttablep/{id}', 'carelabelrequesttableController@updatep');
 Route::get('/carelabelrequesttablelog', 'carelabelrequesttableController@log');

@@ -83,3 +83,14 @@ th.h-ct {
     background-color: #BCE8F1;
     color: #3A87AD;
 } 
+.fixed-table-container thead th .th-inner, .fixed-table-container tbody td .th-inner {
+    padding: 2px !important; 
+    /*line-height: 24px;
+    vertical-align: top;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;*/
+}
+.bootstrap-table .table:not(.table-condensed), .bootstrap-table .table:not(.table-condensed) > tbody > tr > th, .bootstrap-table .table:not(.table-condensed) > tfoot > tr > th, .bootstrap-table .table:not(.table-condensed) > thead > tr > td, .bootstrap-table .table:not(.table-condensed) > tbody > tr > td, .bootstrap-table .table:not(.table-condensed) > tfoot > tr > td {
+    padding: 2px !important;
+}

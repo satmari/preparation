@@ -5,7 +5,14 @@
 	<div class="row vertical-center-row">
 		<div class="text-center col-md-8 col-md-offset-2">
 			<div class="panel panel-default">
-				<div class="panel-heading h-c">Edit Carelabel Request: {{$request_c->id}}</div>
+				<div class="panel-heading h-c">Edit Carelabel Request: {{$request_c->id}}
+					<br>
+					<br>
+					{!! Form::open(['method'=>'POST', 'url'=>'/carelabelrequesttable-error/'.$request_c->id]) !!}
+						{!! Form::hidden('id', $request_c->id, ['class' => 'form-control']) !!}
+						{!! Form::submit('Set request as error', ['class' => 'btn  btn-warning btn-xs center-block']) !!}
+					{!! Form::close() !!}
+				</div>
 				<br>
 				
 				{!! Form::model($request_c , ['method' => 'PATCH', 'url' => 'carelabelrequesttablep/'.$request_c->id /*, 'class' => 'form-inline'*/]) !!}
@@ -25,7 +32,7 @@
 				
 
 				<div class="panel-body">
-					{!! Form::submit('Edit Request', ['class' => 'btn btn-warning center-block']) !!}
+					{!! Form::submit('Edit Request', ['class' => 'btn btn-success center-block']) !!}
 				</div>
 
 				@include('errors.list')

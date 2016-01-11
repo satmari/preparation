@@ -73,7 +73,7 @@
 				@endif
 				@if(Auth::check() && Auth::user()->level() <= 3)
 				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/log') }}">Log</a></li>
+					<li><a href="{{ url('/log') }}">Log tables</a></li>
 				</ul>
 				@endif
 				@if(Auth::check() && Auth::user()->level() <= 1)
