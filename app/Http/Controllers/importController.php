@@ -20,8 +20,7 @@ class importController extends Controller {
 		return view('import.index');
 	}
 	
-	public function postImportPo(Request $request)
-	{
+	public function postImportPo(Request $request) {
 	 
 	    $getSheetName = Excel::load(Request::file('file'))->getSheetNames();
 	    
@@ -35,7 +34,7 @@ class importController extends Controller {
 	            //Excel::selectSheets($sheetName)->load($request->file('file'), function ($reader)
 	            //Excel::selectSheets($sheetName)->load(Input::file('file'), function ($reader)
 	            //Excel::filter('chunk')->selectSheetsByIndex(0)->load(Request::file('file'))->chunk(50, function ($reader)
-	            Excel::filter('chunk')->selectSheets($sheetName)->load(Request::file('file'))->chunk(50, function ($reader)
+	            Excel::filter('chunk')->selectSheets($sheetName)->load(Request::file('file'))->chunk(100, function ($reader)
 	            
 	            {
 	                foreach($reader->toArray() as $sheet)
@@ -92,7 +91,7 @@ class importController extends Controller {
 							$flash = '';
 						}
 
-						$closed = False;
+						$closed = 'Open';
 
 						$style = str_replace(' ', '', $style);
 						$size = str_replace(' ', '', $size);
@@ -125,11 +124,9 @@ class importController extends Controller {
 	    //Session::flash('file_uploaded_successfully', 'File has been uploaded successfully and has also updated the database.');
 	    return redirect('/');
 	    //return view('import.importresult', compact('reader'));
-
 	}
 
-	public function postImportUser(Request $request)
-	{
+	public function postImportUser(Request $request) {
 	    $getSheetName = Excel::load(Request::file('file2'))->getSheetNames();
 	    
 	    foreach($getSheetName as $sheetName)
@@ -163,11 +160,9 @@ class importController extends Controller {
 	            });
 	    }
 		return redirect('/');
-
 	}
 
-	public function postImportRoll(Request $request)
-	{
+	public function postImportRoll(Request $request) {
 	    $getSheetName = Excel::load(Request::file('file3'))->getSheetNames();
 	    
 	    foreach($getSheetName as $sheetName)
@@ -202,7 +197,43 @@ class importController extends Controller {
 	            });
 	    }
 		return redirect('/');
+	}
 
+	public function postImportUserRole(Request $request) {
+	    $getSheetName = Excel::load(Request::file('file4'))->getSheetNames();
+	    
+	    foreach($getSheetName as $sheetName)
+	    {
+	        //if ($sheetName === 'Product-General-Table')  {
+	    	//selectSheetsByIndex(0)
+	           	//DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+	            //DB::table('users')->truncate();
+	
+	            //Excel::selectSheets($sheetName)->load($request->file('file'), function ($reader)
+	            //Excel::selectSheets($sheetName)->load(Input::file('file'), function ($reader)
+	            //Excel::filter('chunk')->selectSheetsByIndex(0)->load(Request::file('file'))->chunk(50, function ($reader)
+	            Excel::filter('chunk')->selectSheets($sheetName)->load(Request::file('file4'))->chunk(50, function ($reader)
+	            
+	            {
+	                $readerarray = $reader->toArray();
+	                //var_dump($readerarray);
+
+	                foreach($readerarray as $row)
+	                {
+	                	/*
+						$userbulk = new User;
+						$userbulk->name = $row['user'];;
+						$userbulk->email = $row['email'];
+						$userbulk->password = bcrypt($row['pass']);
+						//$userbulk->created_at = date(2015-12-22);
+						//$userbulk->updated_at = date(2015-12-22);
+												
+						$userbulk->save();
+						*/
+	                }
+	            });
+	    }
+		return redirect('/');
 	}
 	
 }

@@ -37,13 +37,13 @@
 					<table>
 						<!-- <th> -->
 						<div class="col-md-6">
-							<span><b>Barcode</b></span>
+							<b>Barcode</b>
 							{!! Form::checkbox('barcode', 1 , null, ['id' => 'check', 'class' => 'form-control']); !!}
 						</div>
 						<!-- </th> -->
 						<!-- <th> -->
 						<div class="col-md-6">
-							<span><b>Carelabel</b></span>
+							<b>Carelabel</b>
 							{!! Form::checkbox('carelabel', 1 ,null , ['id' => 'check', 'class' => 'form-control']); !!}
 						</div>
 						<!-- </th> -->
@@ -63,11 +63,12 @@
 				{!! Form::close() !!}
 
 				
+				{{--
+				<hr>
 				<div class="panel-body">
-					<div class="">
-						<a href="{{url('/request')}}" class="btn btn-default center-block">Back</a>
-					</div>
+					<a href="{{url('/')}}" class="btn btn-default center-block">Back</a>
 				</div>
+				--}}
 				
 			</div>
 		</div>

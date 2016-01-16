@@ -94,7 +94,7 @@ class BarcodeStockController extends Controller {
 		}
 		
 		// verify po is closed
-		if($po_closed == True) {
+		if($po_closed == 'Closed') {
 			$msg = 'Komesa is Closed';
 		    return view('BarcodeStock.error',compact('msg'));
 		}
@@ -158,7 +158,7 @@ class BarcodeStockController extends Controller {
 		}
 
 		// verify po is closed
-		if($po_closed == True) {
+		if($po_closed == 'Closed') {
 			$msg = 'Po is Closed';
 		    return view('BarcodeStock.error',compact('msg'));
 		}
@@ -222,7 +222,7 @@ class BarcodeStockController extends Controller {
 		}
 
 		// verify po is closed
-		if($po_closed == True) {
+		if($po_closed == 'Closed') {
 			$msg = 'Po is Closed';
 		    return view('BarcodeStock.error',compact('msg'));
 		}

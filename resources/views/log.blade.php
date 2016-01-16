@@ -32,6 +32,11 @@
 							<a href="{{url('/carelabelrequesttablelog')}}" class="btn btn-info center-block">Carelabel Request Log</a>
 						</div>
 					</div>
+					<div class="panel-body">
+						<div class="">
+							<a href="{{url('/secondqrequesttablelog')}}" class="btn btn-warning center-block">II quality Request Log</a>
+						</div>
+					</div>
 				</div>
 				</div>
 			</div>

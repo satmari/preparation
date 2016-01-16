@@ -52,6 +52,17 @@ Route::patch('/carelabelrequesttablep/{id}', 'carelabelrequesttableController@up
 Route::get('/carelabelrequesttablelog', 'carelabelrequesttableController@log');
 Route::get('/carelabelrequesttablelogmodule', 'carelabelrequesttableController@logmodule');
 
+Route::get('/secondqrequesttable', 'secondqulityrequestController@index');
+Route::get('/secondqrequesttable/edit/{id}', 'secondqulityrequestController@edit');
+Route::get('/secondqrequesttablep/edit/{id}', 'secondqulityrequestController@editp');
+Route::post('/secondqrequesttable-error/{id}', 'secondqulityrequestController@error');
+Route::patch('/secondqrequesttable/{id}', 'secondqulityrequestController@update');
+Route::patch('/secondqrequesttablep/{id}', 'secondqulityrequestController@updatep');
+Route::get('/secondqrequesttablelog', 'secondqulityrequestController@log');
+Route::get('/secondqrequesttablelogmodule', 'secondqulityrequestController@logmodule');
+Route::get('/secondqrequestupdate', 'secondqulityrequestController@secondqrequestupdate');
+Route::get('/secondqrequestupdatenav', 'secondqulityrequestController@secondqrequestupdatenav');
+
 // BarcodeStock
 Route::get('/barcodestock', 'BarcodeStockController@index');
 Route::get('/barcodestockcreatenew', 'BarcodeStockController@createnew');
@@ -72,13 +83,21 @@ Route::post('/carelabelstockstoreundo', 'CarelabelStockController@storeundo');
 
 // Request
 Route::get('/request', 'RequestController@index');
-Route::get('/requestp', 'RequestController@createp');
+Route::get('/requestcheck', 'RequestController@check');
+Route::get('/requestselect', 'RequestController@select');
 Route::get('/requestcreate', 'RequestController@create');
 Route::get('/requeststore', 'RequestController@store');
-Route::get('/requeststorep', 'RequestController@storep');
+Route::post('/requestcheck', 'RequestController@check');
 Route::post('/requestcreate', 'RequestController@create');
 Route::post('/requeststore', 'RequestController@store');
+
+Route::get('/requestcreatep', 'RequestController@createp');
+Route::get('/requeststorep', 'RequestController@storep');
 Route::post('/requeststorep', 'RequestController@storep');
+
+Route::get('/requestcreatesec', 'RequestController@createsec');
+Route::get('/requeststoresec', 'RequestController@storesec');
+Route::post('/requeststoresec', 'RequestController@storesec');
 
 // Import Po
 Route::get('/import', 'importController@index');
@@ -86,6 +105,7 @@ Route::get('/importresult', 'importController@show');
 Route::post('/import', 'importController@postImportPo');
 Route::post('/import2', 'importController@postImportUser');
 Route::post('/import3', 'importController@postImportRoll');
+Route::post('/import4', 'importController@postImportUserRole');
 
 // Import Modules
 Route::get('/importmodules', 'importModulesController@index');
@@ -95,7 +115,7 @@ Route::post('/importmodulesimport', 'importModulesController@create');
 Route::any('getpodata', function() {
 	$term = Input::get('term');
 
-	$data = DB::connection('sqlsrv')->table('pos')->distinct()->select('po')->where('po','LIKE', $term.'%')->where('closed_po','=',0)->groupBy('po')->take(10)->get();
+	$data = DB::connection('sqlsrv')->table('pos')->distinct()->select('po')->where('po','LIKE', $term.'%')->where('closed_po','=','Open')->groupBy('po')->take(10)->get();
 	foreach ($data as $v) {
 		$retun_array[] = array('value' => $v->po);
 	}

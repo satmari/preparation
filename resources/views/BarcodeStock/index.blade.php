@@ -20,7 +20,7 @@
 
 				<div class="panel-body">
 					<div class="">
-						<a href="{{url('/barcodestockcreateundo')}}" class="btn btn-b3 center-block">Reduce form Barcode Stock</a>
+						<a href="{{url('/barcodestockcreateundo')}}" class="btn btn-b3 center-block">Reduce from Barcode Stock</a>
 					</div>
 				</div>
 

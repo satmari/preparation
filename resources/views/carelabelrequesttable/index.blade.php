@@ -6,12 +6,7 @@
         <div class="text-center">
             <div class="panel panel-default">
 				<div class="panel-heading h-c">Carelabel Request Table</div>
-				<br>
 				
-				{{-- @if(Auth::check() && Auth::user()->level() <= 2) --}}
-				{{-- {!! $table->render() !!} --}}
-				{{-- @endif --}}
-
 				<div class="input-group"> <span class="input-group-addon">Filter</span>
                     <input id="filter" type="text" class="form-control" placeholder="Type here...">
                 </div>
@@ -42,9 +37,9 @@
                 -->
                     <thead>
                         <tr>
-                            <th data-sortable="true">Id</th>
-                            <th>Po_Id</th>
-                            <th>User_ID</th>
+                            <!-- <th data-sortable="true">Id</th> -->
+                            <!-- <th>Po_Id</th> -->
+                            <!-- <th>User_ID</th> -->
                             <th data-sortable="true">Po</th>
                             <th>Size</th>
                             <th data-sortable="true">Qty</th>
@@ -63,9 +58,9 @@
                     @foreach ($request_c as $req)
 
                         <tr>
-                            <td>{{ $req->id }}</td>
-                            <td>{{ $req->po_id }}</td>
-                            <td>{{ $req->user_id }}</td>
+                            <!-- <td>{{-- $req->id --}}</td> -->
+                            <!-- <td>{{-- $req->po_id --}}</td> -->
+                            <!-- <td>{{-- $req->user_id --}}</td> -->
                             <td>{{ $req->ponum }}</td>
                             <td>{{ $req->size }}</td>
                             <td>{{ $req->qty }}</td>

@@ -1,5 +1,15 @@
 body {
 	font-size: 12px !important;
+
+    background-image: url("images/8.png");
+    background-repeat: repeat;
+}
+.navbar {
+    background-image: url("images/3.png");
+    background-repeat: repeat;
+}
+.navbar-default {
+    border-color: #DC3ACF !important;
 }
 .dataTables_wrapper .dataTables_filter {
     float: left;
@@ -75,6 +85,10 @@ table.dataTable tbody td {
     background-color: #BCE8F1 !important;
     color: #3A87AD !important;
 }
+.h-q {
+    background-color: #FFBA8E !important;
+    color: #A94442 !important;
+}
 th.h-bt {
     background-color: #D6E9C6;
     color: #468847;
@@ -83,14 +97,9 @@ th.h-ct {
     background-color: #BCE8F1;
     color: #3A87AD;
 } 
-.fixed-table-container thead th .th-inner, .fixed-table-container tbody td .th-inner {
+/*.fixed-table-container thead th .th-inner, .fixed-table-container tbody td .th-inner {
     padding: 2px !important; 
-    /*line-height: 24px;
-    vertical-align: top;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;*/
 }
 .bootstrap-table .table:not(.table-condensed), .bootstrap-table .table:not(.table-condensed) > tbody > tr > th, .bootstrap-table .table:not(.table-condensed) > tfoot > tr > th, .bootstrap-table .table:not(.table-condensed) > thead > tr > td, .bootstrap-table .table:not(.table-condensed) > tbody > tr > td, .bootstrap-table .table:not(.table-condensed) > tfoot > tr > td {
     padding: 2px !important;
-}
+}*/

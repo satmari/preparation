@@ -37,24 +37,42 @@
 				{!! Form::close() !!}
 
 				<!-- <hr> -->
-			</div>	
-
+			</div>
+			
+			
+			<!-- 
 			<div class="panel panel-default">
-				<div class="panel-heading">Import user Rolles form Excel file</div>
+				<div class="panel-heading">Import roles form Excel file</div>
 
 				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportRoll']]) !!}
 					<div class="panel-body">
 						{!! Form::file('file3', ['class' => 'center-block']) !!}
 					</div>
 					<div class="panel-body">
-						{!! Form::submit('Import Rolles', ['class' => 'btn btn-warning center-block']) !!}
+						{!! Form::submit('Import Roles', ['class' => 'btn btn-warning center-block']) !!}
 					</div>
 					@include('errors.list')
 				{!! Form::close() !!}
 
-				<!-- <hr> -->
 			</div>
 
+			<div class="panel panel-default">
+				<div class="panel-heading">Import user_rolls form Excel file</div>
+
+				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportUserRole']]) !!}
+					<div class="panel-body">
+						{!! Form::file('file4', ['class' => 'center-block']) !!}
+					</div>
+					<div class="panel-body">
+						{!! Form::submit('Import user-role', ['class' => 'btn btn-warning center-block']) !!}
+					</div>
+					@include('errors.list')
+				{!! Form::close() !!}
+
+				
+			</div> -->
+
+			
 			<div class="panel panel-default">
 				<div class="panel-body">
 					<div class="">

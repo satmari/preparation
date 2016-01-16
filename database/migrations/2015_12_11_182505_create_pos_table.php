@@ -28,7 +28,7 @@ class CreatePosTable extends Migration {
             $table->string('season', 4)->nullable();
             $table->integer('total_order_qty')->nullable(); 
             $table->string('flash', 12)->nullable();
-            $table->boolean('closed_po')->nullable();
+            $table->string('closed_po', 12)->nullable();
             $table->string('brand', 12)->nullable();
             $table->string('status', 12)->nullable();
             $table->string('type', 12)->nullable();

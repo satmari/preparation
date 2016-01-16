@@ -51,11 +51,8 @@
 				@endif
 				<div class="panel-body">
 					<span>Closed Po:</span>
-					{!! Form::input('boolean', 'closed_po', null, ['class' => 'form-control']) !!}
-					{{-- {!! Form::select('closed_po', array(0=>'Open',1=>'Closed'), 'closed_po', array('class' => 'form-control')) !!}  --}}
-					<div class="alert alert-info">
-  							0 ---> Open   ;  1 ---> Closed
-					</div>
+					{{-- {!! Form::input('boolean', 'closed_po', null, ['class' => 'form-control']) !!} --}}
+					{!! Form::select('closed_po', array('Open'=>'Open','Closed'=>'Closed'), 'closed_po', array('class' => 'form-control')) !!} 
 				</div>
 				@if(Auth::check() && Auth::user()->level() == 1)
 				<div class="panel-body">

@@ -20,7 +20,7 @@
 
 				<div class="panel-body">
 					<div class="">
-						<a href="{{url('/carelabelstockcreateundo')}}" class="btn btn-c3 center-block">Reduce form Carelabel Stock</a>
+						<a href="{{url('/carelabelstockcreateundo')}}" class="btn btn-c3 center-block">Reduce from Carelabel Stock</a>
 					</div>
 				</div>
 

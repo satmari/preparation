@@ -6,12 +6,7 @@
         <div class="text-center">
             <div class="panel panel-default">
 				<div class="panel-heading h-b">Barcode Request Log Table</div>
-				<br>
 				
-				{{-- @if(Auth::check() && Auth::user()->level() <= 2) --}}
-				{{-- {!! $table->render() !!} --}}
-				{{-- @endif --}}
-
 				<div class="input-group"> <span class="input-group-addon">Filter</span>
                     <input id="filter" type="text" class="form-control" placeholder="Type here...">
                 </div>
@@ -82,8 +77,6 @@
                     
                     @endforeach
                     </tbody>
-
-					
 			</div>
 		</div>
 	</div>

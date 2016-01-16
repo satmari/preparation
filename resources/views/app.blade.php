@@ -40,8 +40,12 @@
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/') }}">Home</a></li>
+				</ul>
+
 				@if(Auth::check() && Auth::user()->level() <= 3)
-								
+												
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/maintable') }}">Main Table</a></li>
 				</ul>
@@ -49,21 +53,24 @@
 					<li><a href="{{ url('/main') }}">Po Table</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/barcodestock') }}">Barcode Stock</a></li>
+					<li><a style="color:#D6E9C6" href="{{ url('/barcodestock') }}">Barcode Stock</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/carelabelstock') }}">Carelabel Stock</a></li>
+					<li><a style="color:#BCE8F1" href="{{ url('/carelabelstock') }}">Carelabel Stock</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/barcoderequesttable') }}">Barcode Requests</a></li>
+					<li><a style="color:#D6E9C6" href="{{ url('/barcoderequesttable') }}">Barcode Requests</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/carelabelrequesttable') }}">Carelabel Requests</a></li>
+					<li><a style="color:#BCE8F1" href="{{ url('/carelabelrequesttable') }}">Carelabel Requests</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a style="color:#FFBA8E" href="{{ url('/secondqrequesttable') }}">II quality Requests</a></li>
 				</ul>
 				
 				@if(Auth::check() && Auth::user()->level() <= 3)
 				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/requestp') }}">Request from Modul by mail</a></li>
+					<li><a href="{{ url('/requestcreatep') }}">Request from Modul by mail</a></li>
 				</ul>
 				@endif
 				@if(Auth::check() && Auth::user()->level() <= 1)
@@ -80,6 +87,9 @@
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/import') }}">Import</a></li>
 				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/importmodules') }}">Import module</a></li>
+				</ul>
 				@endif
 
 				@endif
@@ -90,6 +100,9 @@
 				</ul>
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/carelabelrequesttablelogmodule') }}">Carelabel request history</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/secondqrequesttablelogmodule') }}">II quality request history</a></li>
 				</ul>
 				@endif
 				
@@ -153,11 +166,7 @@ $(function() {
 	$('#sort').bootstrapTable({
     
 	});
-	// function starsSorter(a, b) {
-	//     if (a < b) return 1;
-	//     if (a > b) return -1;
-	//     return 0;
-	// }
+	
 
 
 });

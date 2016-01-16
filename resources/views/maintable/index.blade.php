@@ -6,7 +6,7 @@
 		<div class="text-center">
 			<div class="panel panel-default">
 				<div class="panel-heading">Main Table</div>
-				<br>
+				
 				<div class="input-group"> <span class="input-group-addon">Filter</span>
 				    <input id="filter" type="text" class="form-control" placeholder="Type here...">
 				</div>
@@ -36,7 +36,7 @@
 		       	-->
 				    <thead>
 				        <tr>
-				            <th data-sortable="true">Id</th>
+				            <!-- <th data-sortable="true">Id</th> -->
 				            <th data-sortable="true">Po</th>
 				            <th>Size</th>
 				            <th data-sortable="true">Style</th>
@@ -61,7 +61,7 @@
 				    @foreach ($postable as $po)
 
 				        <tr>
-				        	<td>{{ $po->id }}</td>
+				        	{{--<td>{{ $po->id }}</td>--}}
 				        	<td>{{ $po->po }}</td>
 				        	<td>{{ $po->size }}</td>
 				        	<td>{{ $po->style }}</td>

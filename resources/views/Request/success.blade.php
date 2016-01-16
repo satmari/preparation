@@ -10,6 +10,10 @@
 				<br />
 				<br />
 				<p>{!! $msg !!}</p>
+				<hr>
+				<p style="font-size: x-large;">{!! $del !!}</p>
+				</p>
+				<hr>
 				<div class="panel-body">
 					<div class="">
 						<a href="{{url('/request')}}" class="btn btn-default center-block">Back</a>

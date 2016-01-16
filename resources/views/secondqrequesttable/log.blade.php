@@ -1,11 +1,11 @@
 @extends('app')
 
 @section('content')
-<div class="container container-table">
-	<div class="row vertical-center-row">
-		<div class="text-center col-md-15 col-md-offset-0">
-			<div class="panel panel-default">
-				<div class="panel-heading h-b">BarcodeStock Table</div>
+<div class="container-fluid">
+    <div class="row vertical-center-row">
+        <div class="text-center">
+            <div class="panel panel-default">
+				<div class="panel-heading h-q">II quality Request Log Table</div>
 				
 				<div class="input-group"> <span class="input-group-addon">Filter</span>
                     <input id="filter" type="text" class="form-control" placeholder="Type here...">
@@ -44,43 +44,41 @@
                             <th>Size</th>
                             <th data-sortable="true">Qty</th>
                             <th data-sortable="true">Module</th>
-                            
-                            <th data-sortable="true">Type</th>
+                            <th data-sortable="true">Leader</th>
+                            <th data-sortable="true">Status</th>
+                            <th>Type</th>
                             <th>Comment</th>
                             <th data-sortable="true">Created</th>
                             <th data-sortable="true">Updated</th>
-                            
+                
                         </tr>
                     </thead>
                     <tbody class="searchable">
                     
-                    @foreach ($stock_b as $sto)
+                    @foreach ($request_q as $req)
 
                         <tr>
-                            <td>{{ $sto->id }}</td>
-                            <td>{{ $sto->po_id }}</td>
-                            <td>{{ $sto->user_id }}</td>
-                            <td>{{ $sto->ponum }}</td>
-                            <td>{{ $sto->size }}</td>
-                            <td>{{ $sto->qty }}</td>
-                            <td>{{ $sto->module }}</td>
+                            <td>{{ $req->id }}</td>
+                            <td>{{ $req->po_id }}</td>
+                            <td>{{ $req->user_id }}</td>
+                            <td>{{ $req->ponum }}</td>
+                            <td>{{ $req->size }}</td>
+                            <td>{{ $req->qty }}</td>
+                            <td>{{ $req->module }}</td>
+                            <td>{{ $req->leader }}</td>
+                            <td>{{ $req->status }}</td>
+                            <td>{{ $req->type }}</td>
+                            <td>{{ $req->comment }}</td>
+                            <td>{{ $req->created_at }}</td>
+                            <td>{{ $req->updated_at }}</td>
                             
-                            <td>{{ $sto->type }}</td>
-                            <td>{{ $sto->comment }}</td>
-                            <td>{{ $sto->created_at }}</td>
-                            <td>{{ $sto->updated_at }}</td>
-                            
+
                         </tr>
                     
                     @endforeach
                     </tbody>
-
-
-				<hr>
-					
 			</div>
 		</div>
 	</div>
 </div>
-
 @endsection

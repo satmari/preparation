@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 
 use App\BarcodeRequest;
 use App\CarelabelRequest;
+use App\SecondQRequest;
 use App\Po;
 use App\Module;
 use DB;
@@ -21,6 +22,7 @@ use Bican\Roles\Models\Role;
 use Bican\Roles\Models\Permission;
 use Auth;
 
+use Session;
 use Validator;
 
 class RequestController extends Controller {
@@ -41,7 +43,7 @@ class RequestController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function create(Request $request)
+	public function check(Request $request)
 	{
 		//
 		$this->validate($request, ['pin'=>'required|min:4|max:5']);
@@ -67,25 +69,33 @@ class RequestController extends Controller {
 		
 		} else {
 			foreach ($inteosleaders as $row) {
-    			$leader = $row->Name;		
+    			$leader = $row->Name;
+    			Session::set('leader', $leader);		
     		}
     		//dd($leader);
-    		return view('Request.create', compact('leader'));
+    		return view('Request.select', compact('leader'));
     	} 
+	}
 
+	public function create(Request $request)
+	{
+		$leader = Session::get('leader');
+		//dd($leader);
+		return view('Request.create', compact('leader'));
+	}
+
+	public function createsec(Request $request)
+	{
+		$leader = Session::get('leader');
+		//dd($leader);
+		return view('Request.createsec', compact('leader'));
 	}
 
 	public function createp(Request $request)
 	{
 		return view('Request.createp');
-
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
 	public function store(Request $request2)
 	{
 		//
@@ -151,7 +161,7 @@ class RequestController extends Controller {
 		}
 
 		// verify po is closed
-		if($po_closed == True) {
+		if($po_closed == "Closed") {
 			$msg = 'Komesa is Closed';
 		    return view('Request.error',compact('msg'));
 		}
@@ -215,7 +225,15 @@ class RequestController extends Controller {
 			$msg = '<p style="color:red;"><big>BARCODE AND CARELABEL NOT SELECTED !!!</big></p>';
 		}
 
-		return view('Request.success', compact('msg'));
+		if(time() < mktime(08, 30, 0)) {
+		    $del = "Delivery at 9:00";
+		} else if (time() < mktime(11, 30, 0)) {
+			$del = "Delivery at 12:00";
+		} else 	{
+			$del = "Delivery tomorow at 07:00";
+		}
+
+		return view('Request.success', compact('msg','del'));
 	}
 
 	public function storep(Request $request2)
@@ -232,7 +250,7 @@ class RequestController extends Controller {
             'leader' => 'required'
         ]);
 		if ($validator->fails()) {
-            return redirect('/requestp')
+            return redirect('/request')
                 ->withErrors($validator)
                 ->withInput();
         }
@@ -354,7 +372,121 @@ class RequestController extends Controller {
 			return view('Request.errorp',compact('msg'));
 		}
 
-		return view('Request.success', compact('msg'));
+		if(time() < mktime(08, 30, 0)) {
+		    $del = "Delivery at 9:00";
+		} else if (time() < mktime(11, 30, 0)) {
+			$del = "Delivery at 12:00";
+		} else 	{
+			$del = "Delivery tomorow at 07:00";
+		}
+
+		return view('Request.success', compact('msg','del'));
+	}
+
+	public function storesec(Request $request2)
+	{
+		//
+		//validation
+		//$this->validate($request2, ['po'=>'required|min:5|max:5','size'=>'required|min:1|max:2','qty'=>'required'/*,'module'=>'min:4|max:10'*/]);
+		
+		$validator = Validator::make($request2->all(), [
+            'po' => 'required|min:5|max:5',
+            'size' => 'required|min:1|max:2',
+            'qty' => 'required',
+            'leader' => 'required'
+        ]);
+
+		if ($validator->fails()) {
+            return redirect('/request')
+                ->withErrors($validator)
+                ->withInput();
+        }
+		
+		$forminput = $request2->all(); 
+		//dd($forminput);
+
+		$ponum = $forminput['po'];
+		$size = $forminput['size'];
+		$qty = $forminput['qty'];
+		//$module = $forminput['module'];
+		$leader = $forminput['leader'];
+		$comment = $forminput['comment'];
+		$key = $ponum.'-'.$size;
+
+		//dd("B: ".$barcode." C: ".$carelabel);
+
+		$type = "modul";
+		$status = "pending";
+		
+		// virfy userId
+		if (Auth::check())
+		{
+		    $userId = Auth::user()->id;
+		    $module = Auth::user()->name;
+		} else {
+			$msg = 'Modul or User is not autenticated';
+			return view('Request.error',compact('msg'));
+		}
+		
+		// verify po_id
+		try {
+			$po = DB::connection('sqlsrv')->select(DB::raw("SELECT id, style, color, closed_po FROM pos WHERE po_key ='".$key."'"));
+
+			//dd($po);
+		    $poid = $po['0']->id;
+		    $style = $po['0']->style;
+		    $color = $po['0']->color;
+		    $po_closed = $po['0']->closed_po;
+
+		    // $poid = Po::where('po_key', $key)->firstOrFail()->id;
+		    // $po_closed = Po::where('po_key', $key)->firstOrFail()->closed_po;
+		} catch (ModelNotFoundException $e) {
+		    $msg = 'PO and size not exist in Po table';
+		    return view('Request.error',compact('msg'));
+		}
+
+		// verify po is closed
+		if($po_closed == "Closed") {
+			$msg = 'Komesa is Closed';
+		    return view('Request.error',compact('msg'));
+		}
+
+		$msg = "";
+
+			try {
+				$squality = new SecondQRequest;
+
+				$squality->po_id = $poid;
+				$squality->user_id = $userId;
+				$squality->ponum = $ponum;
+				$squality->size = $size;
+				$squality->qty = $qty;
+				$squality->module = $module;
+				$squality->leader = $leader;
+				$squality->status = $status;
+				$squality->type = $type;
+				$squality->comment = $comment;
+				$squality->style = $style;
+				$squality->color = $color;
+			
+				$squality->save();
+			}
+			catch (\Illuminate\Database\QueryException $e) {
+				$msg = "Problem to save in request table for II quality";
+				return view('Request.error',compact('msg'));			
+			}
+		//return view('Request.success');
+		$msg = '<p style="color:green;">II quality request successfully saved</p>';
+		
+		if(time() < mktime(08, 30, 0)) {
+		    $del = "Delivery at 9:00";
+		} else if (time() < mktime(11, 30, 0)) {
+			$del = "Delivery at 12:00";
+		} else 	{
+			$del = "Delivery tomorow at 07:00";
+		}
+
+		return view('Request.success', compact('msg','del'));
 	}
 
 	/**

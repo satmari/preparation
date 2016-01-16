@@ -42,7 +42,7 @@ class maintableController extends Controller {
 		LEFT JOIN barcode_requests ON barcode_requests.po_id = pos.id
 		LEFT JOIN carelabel_stocks ON carelabel_stocks.po_id = pos.id
 		LEFT JOIN carelabel_requests ON carelabel_requests.po_id = pos.id
-		WHERE pos.closed_po = 0
+		WHERE pos.closed_po = 'Open'
 		GROUP BY	pos.id,
 					pos.po,
 					pos.size,

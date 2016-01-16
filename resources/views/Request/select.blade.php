@@ -5,32 +5,29 @@
 	<div class="row vertical-center-row">
 		<div class="text-center col-md-4 col-md-offset-4">
 			<div class="panel panel-default">
-				<div class="panel-heading">Request for barcode and carelabel</div>			
-				<br>				
-				{!! Form::open(['method'=>'POST', 'url'=>'/requestcheck']) !!}
-
+				<div class="panel-heading">Choose Request?</div>
+				<div class="panel-heading"><span>Majstorica: <b>{{$leader}}</b></span></div>		
 				<div class="panel-body">
-					<p>LineLeader PIN code (Inteos)</p>
-					{!! Form::number('pin', null, ['id' => 'pin', 'class' => 'form-control', 'autofocus' => 'autofocus']) !!}
+					<div class="">
+						<a href="{{url('/requestcreate')}}" class="btn btn-info center-block">Barcode and Carelabel</a>
+					</div>
+				</div>
+				<div class="panel-body">
+					<div class="">
+						<a href="{{url('/requestcreatesec')}}" class="btn btn-warning center-block">II Quality</a>
+					</div>
 				</div>
 				
-				<div class="panel-body">
-					{!! Form::submit('Confirm', ['class' => 'btn btn-success center-block']) !!}
-				</div>
-
-				@include('errors.list')
-				{!! Form::close() !!}
-
 				{{--
 				<hr>
 				<div class="panel-body">
 					<a href="{{url('/')}}" class="btn btn-default center-block">Back</a>
 				</div>
 				--}}
-		
+				
+
 			</div>
 		</div>
-
 		<div class="text-center col-md-8 col-md-offset-2">
 			<div class="panel panel-default">
 				
@@ -43,7 +40,7 @@
 				<tr>
 					<td>ORDER MADE <span style="color:red">TILL 11:30</span></td>
 					<td>----------></td>
-					<td>DELIVERY <span style="color:red">at 12:00</span></td>
+					<td>DELIVERY at <span style="color:red">12:00</span></td>
 				</tr>
 				<tr>
 					<td>ORDER MADE <span style="color:red">AFTER 11:30</span></td>
@@ -52,7 +49,7 @@
 				</tr>
 				
 				</table>
-							
+				
 			</div>
 		</div>
 	</div>

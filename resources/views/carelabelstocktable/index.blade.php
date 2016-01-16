@@ -6,15 +6,7 @@
 		<div class="text-center col-md-15 col-md-offset-0">
 			<div class="panel panel-default">
 				<div class="panel-heading h-c">CarelabelStock Table</div>
-				<br>
-				<p>{{-- $allpo --}}</p>
-
-				{{--@if(Auth::check() && Auth::user()->level() <= 2) --}}
-			
-				{{-- {!! $table->render() !!} --}}
 				
-				{{-- @endif --}}
-
 				<div class="input-group"> <span class="input-group-addon">Filter</span>
                     <input id="filter" type="text" class="form-control" placeholder="Type here...">
                 </div>
