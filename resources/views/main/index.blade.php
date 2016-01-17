@@ -37,6 +37,7 @@
                     <thead>
                         <tr>
                             <!-- <th data-sortable="true">Id</th> -->
+                            <th>Edit Po</th>
                             <th data-sortable="true">Po</th>
                             <th>Size</th>
                             <th data-sortable="true">Style</th>
@@ -50,7 +51,7 @@
                             <th>Comment</th>
                             <th data-sortable="true">Created</th>
                             <th data-sortable="true">Updated</th>
-                            <th>Edit Po</th>
+                            
                         </tr>
                     </thead>
                     <tbody class="searchable">
@@ -59,6 +60,7 @@
 
                         <tr>
                             {{-- <td>{{ $po->id }}</td> --}}
+                            <td><a href="{{ url('/main/edit/'.$po->id) }}" class="btn btn-info btn-xs center-block">Edit</a></td>
                             <td>{{ $po->po }}</td>
                             <td>{{ $po->size }}</td>
                             <td>{{ $po->style }}</td>
@@ -72,8 +74,7 @@
                             <td>{{ $po->comment }}</td>
                             <td>{{ $po->created_at }}</td>
                             <td>{{ $po->updated_at }}</td>
-                            <td><a href="{{ url('/main/edit/'.$po->id) }}" class="btn btn-info btn-xs center-block">Edit</a></td>
-
+                            
                         </tr>
                     
                     @endforeach

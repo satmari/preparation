@@ -89,6 +89,10 @@ table.dataTable tbody td {
     background-color: #FFBA8E !important;
     color: #A94442 !important;
 }
+.btn-bc {
+    background: -webkit-linear-gradient(left, #38b21c 1%,#38b21c 1%,#6cc96f 42%,#6cc96f 42%,#2989d8 64%,#1e5799 100%); /* Chrome10-25,Safari5.1-6 */
+    color: #fff;
+}
 th.h-bt {
     background-color: #D6E9C6;
     color: #468847;

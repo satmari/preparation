@@ -9,7 +9,7 @@
 				<div class="panel-heading"><span>Majstorica: <b>{{$leader}}</b></span></div>		
 				<div class="panel-body">
 					<div class="">
-						<a href="{{url('/requestcreate')}}" class="btn btn-info center-block">Barcode and Carelabel</a>
+						<a href="{{url('/requestcreate')}}" class="btn btn-bc center-block">Barcode and Carelabel</a>
 					</div>
 				</div>
 				<div class="panel-body">
@@ -34,17 +34,17 @@
 				<table class="table" style="font-size: large">
 				<tr>
 					<td>ORDER MADE <span style="color:red">TILL  8:30</span></td>	
-					<td>----------></td>
+					<td>=====></td>
 					<td>DELIVERY <span style="color:red">at 9:00</span></td>
 				</tr>
 				<tr>
 					<td>ORDER MADE <span style="color:red">TILL 11:30</span></td>
-					<td>----------></td>
-					<td>DELIVERY at <span style="color:red">12:00</span></td>
+					<td>=====></td>
+					<td>DELIVERY <span style="color:red">at 12:00</span></td>
 				</tr>
 				<tr>
 					<td>ORDER MADE <span style="color:red">AFTER 11:30</span></td>
-					<td>----------></td>
+					<td>=====></td>
 					<td>DELIVERY TOMORROW <span style="color:red">at 7:00</span></td>
 				</tr>
 				

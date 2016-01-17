@@ -40,6 +40,7 @@
                             <!-- <th data-sortable="true">Id</th> -->
                             <!-- <th>Po_Id</th> -->
                             <!-- <th>User_ID</th> -->
+                            <th>Edit Request</th>
                             <th data-sortable="true">Po</th>
                             <th>Size</th>
                             <th data-sortable="true">Qty</th>
@@ -50,7 +51,7 @@
                             <th>Comment</th>
                             <th data-sortable="true">Created</th>
                             <th data-sortable="true">Updated</th>
-                            <th>Edit Request</th>
+                            
                         </tr>
                     </thead>
                     <tbody class="searchable">
@@ -61,6 +62,15 @@
                             <!-- <td>{{-- $req->id --}}</td> -->
                             <!-- <td>{{-- $req->po_id --}}</td> -->
                             <!-- <td>{{-- $req->user_id --}}</td> -->
+
+                            @if(Auth::check() && Auth::user()->level() == 1)
+                            <td><a href="{{ url('/carelabelrequesttable/edit/'.$req->id) }}" class="btn btn-info btn-xs center-block">Edit</a></td>
+                            @endif
+
+                            @if(Auth::check() && Auth::user()->level() == 2)
+                            <td><a href="{{ url('/carelabelrequesttablep/edit/'.$req->id) }}" class="btn btn-info btn-xs center-block">Edit</a></td>
+                            @endif
+                            
                             <td>{{ $req->ponum }}</td>
                             <td>{{ $req->size }}</td>
                             <td>{{ $req->qty }}</td>
@@ -71,22 +81,11 @@
                             <td>{{ $req->comment }}</td>
                             <td>{{ $req->created_at }}</td>
                             <td>{{ $req->updated_at }}</td>
-
-                            @if(Auth::check() && Auth::user()->level() == 1)
-                            <td><a href="{{ url('/carelabelrequesttable/edit/'.$req->id) }}" class="btn btn-info btn-xs center-block">Edit</a></td>
-                            @endif
-
-                            @if(Auth::check() && Auth::user()->level() == 2)
-                            <td><a href="{{ url('/carelabelrequesttablep/edit/'.$req->id) }}" class="btn btn-info btn-xs center-block">Edit</a></td>
-                            @endif
                             
-
                         </tr>
                     
                     @endforeach
-                    </tbody>
-
-					
+                    </tbody>	
 			</div>
 		</div>
 	</div>

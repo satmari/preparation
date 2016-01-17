@@ -96,13 +96,13 @@
 
 				@if(Auth::check() && Auth::user()->level() == 4)
 				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/barcoderequesttablelogmodule') }}">Barcode request history</a></li>
+					<li><a style="color:#D6E9C6" href="{{ url('/barcoderequesttablelogmodule') }}">Barcode request history</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/carelabelrequesttablelogmodule') }}">Carelabel request history</a></li>
+					<li><a style="color:#BCE8F1" href="{{ url('/carelabelrequesttablelogmodule') }}">Carelabel request history</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/secondqrequesttablelogmodule') }}">II quality request history</a></li>
+					<li><a style="color:#FFBA8E" href="{{ url('/secondqrequesttablelogmodule') }}">II quality request history</a></li>
 				</ul>
 				@endif
 				
