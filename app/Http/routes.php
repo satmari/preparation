@@ -56,6 +56,7 @@ Route::get('/secondqrequesttable', 'secondqulityrequestController@index');
 Route::get('/secondqrequesttable/edit/{id}', 'secondqulityrequestController@edit');
 Route::get('/secondqrequesttablep/edit/{id}', 'secondqulityrequestController@editp');
 Route::post('/secondqrequesttable-error/{id}', 'secondqulityrequestController@error');
+Route::post('/secondqrequesttable-confirm/{id}', 'secondqulityrequestController@confirm');
 Route::patch('/secondqrequesttable/{id}', 'secondqulityrequestController@update');
 Route::patch('/secondqrequesttablep/{id}', 'secondqulityrequestController@updatep');
 Route::get('/secondqrequesttablelog', 'secondqulityrequestController@log');

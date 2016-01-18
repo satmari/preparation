@@ -29,12 +29,12 @@ class importController extends Controller {
 	        //if ($sheetName === 'Product-General-Table')  {
 	    	//selectSheetsByIndex(0)
 	           	//DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-	            DB::table('pos')->truncate();
+	            //DB::table('pos')->truncate();
 	
 	            //Excel::selectSheets($sheetName)->load($request->file('file'), function ($reader)
 	            //Excel::selectSheets($sheetName)->load(Input::file('file'), function ($reader)
 	            //Excel::filter('chunk')->selectSheetsByIndex(0)->load(Request::file('file'))->chunk(50, function ($reader)
-	            Excel::filter('chunk')->selectSheets($sheetName)->load(Request::file('file'))->chunk(100, function ($reader)
+	            Excel::filter('chunk')->selectSheets($sheetName)->load(Request::file('file'))->chunk(50, function ($reader)
 	            
 	            {
 	                foreach($reader->toArray() as $sheet)

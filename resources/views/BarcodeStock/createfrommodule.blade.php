@@ -20,6 +20,9 @@
 				<div class="panel-body">
 					<p>Qty/Kolicina: </p>
 					{!! Form::number('qty', null, ['class' => 'form-control']) !!}
+					<div class="alert alert-success">
+  							Insert positive number and application will reduce form barcode stock.
+					</div>
 				</div>
 				<div class="panel-body">
 					<p>Module: </p>

@@ -72,7 +72,6 @@
                             <td>{{ $req->created_at }}</td>
                             <td>{{ $req->updated_at }}</td>
                             
-
                         </tr>
                     
                     @endforeach

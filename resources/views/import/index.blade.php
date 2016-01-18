@@ -23,6 +23,8 @@
 			</div>
 				
 
+			<!-- 
+			
 			<div class="panel panel-default">
 				<div class="panel-heading">Import users form Excel file</div>
 
@@ -36,11 +38,9 @@
 					@include('errors.list')
 				{!! Form::close() !!}
 
-				<!-- <hr> -->
+				
 			</div>
 			
-			
-			<!-- 
 			<div class="panel panel-default">
 				<div class="panel-heading">Import roles form Excel file</div>
 
@@ -70,7 +70,8 @@
 				{!! Form::close() !!}
 
 				
-			</div> -->
+			</div>
+			-->
 
 			
 			<div class="panel panel-default">

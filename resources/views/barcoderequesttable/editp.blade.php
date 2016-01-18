@@ -20,7 +20,6 @@
 				{!! Form::hidden('id', $request_b->id, ['class' => 'form-control']) !!}
 				{!! Form::hidden('status', $request_b->status, ['class' => 'form-control']) !!}
 
-				
 				<div class="panel-body">
 					<span>Qty:</span>
 					{!! Form::input('number', 'qty', null, ['class' => 'form-control']) !!}
@@ -36,8 +35,9 @@
 				</div>
 
 				@include('errors.list')
-
 				{!! Form::close() !!}
+
+				<hr>
 
 				{{-- 
 				<hr>

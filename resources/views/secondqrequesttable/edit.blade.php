@@ -5,7 +5,7 @@
 	<div class="row vertical-center-row">
 		<div class="text-center col-md-8 col-md-offset-2">
 			<div class="panel panel-default">
-				<div class="panel-heading h-b">Edit II quality Request: Id:<b>{{$request_q->id}}</b> Po:<b>{{$request_q->ponum}}</b> Size:<b>{{$request_q->size}}</b> Module:<b>{{$request_q->module}}</b>
+				<div class="panel-heading h-q">Edit II quality Request: Id:<b>{{$request_q->id}}</b> Po:<b>{{$request_q->ponum}}</b> Size:<b>{{$request_q->size}}</b> Module:<b>{{$request_q->module}}</b>
 					<br>
 					<br>
 					{!! Form::open(['method'=>'POST', 'url'=>'/secondqrequesttable-error/'.$request_q->id]) !!}

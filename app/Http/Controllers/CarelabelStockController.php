@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 //use Gbrock\Table\Facades\Table;
 
 use App\CarelabelStock;
+use App\CarelabelRequest;
 use App\Po;
 use DB;
 
@@ -126,7 +127,7 @@ class CarelabelStockController extends Controller {
 	{
 		//
 		//validation
-		$this->validate($request, ['po'=>'required|min:5|max:5','size'=>'required','qty'=>'required','module'=>'min:4|max:10']);
+		$this->validate($request, ['po'=>'required|min:5|max:5','size'=>'required','qty'=>'required','module'=>'max:8']);
 		$forminput = $request->all(); 
 
 		$ponum = $forminput['po'];
@@ -137,7 +138,11 @@ class CarelabelStockController extends Controller {
 		$key = $ponum.'-'.$size;
 		//dd($key);
 
-		$type = "back";
+		$qty = $qty * (-1);
+		
+		//$type = "back";
+		$type = "module";
+		$status = "back";
 
 		// virfy userId
 		if (Auth::check())
@@ -164,7 +169,7 @@ class CarelabelStockController extends Controller {
 		}
 
 		try {
-			$carelabel = new CarelabelStock;
+			$carelabel = new CarelabelRequest;
 
 			$carelabel->po_id = $poid;
 			$carelabel->user_id = $userId;
@@ -172,7 +177,8 @@ class CarelabelStockController extends Controller {
 			$carelabel->size = $size;
 			$carelabel->qty = $qty;
 			$carelabel->module = $module;
-			//$carelabel->status = $status;
+			$carelabel->leader; // for req
+			$carelabel->status = $status;
 			$carelabel->type = $type;
 			$carelabel->comment = $comment;
 			

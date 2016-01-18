@@ -42,15 +42,19 @@
                             <!-- <th>User_ID</th> -->
                             <th>Edit Request</th>
                             <th data-sortable="true">Po</th>
-                            <th>Size</th>
-                            <th data-sortable="true">Qty</th>
+                            <th data-sortable="true">Size</th>
+                            <th data-sortable="true">Style</th>
+                            <th data-sortable="true">Color</th>
                             <th data-sortable="true">Module</th>
                             <th data-sortable="true">Leader</th>
                             <th data-sortable="true">Status</th>
-                            <th>Type</th>
+                            <th>Qty</th>
+                            <th class="h-bt">B. to print</th>
+                            <th class="h-bt">B. on stock</th>
+                            <!-- <th>Type</th> -->
                             <th>Comment</th>
                             <th data-sortable="true">Created</th>
-                            <th data-sortable="true">Updated</th>
+                            <!-- <th data-sortable="true">Updated</th> -->
                         </tr>
                     </thead>
                     <tbody class="searchable">
@@ -72,14 +76,19 @@
 
                             <td>{{ $req->ponum }}</td>
                             <td>{{ $req->size }}</td>
-                            <td>{{ $req->qty }}</td>
+                            <td>{{ $req->style }}</td>
+                            <td>{{ $req->color }}</td>
                             <td>{{ $req->module }}</td>
                             <td>{{ $req->leader }}</td>
                             <td>{{ $req->status }}</td>
-                            <td>{{ $req->type }}</td>
+                            <td>{{ $req->qty }}</td>
+                            <td>{{ $req->total_order_qty-$req->stock_b }}</td>
+                            <td>{{ $req->stock_b-$req->request_b }}</td>
+                            <!-- <td>{{-- $req->type --}}</td> -->
                             <td>{{ $req->comment }}</td>
                             <td>{{ $req->created_at }}</td>
-                            <td>{{ $req->updated_at }}</td>
+                            <!-- <td>{{-- $req->updated_at --}}</td> -->
+                            
                           </tr>
         
                     @endforeach

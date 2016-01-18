@@ -5,7 +5,7 @@
     <div class="row vertical-center-row">
         <div class="text-center">
             <div class="panel panel-default">
-                <div class="panel-heading">Po Table</div>
+                <div class="panel-heading h-n">Po Table</div>
                 
                 <div class="input-group"> <span class="input-group-addon">Filter</span>
                     <input id="filter" type="text" class="form-control" placeholder="Type here...">

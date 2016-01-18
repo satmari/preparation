@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 //use Gbrock\Table\Facades\Table;
 
 use App\BarcodeStock;
+use App\BarcodeRequest;
 use App\Po;
 use DB;
 
@@ -126,7 +127,7 @@ class BarcodeStockController extends Controller {
 	{
 		//
 		//validation
-		$this->validate($request, ['po'=>'required|min:5|max:5','size'=>'required','qty'=>'required','module'=>'min:4|max:10']);
+		$this->validate($request, ['po'=>'required|min:5|max:5','size'=>'required','qty'=>'required','module'=>'max:8']);
 		$forminput = $request->all(); 
 
 		$ponum = $forminput['po'];
@@ -137,7 +138,11 @@ class BarcodeStockController extends Controller {
 		$key = $ponum.'-'.$size;
 		//dd($key);
 
-		$type = "back";
+		$qty = $qty * (-1);
+		
+		//$type = "back";
+		$type = "module";
+		$status = "back";
 
 		// virfy userId
 		if (Auth::check())
@@ -164,7 +169,8 @@ class BarcodeStockController extends Controller {
 		}
 
 		try {
-			$barcode = new BarcodeStock;
+			//$barcode = new BarcodeStock;
+			$barcode = new BarcodeRequest;
 
 			$barcode->po_id = $poid;
 			$barcode->user_id = $userId;
@@ -172,7 +178,8 @@ class BarcodeStockController extends Controller {
 			$barcode->size = $size;
 			$barcode->qty = $qty;
 			$barcode->module = $module;
-			//$barcode->status = $status;
+			$barcode->leader; // for req
+			$barcode->status = $status;
 			$barcode->type = $type;
 			$barcode->comment = $comment;
 			

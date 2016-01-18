@@ -70,20 +70,21 @@
 				
 				@if(Auth::check() && Auth::user()->level() <= 3)
 				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/requestcreatep') }}">Request from Modul by mail</a></li>
+					<li><a href="{{ url('/import') }}">Import</a></li>
 				</ul>
-				@endif
-				@if(Auth::check() && Auth::user()->level() <= 1)
-				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/request') }}">Request from Modul</a></li>
-				</ul>
-				@endif
-				@if(Auth::check() && Auth::user()->level() <= 3)
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/log') }}">Log tables</a></li>
 				</ul>
 				@endif
+				
+				
 				@if(Auth::check() && Auth::user()->level() <= 1)
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/request') }}">Request from Modul</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/requestcreatep') }}">Request from Modul by mail</a></li>
+				</ul>
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/import') }}">Import</a></li>
 				</ul>

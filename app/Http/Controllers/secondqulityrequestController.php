@@ -179,6 +179,23 @@ class secondqulityrequestController extends Controller {
 		return Redirect::to('/secondqrequesttable');
 	}
 
+	public function confirm($id, Request $request) {
+
+		$request_q = SecondQRequest::findOrFail($id);
+		//$request_q->update($request->all());
+
+		$input = $request->all(); 
+		//dd($input);
+
+		$request_q->id = $input['id'];
+		$request_q->qty;
+		$request_q->status = 'confirmed';
+		$request_q->save();
+
+		//return view('main.index');
+		return Redirect::to('/secondqrequesttable');
+	}
+
 	public function secondqrequestupdate(Request $request) { //NOT NEEDED 
 
 		$request_q = DB::connection('sqlsrv')->select(DB::raw("SELECT id,ponum FROM secondq_requests"));

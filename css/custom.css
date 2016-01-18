@@ -80,14 +80,20 @@ table.dataTable tbody td {
 .h-b {
     background-color: #D6E9C6 !important;
     color: #468847 !important;
+    font-size: large;
 }
 .h-c {
     background-color: #BCE8F1 !important;
     color: #3A87AD !important;
+    font-size: large;
 }
 .h-q {
     background-color: #FFBA8E !important;
     color: #A94442 !important;
+    font-size: large;
+}
+.h-n {
+    font-size: large;
 }
 .btn-bc {
     background: -webkit-linear-gradient(left, #38b21c 1%,#38b21c 1%,#6cc96f 42%,#6cc96f 42%,#2989d8 64%,#1e5799 100%); /* Chrome10-25,Safari5.1-6 */
@@ -106,4 +112,9 @@ th.h-ct {
 }
 .bootstrap-table .table:not(.table-condensed), .bootstrap-table .table:not(.table-condensed) > tbody > tr > th, .bootstrap-table .table:not(.table-condensed) > tfoot > tr > th, .bootstrap-table .table:not(.table-condensed) > thead > tr > td, .bootstrap-table .table:not(.table-condensed) > tbody > tr > td, .bootstrap-table .table:not(.table-condensed) > tfoot > tr > td {
     padding: 2px !important;
+}*/
+/*.nav a:active {
+    border: 1px solid #fff !important;
+    color: #BCE8F1 !important;
+
 }*/

@@ -27,7 +27,6 @@ class barcoderequesttableController extends Controller {
 	 */
 	public function index()
 	{
-		//Gbrock
 
 		//$user = User::find(Auth::id());
 		//if ($user->level() == 1) {
@@ -39,13 +38,58 @@ class barcoderequesttableController extends Controller {
 
  		//}
  		//$request_b = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM barcode_requests"));
- 		$request_b = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM barcode_requests
-																WHERE 
-																(CAST(created_at AS DATE) = CAST(GETDATE() AS DATE) AND status != 'error')
-																OR
-    															status = 'pending'
-    															ORDER BY status desc,created_at asc"
-    														  ));
+ 		// $request_b = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM barcode_requests
+		//	 													WHERE 
+		//	 													(CAST(created_at AS DATE) = CAST(GETDATE() AS DATE) AND status != 'error')
+		//	 													OR
+   		//  													status = 'pending'
+   		//														ORDER BY status desc,created_at asc"
+		//		    											  ));
+		
+
+		$request_b = DB::connection('sqlsrv')->select(DB::raw("SELECT 
+br.*, 
+
+(SELECT SUM(barcode_stocks.qty) FROM barcode_stocks WHERE barcode_stocks.po_id = br.po_id) as stock_b,
+(SELECT SUM(barcode_requests.qty) FROM barcode_requests WHERE barcode_requests.po_id = br.po_id AND barcode_requests.status != 'error') as request_b,
+
+pos.total_order_qty,
+pos.style,
+pos.color
+
+FROM barcode_requests as br
+
+JOIN barcode_stocks ON barcode_stocks.po_id = br.po_id
+JOIN barcode_requests ON barcode_requests.po_id = br.po_id
+JOIN pos ON pos.id = br.po_id
+
+WHERE 
+(CAST(br.created_at AS DATE) = CAST(GETDATE() AS DATE) AND br.status != 'error')
+OR
+br.status = 'pending'
+
+GROUP BY 
+
+br.id,
+br.po_id,
+br.user_id,
+br.ponum,
+br.size,
+br.module,
+br.leader,
+br.status,
+br.type,
+br.comment,
+br.qty,
+br.created_at,
+br.updated_at,
+barcode_requests.po_id,
+pos.total_order_qty,
+pos.style,
+pos.color
+
+ORDER BY br.status desc,br.created_at asc
+"));
 
 		return view('barcoderequesttable.index', compact('request_b'));
 	}
@@ -93,21 +137,27 @@ class barcoderequesttableController extends Controller {
 		$qty = $input['qty'];
 		$status = $input['status'];
 
-		if (($qty <= 0) OR ($qty == NULL)) {
+		if (($qty == 0) OR ($qty == NULL)) {
 
 			if ($status == 'error'){
 				$request_b->qty = NULL;			
 				$request_b->status = 'error';	
+			} else if ($status == 'back') {
+				$request_b->qty = NULL;
+				$request_b->status = 'back';
 			} else {
-				$request_b->qty = NULL;			
+				$request_b->qty = NULL;
 				$request_b->status = 'pending';	
 			}
 
-		} else if ($qty > 0) {				
+		} else {				
 
 			if ($status == 'error'){
 				$request_b->qty = $qty;			
-				$request_b->status = 'error';	
+				$request_b->status = 'error';
+			} else if ($status == 'back') {
+				$request_b->qty = $qty;	;
+				$request_b->status = 'back';
 			} else {
 				$request_b->qty = $qty;			
 				$request_b->status = 'confirmed';	
@@ -142,21 +192,27 @@ class barcoderequesttableController extends Controller {
 		$qty = $input['qty'];
 		$status = $input['status'];
 
-		if (($qty <= 0) OR ($qty == NULL)) {
+		if (($qty == 0) OR ($qty == NULL)) {
 
 			if ($status == 'error'){
 				$request_b->qty = NULL;			
 				$request_b->status = 'error';	
+			} else if ($status == 'back') {
+				$request_b->qty = NULL;
+				$request_b->status = 'back';
 			} else {
-				$request_b->qty = NULL;			
+				$request_b->qty = NULL;
 				$request_b->status = 'pending';	
 			}
 
-		} else if ($qty > 0) {				
+		} else {				
 
 			if ($status == 'error'){
 				$request_b->qty = $qty;			
-				$request_b->status = 'error';	
+				$request_b->status = 'error';
+			} else if ($status == 'back') {
+				$request_b->qty = $qty;	;
+				$request_b->status = 'back';
 			} else {
 				$request_b->qty = $qty;			
 				$request_b->status = 'confirmed';	
