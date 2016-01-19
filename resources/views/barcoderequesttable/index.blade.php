@@ -43,14 +43,15 @@
                             <th>Edit Request</th>
                             <th data-sortable="true">Po</th>
                             <th data-sortable="true">Size</th>
+                            <th class="qty">Qty</th>
                             <th data-sortable="true">Style</th>
                             <th data-sortable="true">Color</th>
                             <th data-sortable="true">Module</th>
                             <th data-sortable="true">Leader</th>
-                            <th data-sortable="true">Status</th>
-                            <th>Qty</th>
-                            <th class="h-bt">B. to print</th>
-                            <th class="h-bt">B. on stock</th>
+                            <th data-sortable="true" class="status">Status</th>
+                            
+                            <th class="h-bt to-print">B. to print</th>
+                            <th class="h-bt on-stock">B. on stock</th>
                             <!-- <th>Type</th> -->
                             <th>Comment</th>
                             <th data-sortable="true">Created</th>
@@ -76,12 +77,13 @@
 
                             <td>{{ $req->ponum }}</td>
                             <td>{{ $req->size }}</td>
+                            <td>{{ $req->qty }}</td>
                             <td>{{ $req->style }}</td>
                             <td>{{ $req->color }}</td>
                             <td>{{ $req->module }}</td>
                             <td>{{ $req->leader }}</td>
                             <td>{{ $req->status }}</td>
-                            <td>{{ $req->qty }}</td>
+                            
                             <td>{{ $req->total_order_qty-$req->stock_b }}</td>
                             <td>{{ $req->stock_b-$req->request_b }}</td>
                             <!-- <td>{{-- $req->type --}}</td> -->

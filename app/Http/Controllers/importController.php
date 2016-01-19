@@ -85,10 +85,10 @@ class importController extends Controller {
 							$brand = "";
 						}
 
-						if ($flash == 'F') {
-							$flash = 'FLASH';
-						} else {
+						if ($flash == 'N') {
 							$flash = '';
+						} else {
+							$flash = $flash ;
 						}
 
 						$closed = 'Open';

@@ -433,6 +433,7 @@ class RequestController extends Controller {
 			$po = DB::connection('sqlsrv')->select(DB::raw("SELECT id, style, color, closed_po FROM pos WHERE po_key ='".$key."'"));
 
 			//dd($po);
+
 		    $poid = $po['0']->id;
 		    $style = $po['0']->style;
 		    $color = $po['0']->color;
@@ -440,7 +441,12 @@ class RequestController extends Controller {
 
 		    // $poid = Po::where('po_key', $key)->firstOrFail()->id;
 		    // $po_closed = Po::where('po_key', $key)->firstOrFail()->closed_po;
-		} catch (ModelNotFoundException $e) {
+		} 
+		catch (ModelNotFoundException $e) {
+		    $msg = 'PO and size not exist in Po table';
+		    return view('Request.error',compact('msg'));
+		}
+		catch (\Exception $e) {
 		    $msg = 'PO and size not exist in Po table';
 		    return view('Request.error',compact('msg'));
 		}

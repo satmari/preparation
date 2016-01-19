@@ -47,7 +47,7 @@
                             <th>Edit Request</th>
                             <th data-sortable="true">Po</th>
                             <th>Size</th>
-                            <th data-sortable="true">Qty</th>
+                            <th data-sortable="true" class="qty">Qty</th>
                             <th data-sortable="true">Module</th>
                             <th data-sortable="true">Leader</th>
                             <th data-sortable="true">Status</th>

@@ -37,22 +37,22 @@
 				    <thead>
 				        <tr>
 				            <!-- <th data-sortable="true">Id</th> -->
-				            <th data-sortable="true">Po</th>
-				            <th>Size</th>
-				            <th data-sortable="true">Style</th>
-				            <th>Color</th>
-				            <th>Color desc</th>
-				            <th data-sortable="true">Season</th>
-				            <th data-sortable="true">Flash</th>
-				            <th data-sortable="true">Brand</th>
-				            <th data-sortable="true">Order Qty</th>
+				            <th data-sortable="true" class="po">Po</th>
+				            <th class="size">Size</th>
+				            <th data-sortable="true" class="style">Style</th>
+				            <th class="color">Color</th>
+				            <th class="colordesc">Color desc</th>
+				            <th data-sortable="true" class="season">Season</th>
+				            <th data-sortable="true" calss="flash">Flash</th>
+				            <th data-sortable="true" class="brand">Brand</th>
+				            <th data-sortable="true" class="">Order Qty</th>
 				            <th data-sortable="true" class="h-bt">B. printed</th>
-				            <th data-sortable="true" class="h-bt">B. to print</th>
-				            <th data-sortable="true" class="h-bt">B. on stock</th>
+				            <th data-sortable="true" class="h-bt to-print">B. to print</th>
+				            <th data-sortable="true" class="h-bt on-stock">B. on stock</th>
 				            <th data-sortable="true" class="h-bt">B. in modules</th>
 				            <th data-sortable="true" class="h-ct">C. printed</th>
-				            <th data-sortable="true" class="h-ct">C. to print</th>
-				            <th data-sortable="true" class="h-ct">C. on stock</th>
+				            <th data-sortable="true" class="h-ct to-print">C. to print</th>
+				            <th data-sortable="true" class="h-ct on-stock">C. on stock</th>
 				            <th data-sortable="true" class="h-ct">C. in modules</th>
 				        </tr>
 				    </thead>

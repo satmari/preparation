@@ -40,10 +40,6 @@
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				
-				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/') }}">Home</a></li>
-				</ul>
-
 				@if(Auth::check() && Auth::user()->level() <= 3)
 												
 				<ul class="nav navbar-nav">
@@ -79,6 +75,7 @@
 				
 				
 				@if(Auth::check() && Auth::user()->level() <= 1)
+
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/request') }}">Request from Modul</a></li>
 				</ul>
@@ -96,6 +93,9 @@
 				@endif
 
 				@if(Auth::check() && Auth::user()->level() == 4)
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/') }}">Home</a></li>
+				</ul>
 				<ul class="nav navbar-nav">
 					<li><a style="color:#D6E9C6" href="{{ url('/barcoderequesttablelogmodule') }}">Barcode request history</a></li>
 				</ul>
@@ -167,12 +167,32 @@ $(function() {
 	$('#sort').bootstrapTable({
     
 	});
-	
 
+	$('.table tr').each(function(){
+  		
+  		//$("td:contains('pending')").addClass('pending');
+  		//$("td:contains('confirmed')").addClass('confirmed');
+  		//$("td:contains('back')").addClass('back');
+  		//$("td:contains('error')").addClass('error');
+  		//$("td:contains('TEZENIS')").addClass('tezenis');
+
+  		// $("td:contains('TEZENIS')").function() {
+  		// 	$(this).index().addClass('tezenis');
+  		// }
+	});
+
+	// $('td').click(function() {
+	//    	var myCol = $(this).index();
+ 	//    	var $tr = $(this).closest('tr');
+ 	//    	var myRow = $tr.index();
+
+ 	//    	console.log("col: "+myCol+" tr: "+$tr+" row:"+ myRow);
+	// });
 
 });
 </script>
 
 </body>
 </html>
+
 

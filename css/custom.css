@@ -8,6 +8,13 @@ body {
     background-image: url("images/3.png");
     background-repeat: repeat;
 }
+.table {
+    /*font-size: 16px !important;*/
+}
+.bootstrap-table{
+    font-size: 12px !important;
+    /*font-stretch: semi-condensed;*/
+}
 .navbar-default {
     border-color: #DC3ACF !important;
 }
@@ -107,7 +114,7 @@ th.h-ct {
     background-color: #BCE8F1;
     color: #3A87AD;
 } 
-/*.fixed-table-container thead th .th-inner, .fixed-table-container tbody td .th-inner {
+/*.fixed-inable-container thead th .th-inner, .fixed-table-container tbody td .th-inner {
     padding: 2px !important; 
 }
 .bootstrap-table .table:not(.table-condensed), .bootstrap-table .table:not(.table-condensed) > tbody > tr > th, .bootstrap-table .table:not(.table-condensed) > tfoot > tr > th, .bootstrap-table .table:not(.table-condensed) > thead > tr > td, .bootstrap-table .table:not(.table-condensed) > tbody > tr > td, .bootstrap-table .table:not(.table-condensed) > tfoot > tr > td {
@@ -118,3 +125,48 @@ th.h-ct {
     color: #BCE8F1 !important;
 
 }*/
+.qty {
+    background-color: #C1C1C1;
+    font-size: medium;
+}
+.to-print{
+    background-color: #FFFC98;
+}
+.on-stock {
+    background-color: #98FFB3;
+}
+.pending {
+    color: #fff !important;
+    background-color: #FF4F4F;
+    font-size: medium;
+}
+.confirmed {
+    color: #fff !important;
+    background-color: hsla(94, 100%, 25%, 0.72);
+    font-size: medium;
+}
+.back {
+    /*color: #fff !important;*/
+    /*background-color: hsla(0, 0%, 39%, 0.72);*/
+    font-size: medium;
+}
+.error {
+    color: #f00 !important;
+    background-color: #FFF;
+    font-size: medium;
+}
+.tezenis {
+    color: #F00 !important;
+    background-color: hsla(0, 100%, 88%, 0.72);
+    /* font-size: medium; */
+}
+.mip {
+    color: #fff !important;
+    background-color: hsla(0, 0%, 39%, 0.72);
+    font-size: medium;
+}
+.mod {
+    color: #fff !important;
+    background-color: hsla(0, 0%, 39%, 0.72);
+    font-size: medium;
+}
