@@ -49,7 +49,6 @@
                             <th data-sortable="true">Module</th>
                             <th data-sortable="true">Leader</th>
                             <th data-sortable="true" class="status">Status</th>
-                            
                             <th class="h-bt to-print">B. to print</th>
                             <th class="h-bt on-stock">B. on stock</th>
                             <!-- <th>Type</th> -->

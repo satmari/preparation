@@ -50,7 +50,7 @@
                             <th data-sortable="true" class="qty">Qty</th>
                             <th data-sortable="true">Module</th>
                             <th data-sortable="true">Leader</th>
-                            <th data-sortable="true">Status</th>
+                            <th data-sortable="true" class="status">Status</th>
                             <th data-sortable="true">Style</th>
                             <th data-sortable="true">Color</th>
                             <th data-sortable="true">Materiale</th>

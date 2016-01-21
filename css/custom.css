@@ -129,26 +129,33 @@ th.h-ct {
     background-color: #C1C1C1;
     font-size: medium;
 }
-.to-print{
+
+.zuto{
     background-color: #FFFC98;
 }
-.on-stock {
+.zeleno {
     background-color: #98FFB3;
 }
+.crveno {
+    background-color: #FF9F9F;
+}
+
+
 .pending {
     color: #fff !important;
     background-color: #FF4F4F;
-    font-size: medium;
+    /*font-size: medium;*/
 }
 .confirmed {
     color: #fff !important;
     background-color: hsla(94, 100%, 25%, 0.72);
-    font-size: medium;
+    /*font-size: medium;*/
 }
 .back {
-    /*color: #fff !important;*/
+    background-color: #C1C1C1;
+    color: #fff !important;
     /*background-color: hsla(0, 0%, 39%, 0.72);*/
-    font-size: medium;
+    /*font-size: medium;*/
 }
 .error {
     color: #f00 !important;
@@ -169,4 +176,10 @@ th.h-ct {
     color: #fff !important;
     background-color: hsla(0, 0%, 39%, 0.72);
     font-size: medium;
+}
+/*.table-hover>tbody>tr:hover {
+    background-color: #fff !important;
+}*/
+.table-hover>tbody>tr:hover {
+    background-color: #D0D4E2 !important;
 }

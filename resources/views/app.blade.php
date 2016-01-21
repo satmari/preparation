@@ -181,6 +181,32 @@ $(function() {
   		// }
 	});
 
+	$('.to-print').each(function(){
+		var qty = $(this).html();
+		//console.log(qty);
+
+		if (qty == 0 ) {
+			$(this).addClass('zeleno');
+		} else if (qty > 0) {
+			$(this).addClass('zuto');
+		} else if (qty < 0 ) {	
+			$(this).addClass('crveno');
+		}
+	});
+
+	$('.status').each(function(){
+		var status = $(this).html();
+		//console.log(qty);
+
+		if (status == 'pending' ) {
+			$(this).addClass('pending');
+		} else if (status == 'confirmed') {
+			$(this).addClass('confirmed');
+		} else {	
+			$(this).addClass('back');
+		}
+	});
+
 	// $('td').click(function() {
 	//    	var myCol = $(this).index();
  	//    	var $tr = $(this).closest('tr');
