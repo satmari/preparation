@@ -1,21 +1,19 @@
-<?php namespace App\Http\Controllers;
+<?php 
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Redirect;
 
 use Illuminate\Http\Request;
 
-use App\MainModel;
-use Gbrock\Table\Facades\Table;
-
+use App\User;
+use App\Po;
 use DB;
 
-use App\User;
 use Bican\Roles\Models\Role;
 use Bican\Roles\Models\Permission;
 use Auth;
-
-use Yajra\Datatables\Datatables;
 
 
 class mainController extends Controller {
@@ -27,16 +25,12 @@ class mainController extends Controller {
 	 */
 	public function index()
 	{
-		//
-		return view('main.index');
+		$pos = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM pos"));
+
+		//dd($postable);
+
+		return view('main.index',compact('pos'));
 	}
-
-	public function anyData()
-    {
-        return Datatables::of(MainModel::select('*'))->make(true);
-    
-    }
-
 
 	/**
 	 * Show the form for creating a new resource.
@@ -75,20 +69,23 @@ class mainController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($id)
-	{
-		//
-	}
+	public function edit($id) {
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
+		$po = Po::findOrFail($id);		
+
+		return view('main.edit', compact('po'));
+
+	}
+	public function update($id, Request $request) {
+
+		// $input = $request->all(); 
+		// dd($input);
+		
+		$po = Po::findOrFail($id);		
+		$po->update($request->all());
+
+		//return view('main.index');
+		return Redirect::to('/main');
 	}
 
 	/**

@@ -6,14 +6,18 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Preparation Application</title>
 
-	
-	<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css">
-	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
-	
-	<!-- Fonts -->
-	<link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
+	<!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel='stylesheet' type='text/css' > -->
+    <!-- <link href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css" rel='stylesheet' type='text/css'> -->
+    <!-- <link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css' > -->
 
+	<link href="{{ asset('/css/app.css') }}" rel='stylesheet' type='text/css'>
+	<link href="{{ asset('/css/font.css') }}" rel='stylesheet' type='text/css'>
+	<link href="{{ asset('/css/bootstrap.min.css') }}" rel='stylesheet' type='text/css'>
+	<link href="{{ asset('/css/bootstrap-table.css') }}" rel='stylesheet' type='text/css'>
+	<!-- <link href="{{ asset('/css/jquery.dataTables.min.css') }}" rel='stylesheet' type='text/css'> -->
+	<link href="{{ asset('/css/jquery-ui.min.css') }}" rel='stylesheet' type='text/css'>
+	<link href="{{ asset('/css/custom.css') }}" rel='stylesheet' type='text/css'>
+		
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
@@ -31,13 +35,78 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Preparation Application</a>
+				<a class="navbar-brand" href="{{ url('/') }}">Preparation Application</a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				
+				@if(Auth::check() && Auth::user()->level() <= 3)
+												
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/maintable') }}">Main Table</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/main') }}">Po Table</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a style="color:#D6E9C6" href="{{ url('/barcodestock') }}">Barcode Stock</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a style="color:#BCE8F1" href="{{ url('/carelabelstock') }}">Carelabel Stock</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a style="color:#D6E9C6" href="{{ url('/barcoderequesttable') }}">Barcode Requests</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a style="color:#BCE8F1" href="{{ url('/carelabelrequesttable') }}">Carelabel Requests</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a style="color:#FFBA8E" href="{{ url('/secondqrequesttable') }}">II quality Requests</a></li>
+				</ul>
+				
+				@if(Auth::check() && Auth::user()->level() <= 3)
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/import') }}">Import</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/log') }}">Log tables</a></li>
+				</ul>
+				@endif
+				
+				
+				@if(Auth::check() && Auth::user()->level() <= 1)
+
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/request') }}">Request from Modul</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/requestcreatep') }}">Request from Modul by mail</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/import') }}">Import</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/importmodules') }}">Import module</a></li>
+				</ul>
+				@endif
+
+				@endif
+
+				@if(Auth::check() && Auth::user()->level() == 4)
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/') }}">Home</a></li>
 				</ul>
+				<ul class="nav navbar-nav">
+					<li><a style="color:#D6E9C6" href="{{ url('/barcoderequesttablelogmodule') }}">Barcode request history</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a style="color:#BCE8F1" href="{{ url('/carelabelrequesttablelogmodule') }}">Carelabel request history</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a style="color:#FFBA8E" href="{{ url('/secondqrequesttablelogmodule') }}">II quality request history</a></li>
+				</ul>
+				@endif
+				
 
 				<ul class="nav navbar-nav navbar-right">
 					@if (Auth::guest())
@@ -58,79 +127,98 @@
 
 	@yield('content')
 
-	<!-- Scripts 
-	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
-	-->
-	<!--<script type="text/javascript" src="//code.jquery.com/jquery.js"></script>-->
-	<script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+	<!-- App scripts -->
 
-	<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-	<!--
-	<script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
-	-->
-	
-	<!--<script stype="text/javascript" src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.js"></script>-->
-	<script stype="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
-    <!-- App scripts 
-    <script src="{{ asset('/js/file.js') }}"></script>-->
+    <script src="{{ asset('/js/jquery.min.js') }}" type="text/javascript" ></script>
+    <script src="{{ asset('/js/bootstrap.min.js') }}" type="text/javascript" ></script>
+    <script src="{{ asset('/js/bootstrap-table.js') }}" type="text/javascript" ></script>
+	<script src="{{ asset('/js/jquery-ui.min.js') }}" type="text/javascript" ></script>
+	<!-- <script src="{{ asset('/js/jquery.dataTables.min.js') }}" type="text/javascript" ></script>-->
+	<!--<script src="{{ asset('/js/jquery.tablesorter.min.js') }}" type="text/javascript" ></script>-->
+	<!--<script src="{{ asset('/js/custom.js') }}" type="text/javascript" ></script>-->
+	<script src="{{ asset('/js/tableExport.js') }}" type="text/javascript" ></script>
+	<!--<script src="{{ asset('/js/jspdf.plugin.autotable.js') }}" type="text/javascript" ></script>-->
+	<!--<script src="{{ asset('/js/jspdf.min.js') }}" type="text/javascript" ></script>-->
+	<script src="{{ asset('/js/FileSaver.min.js') }}" type="text/javascript" ></script>
+	<script src="{{ asset('/js/bootstrap-table-export.js') }}" type="text/javascript" ></script>
+    
+<script type="text/javascript">
+$(function() {
+    	
+	$('#po').autocomplete({
+		minLength: 3,
+		autoFocus: true,
+		source: '{{ URL('getpodata')}}'
+	});
+	$('#module').autocomplete({
+		minLength: 1,
+		autoFocus: true,
+		source: '{{ URL('getmoduledata')}}'
+	});
+	$('#filter').keyup(function () {
 
-    <script type="text/javascript">
-    	$(function() {
-    		$('#users-table').dataTable({
-    			createdRow: function( row, data, dataIndex ) {
-         		   	if ( data['total_order_qty'] >= 5000 ) {
-                		$('td', row).eq(6).addClass('highlight');
-                		//$(row).addClass( 'important2' );
-            		}
-            		if (data['size'] == "S" ) {
-      					$(row).addClass( 'important' );
-    				}
-        		},
-        		
-    	    	processing: true,
-    	    	serverSide: false,
-    	    	ajax: "{!! route('datatables.data') !!}",
-    	    	columns: [
-    	        	// { data: 'id'},
-    	        	// { data: 'po_size'},
-    	        	// { data: 'order_code'},
-    	        	{ data: 'po'},
-    	        	{ data: 'size'},
-    	        	{ data: 'style'},
-    	        	{ data: 'color', orderable: false},
-    	        	{ data: 'color_desc', orderable: false},
-    	        	{ data: 'season'},
-    	        	{ data: 'total_order_qty' },
-    	        	{ data: 'flash' , searchable: false},
-    	        	{ data: 'closed_po', searchable: false},
-    	        	// { data: 'created_at'},
-            		// { data: 'updated_at'}
-    	        ],
-    	        aLengthMenu: [
-        			[25, 50, 100, 200, -1],
-        			[25, 50, 100, 200, "All"]
-    			],
-    			//iDisplayLength: 50,
-    			iDisplayLength: -1,
+        var rex = new RegExp($(this).val(), 'i');
+        $('.searchable tr').hide();
+        $('.searchable tr').filter(function () {
+            return rex.test($(this).text());
+        }).show();
+	});
 
-    			scrollY:        '600px',
-        		scrollCollapse: true,
-        		paging:         false,
-        		
-        		initComplete: function () {
-            		this.api().columns().every(function () {
-                	var column = this;
-                	var input = document.createElement("input");
-                		$(input).appendTo($(column.footer()).empty())
-                			.on('change', function () {
-                    			column.search($(this).val(), false, false, true).draw();
-                		});
-            		});
-        		}
+	$('#sort').bootstrapTable({
+    
+	});
 
-    		});
-		});
-	</script>
+	$('.table tr').each(function(){
+  		
+  		//$("td:contains('pending')").addClass('pending');
+  		//$("td:contains('confirmed')").addClass('confirmed');
+  		//$("td:contains('back')").addClass('back');
+  		//$("td:contains('error')").addClass('error');
+  		//$("td:contains('TEZENIS')").addClass('tezenis');
+
+  		// $("td:contains('TEZENIS')").function() {
+  		// 	$(this).index().addClass('tezenis');
+  		// }
+	});
+
+	$('.to-print').each(function(){
+		var qty = $(this).html();
+		//console.log(qty);
+
+		if (qty == 0 ) {
+			$(this).addClass('zuto');
+		} else if (qty > 0) {
+			$(this).addClass('zeleno');
+		} else if (qty < 0 ) {	
+			$(this).addClass('crveno');
+		}
+	});
+
+	$('.status').each(function(){
+		var status = $(this).html();
+		//console.log(qty);
+
+		if (status == 'pending' ) {
+			$(this).addClass('pending');
+		} else if (status == 'confirmed') {
+			$(this).addClass('confirmed');
+		} else {	
+			$(this).addClass('back');
+		}
+	});
+
+	// $('td').click(function() {
+	//    	var myCol = $(this).index();
+ 	//    	var $tr = $(this).closest('tr');
+ 	//    	var myRow = $tr.index();
+
+ 	//    	console.log("col: "+myCol+" tr: "+$tr+" row:"+ myRow);
+	// });
+
+});
+</script>
+
 </body>
 </html>
+
+

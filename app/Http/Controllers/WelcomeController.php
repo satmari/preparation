@@ -1,5 +1,4 @@
 <?php 
-
 namespace App\Http\Controllers;
 
 use App\User;
@@ -72,7 +71,7 @@ class WelcomeController extends Controller {
 		// attach roles
 		//find role
 		//$role = Role::find(1); // when you know id
-		$role = Role::where('level', 2)->first(); // when you want to find
+		$role = Role::where('level', 1)->first(); // when you want to find
 
 		//Admin 1
 		//Preparacija 2

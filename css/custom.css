@@ -1,0 +1,185 @@
+body {
+	font-size: 12px !important;
+
+    background-image: url("images/8.png");
+    background-repeat: repeat;
+}
+.navbar {
+    background-image: url("images/3.png");
+    background-repeat: repeat;
+}
+.table {
+    /*font-size: 16px !important;*/
+}
+.bootstrap-table{
+    font-size: 12px !important;
+    /*font-stretch: semi-condensed;*/
+}
+.navbar-default {
+    border-color: #DC3ACF !important;
+}
+.dataTables_wrapper .dataTables_filter {
+    float: left;
+}
+.highlightred {
+    font-weight: bold !important;
+    color: red !important;
+}
+.highlightgreen {
+    font-weight: bold !important;
+    color: green !important;
+}
+.important {
+    color: #0f0 !important; 
+}
+.important2 {
+    color: #f00 !important; 
+}
+table.dataTable tbody th,
+table.dataTable tbody td {
+    white-space: nowrap;
+}
+#check {
+    box-shadow: inset 0 0px 0px rgba(0,0,0,0.075);
+}
+.btn-b1 {
+    /* border-bottom: 1px solid #59822c; */
+    background-image: linear-gradient(#6CE676, #2FAB25 60%, #88c149);
+    color: #ffffff;
+    /* background-color: #73a839; */
+    border-color: #333333;
+}
+.btn-b2 {
+    /* border-bottom: 1px solid #59822c; */
+    background-image: linear-gradient(#59CC29, rgb(30, 111, 51) 60%, #88c149);
+    color: #ffffff;
+    /* background-color: #73a839; */
+    border-color: #333333;
+}
+.btn-b3 {
+    /*border-bottom: 1px solid #59822c;*/
+    background-image: linear-gradient(#4C8045, #39A83C 60%, #466F3E);
+    color: #ffffff;
+    /*background-color: #73a839;*/
+    border-color: #333333;
+}
+.btn-c1 {
+    /* border-bottom: 1px solid #326EB7; */
+    background-image: linear-gradient(#59A9FB, #2273D8 60%, #396BA8);
+    color: #ffffff;
+    /* background-color: #73a839; */
+    border-color: #333333;
+}
+.btn-c2 {
+    /*border-bottom: 1px solid #59822c; */
+    background-image: linear-gradient(#55A5F9, #2F5B8E 60%, #53A2F4);
+    color: #ffffff;
+    /* background-color: #73a839; */
+    border-color: #333333;
+}
+.btn-c3 {
+    /*border-bottom: 1px solid #59822c;*/
+    background-image: linear-gradient(#3669A2, #55A5F9 60%, #336298);
+    color: #ffffff;
+    /*background-color: #73a839;*/
+    border-color: #333333;
+}
+.h-b {
+    background-color: #D6E9C6 !important;
+    color: #468847 !important;
+    font-size: large;
+}
+.h-c {
+    background-color: #BCE8F1 !important;
+    color: #3A87AD !important;
+    font-size: large;
+}
+.h-q {
+    background-color: #FFBA8E !important;
+    color: #A94442 !important;
+    font-size: large;
+}
+.h-n {
+    font-size: large;
+}
+.btn-bc {
+    background: -webkit-linear-gradient(left, #38b21c 1%,#38b21c 1%,#6cc96f 42%,#6cc96f 42%,#2989d8 64%,#1e5799 100%); /* Chrome10-25,Safari5.1-6 */
+    color: #fff;
+}
+th.h-bt {
+    background-color: #D6E9C6;
+    color: #468847;
+}
+th.h-ct {
+    background-color: #BCE8F1;
+    color: #3A87AD;
+} 
+/*.fixed-inable-container thead th .th-inner, .fixed-table-container tbody td .th-inner {
+    padding: 2px !important; 
+}
+.bootstrap-table .table:not(.table-condensed), .bootstrap-table .table:not(.table-condensed) > tbody > tr > th, .bootstrap-table .table:not(.table-condensed) > tfoot > tr > th, .bootstrap-table .table:not(.table-condensed) > thead > tr > td, .bootstrap-table .table:not(.table-condensed) > tbody > tr > td, .bootstrap-table .table:not(.table-condensed) > tfoot > tr > td {
+    padding: 2px !important;
+}*/
+/*.nav a:active {
+    border: 1px solid #fff !important;
+    color: #BCE8F1 !important;
+
+}*/
+.qty {
+    background-color: #C1C1C1;
+    font-size: medium;
+}
+
+.zuto{
+    background-color: #FFFC98;
+}
+.zeleno {
+    background-color: #98FFB3;
+}
+.crveno {
+    background-color: #FF9F9F;
+}
+
+
+.pending {
+    color: #fff !important;
+    background-color: #FF4F4F;
+    /*font-size: medium;*/
+}
+.confirmed {
+    color: #fff !important;
+    background-color: hsla(94, 100%, 25%, 0.72);
+    /*font-size: medium;*/
+}
+.back {
+    background-color: #C1C1C1;
+    color: #fff !important;
+    /*background-color: hsla(0, 0%, 39%, 0.72);*/
+    /*font-size: medium;*/
+}
+.error {
+    color: #f00 !important;
+    background-color: #FFF;
+    font-size: medium;
+}
+.tezenis {
+    color: #F00 !important;
+    background-color: hsla(0, 100%, 88%, 0.72);
+    /* font-size: medium; */
+}
+.mip {
+    color: #fff !important;
+    background-color: hsla(0, 0%, 39%, 0.72);
+    font-size: medium;
+}
+.mod {
+    color: #fff !important;
+    background-color: hsla(0, 0%, 39%, 0.72);
+    font-size: medium;
+}
+/*.table-hover>tbody>tr:hover {
+    background-color: #fff !important;
+}*/
+.table-hover>tbody>tr:hover {
+    background-color: #D0D4E2 !important;
+}

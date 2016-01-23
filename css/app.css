@@ -1,14 +1,4 @@
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
-td.highlight {
-        font-weight: bold !important;
-        color: red !important;
-}
-.important {
-    color: #0f0 !important; 
-}
-.important2 {
-    color: #f00 !important; 
-}
 html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;

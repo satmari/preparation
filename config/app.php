@@ -39,7 +39,9 @@ return [
 	|
 	*/
 
-	'timezone' => 'UTC',
+	//'timezone' => 'UTC',
+	'timezone' => 'CET',
+	//'timezone' => 'CEST',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -146,12 +148,14 @@ return [
 		'App\Providers\EventServiceProvider',
 		'App\Providers\RouteServiceProvider',
 
+		//'Illuminate\Html\HtmlServiceProvider',
+
 		'Collective\Html\HtmlServiceProvider',
 
 		'Bican\Roles\RolesServiceProvider',	
 		'Maatwebsite\Excel\ExcelServiceProvider',
 		'Gbrock\Table\Providers\TableServiceProvider',
-		'yajra\Datatables\DatatablesServiceProvider',
+		// 'yajra\Datatables\DatatablesServiceProvider',
 
 
 	],
@@ -207,8 +211,8 @@ return [
 
 		'Form' 		=> 'Collective\Html\FormFacade',
       	'Html' 		=> 'Collective\Html\HtmlFacade',
-
-      	'Datatables' => 'yajra\Datatables\Datatables',
+      	
+      	// 'Datatables' => 'yajra\Datatables\Datatables',
 	],
 
 ];
