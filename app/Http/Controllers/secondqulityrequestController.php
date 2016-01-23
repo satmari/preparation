@@ -87,6 +87,9 @@ class secondqulityrequestController extends Controller {
 			if ($status == 'error'){
 				$request_q->qty = NULL;			
 				$request_q->status = 'error';	
+			} else if ($status == 'pending') {
+				$request_q->qty = NULL;			
+				$request_q->status = 'pending';	
 			} else {
 				$request_q->qty = NULL;			
 				$request_q->status = 'pending';	
@@ -97,6 +100,9 @@ class secondqulityrequestController extends Controller {
 			if ($status == 'error'){
 				$request_q->qty = $qty;			
 				$request_q->status = 'error';	
+			} else if ($status == 'pending') {
+				$request_q->qty = $qty;			
+				$request_q->status = 'pending';	
 			} else {
 				$request_q->qty = $qty;			
 				$request_q->status = 'confirmed';	
@@ -136,9 +142,12 @@ class secondqulityrequestController extends Controller {
 			if ($status == 'error'){
 				$request_q->qty = NULL;			
 				$request_q->status = 'error';	
-			} else {
+			} else if ($status == 'pending') {
 				$request_q->qty = NULL;			
 				$request_q->status = 'pending';	
+			} else {
+				$request_q->qty = NULL;			
+				$request_q->status = 'pending';
 			}
 
 		} else if ($qty > 0) {				
@@ -146,9 +155,12 @@ class secondqulityrequestController extends Controller {
 			if ($status == 'error'){
 				$request_q->qty = $qty;			
 				$request_q->status = 'error';	
+			} else if ($status == 'pending') {
+				$request_q->qty = $qty;			
+				$request_q->status = 'pending';	
 			} else {
 				$request_q->qty = $qty;			
-				$request_q->status = 'confirmed';	
+				$request_q->status = 'confirmed';
 			}
 		}
 	

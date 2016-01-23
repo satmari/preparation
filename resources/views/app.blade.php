@@ -186,9 +186,9 @@ $(function() {
 		//console.log(qty);
 
 		if (qty == 0 ) {
-			$(this).addClass('zeleno');
-		} else if (qty > 0) {
 			$(this).addClass('zuto');
+		} else if (qty > 0) {
+			$(this).addClass('zeleno');
 		} else if (qty < 0 ) {	
 			$(this).addClass('crveno');
 		}
