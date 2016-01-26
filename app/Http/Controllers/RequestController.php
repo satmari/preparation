@@ -233,6 +233,7 @@ class RequestController extends Controller {
 			$del = "Delivery tomorow at 07:00";
 		}
 
+		//return view('Request.index');
 		return view('Request.success', compact('msg','del'));
 	}
 
