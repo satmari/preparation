@@ -208,7 +208,8 @@ class secondqulityrequestController extends Controller {
 		return Redirect::to('/secondqrequesttable');
 	}
 
-	public function secondqrequestupdate(Request $request) { //NOT NEEDED 
+	//NOT NEEDED 
+	public function secondqrequestupdate(Request $request) {
 
 		$request_q = DB::connection('sqlsrv')->select(DB::raw("SELECT id,ponum FROM secondq_requests"));
 		//dd($request_q);
@@ -236,7 +237,7 @@ class secondqulityrequestController extends Controller {
 
 	public function secondqrequestupdatenav(Request $request) {
 
-		$request_q = DB::connection('sqlsrv')->select(DB::raw("SELECT id,style,color,size FROM secondq_requests"));
+		$request_q = DB::connection('sqlsrv')->select(DB::raw("SELECT id,style,color,size,status FROM secondq_requests"));
 		//dd($request_q);
 
 		foreach($request_q as $row) {
@@ -245,38 +246,43 @@ class secondqulityrequestController extends Controller {
 			$style = $row->style;
 			$color = $row->color;
 			$size = $row->size;
+			$status = $row->status;
 			
-			//dd($id." ".$po." ".$size);
-			$po = DB::connection('sqlsrv3')->select(DB::raw("SELECT [Item No_]
-															      ,[Color]
-															      ,[TG]
-															      ,[Materiale] as materiale
-															      ,[Description Model] as des
-															      ,[TG2] as tg2
-															      ,[Commersial Color code] as ccc
-															      ,[Color decstionption] as cd
-															      ,[Barcode] as barcode
-															  FROM [Gordon_LIVE].[dbo].[GORDON\$Barocde Table Quality]
-															  WHERE [Item No_] = '".$style."' 
-															  	AND [Color] = '".$color."' 
-															  	AND [TG] = '".$size."'"));
+			if($status == "pending") {
 
-			$materiale = $po['0']->materiale;
-			$desc = $po['0']->des;
-			$tg2 = $po['0']->tg2;
-			$ccc = $po['0']->ccc;
-			$cd = $po['0']->cd;
-			$barcode = $po['0']->barcode;
+				//dd($id." ".$po." ".$size);
+				$po = DB::connection('sqlsrv3')->select(DB::raw("SELECT [Item No_]
+																      ,[Color]
+																      ,[TG]
+																      ,[Materiale] as materiale
+																      ,[Description Model] as des
+																      ,[TG2] as tg2
+																      ,[Commersial Color code] as ccc
+																      ,[Color decstionption] as cd
+																      ,[Barcode] as barcode
+																  FROM [Gordon_LIVE].[dbo].[GORDON\$Barocde Table Quality]
+																  WHERE [Item No_] = '".$style."' 
+																  	AND [Color] = '".$color."' 
+																  	AND [TG] = '".$size."'"));
 
-			$update = SecondQRequest::findOrFail($id);
-			
-			$update->materiale = $materiale;
-			$update->desc = $desc;
-			$update->tg2 = $tg2;
-			$update->ccc = $ccc;
-			$update->cd = $cd;
-			$update->barcode = $barcode;
-			$update->save();
+
+				$materiale = $po['0']->materiale;
+				$desc = $po['0']->des;
+				$tg2 = $po['0']->tg2;
+				$ccc = $po['0']->ccc;
+				$cd = $po['0']->cd;
+				$barcode = $po['0']->barcode;
+
+				$update = SecondQRequest::findOrFail($id);
+				
+				$update->materiale = $materiale;
+				$update->desc = $desc;
+				$update->tg2 = $tg2;
+				$update->ccc = $ccc;
+				$update->cd = $cd;
+				$update->barcode = $barcode;
+				$update->save();
+			}
 		}
 
 		return Redirect::to('/secondqrequesttable');	
