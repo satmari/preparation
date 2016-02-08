@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Redirect;
 
 use Maatwebsite\Excel\Facades\Excel;
 
+use App\CarelabelStock;
+use App\BarcodeStock;
 use Request;
 use App\Po;
 use App\User;
@@ -113,8 +115,31 @@ class importController extends Controller {
 						$porder->status;
 						$porder->type;
 						$porder->comment;
-
 						$porder->save();
+
+						$barcode = new BarcodeStock;
+						$barcode->po_id = $porder->id; // ???
+						$barcode->user_id = 3;
+						$barcode->ponum = $po;
+						$barcode->size = $size;
+						$barcode->qty = 0;
+						$barcode->module;
+						$barcode->status;
+						$barcode->type = "insert";
+						$barcode->comment;
+						$barcode->save();
+
+						$carelabel = new CarelabelStock;
+						$carelabel->po_id = $porder->id; // ???
+						$carelabel->user_id = 3;
+						$carelabel->ponum = $po;
+						$carelabel->size = $size;
+						$carelabel->qty = 0;
+						$carelabel->module;
+						$carelabel->status;
+						$carelabel->type = "insert";;
+						$carelabel->comment;
+						$carelabel->save();
 
 	                }
 	            });
