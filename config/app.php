@@ -151,7 +151,6 @@ return [
 		//'Illuminate\Html\HtmlServiceProvider',
 
 		'Collective\Html\HtmlServiceProvider',
-
 		'Bican\Roles\RolesServiceProvider',	
 		'Maatwebsite\Excel\ExcelServiceProvider',
 		'Gbrock\Table\Providers\TableServiceProvider',

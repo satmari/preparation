@@ -19,7 +19,7 @@
 				</div>
 				<div class="panel-body">
 					<p>Size/Velicina: </p>
-					{!! Form::select('size', array(''=>'','S'=>'S','M'=>'M','L'=>'L','XL'=>'XL','XXL'=>'XXL'), '', array('class' => 'form-control')) !!} 
+					{!! Form::select('size', array(''=>'','S'=>'S','M'=>'M','L'=>'L','XL'=>'XL','XXL'=>'XXL','M/L'=>'M/L','S/M'=>'S/M'), '', array('class' => 'form-control')) !!} 
 				</div>
 				<div class="panel-body">
 					<p>Qty/Kolicina: </p>
