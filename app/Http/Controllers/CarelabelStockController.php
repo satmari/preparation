@@ -141,7 +141,7 @@ class CarelabelStockController extends Controller {
 		$qty = $qty * (-1);
 		
 		//$type = "back";
-		$type = "module";
+		$type = "modul";
 		$status = "back";
 
 		// virfy userId

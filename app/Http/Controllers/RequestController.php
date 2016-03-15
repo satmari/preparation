@@ -104,7 +104,7 @@ class RequestController extends Controller {
 		
 		$validator = Validator::make($request2->all(), [
             'po' => 'required|min:5|max:5',
-            'size' => 'required|min:1|max:2',
+            'size' => 'required|min:1|max:3',
             //'qty' => 'required',
             'leader' => 'required'
         ]);
@@ -233,6 +233,7 @@ class RequestController extends Controller {
 			$del = "Delivery tomorow at 07:00";
 		}
 
+		//return view('Request.index');
 		return view('Request.success', compact('msg','del'));
 	}
 
@@ -244,7 +245,7 @@ class RequestController extends Controller {
 		
 		$validator = Validator::make($request2->all(), [
             'po' => 'required|min:5|max:5',
-            'size' => 'required|min:1|max:2',
+            'size' => 'required|min:1|max:3',
             //'qty' => 'required',
             'module' => 'required|min:4|max:5',
             'leader' => 'required'
@@ -391,7 +392,7 @@ class RequestController extends Controller {
 		
 		$validator = Validator::make($request2->all(), [
             'po' => 'required|min:5|max:5',
-            'size' => 'required|min:1|max:2',
+            'size' => 'required|min:1|max:3',
             'qty' => 'required',
             'leader' => 'required'
         ]);

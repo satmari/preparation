@@ -16,7 +16,7 @@
 				<hr>
 				<div class="panel-body">
 					<div class="">
-						<a href="{{url('/request')}}" class="btn btn-default center-block">Back</a>
+						<a href="{{url('/request')}}" class="btn btn-warning btn-lg center-block">OBAVEZNO => Back</a>
 					</div>
 				</div>
 
