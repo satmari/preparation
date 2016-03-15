@@ -72,6 +72,16 @@
 					<span>Comment:</span>
 					{!! Form::input('text', 'comment', null, ['class' => 'form-control']) !!}
 				</div>
+				@if(Auth::check() && Auth::user()->level() == 1)
+				<div class="panel-body">
+					<span>Delivery date:</span>
+					{!! Form::input('string', 'delivery_date', null, ['class' => 'form-control']) !!}
+				</div>
+				<div class="panel-body">
+					<span>Hangtag:</span>
+					{!! Form::input('text', 'hangtag', null, ['class' => 'form-control']) !!}
+				</div>
+				@endif
 
 				<div class="panel-body">
 					{!! Form::submit('Edit Po', ['class' => 'btn btn-warning center-block']) !!}

@@ -6,7 +6,7 @@ class Po extends Model {
 
 	//
 	protected $table = 'pos';
-    protected $fillable = ['po_key','order_code','po','size','style','color','color_desc','season','total_order_qty','flash','closed_po','status','type','comment'];
+    protected $fillable = ['po_key','order_code','po','size','style','color','color_desc','season','total_order_qty','flash','closed_po','status','type','comment','delivery_date','hangtag'];
 
     public function barcode_stocks()
     {

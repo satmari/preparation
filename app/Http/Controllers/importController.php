@@ -67,6 +67,8 @@ class importController extends Controller {
 	                	$product_des = $row['product_description'];
 	                	$qty = $row['total_qty'];
 	                	$flash = $row['flash'];
+	                	$delivery_date = $row['delivery_date'];
+	                	$hangtag = $row['hangtag'];
 
 	                	$po = substr($order_code, 9, 5); // 
 	                	$size = substr($order_code, 23, 3);
@@ -115,6 +117,8 @@ class importController extends Controller {
 						$porder->status;
 						$porder->type;
 						$porder->comment;
+						$porder->delivery_date = $delivery_date;
+						$porder->hangtag = $hangtag;
 						$porder->save();
 
 						$barcode = new BarcodeStock;

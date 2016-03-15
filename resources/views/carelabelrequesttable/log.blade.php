@@ -5,7 +5,7 @@
     <div class="row vertical-center-row">
         <div class="text-center">
             <div class="panel panel-default">
-				<div class="panel-heading h-c">Carelabel Request Log Table</div>
+				<div class="panel-heading h-c">Carelabel Request Log Table (last 15 days)</div>
 				
 				<div class="input-group"> <span class="input-group-addon">Filter</span>
                     <input id="filter" type="text" class="form-control" placeholder="Type here...">

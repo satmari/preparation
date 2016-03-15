@@ -33,6 +33,8 @@ class CreatePosTable extends Migration {
             $table->string('status', 12)->nullable();
             $table->string('type', 12)->nullable();
             $table->text('comment')->nullable();
+            $table->string('delivery_date', 20)->nullable();
+            $table->text('hangtag')->nullable();
             $table->timestamps();
 		});
 	}
