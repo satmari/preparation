@@ -40,8 +40,8 @@ class barcodestocktableController extends Controller {
 		 //}
 
 		$stock_b = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM barcode_stocks ORDER BY created_at desc"));
-
  		return view('barcodestocktable.index', compact('stock_b'));
+ 		
 	}
 
 	/**
