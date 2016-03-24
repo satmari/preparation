@@ -67,7 +67,9 @@ class importController extends Controller {
 	                	$product_des = $row['product_description'];
 	                	$qty = $row['total_qty'];
 	                	$flash = $row['flash'];
-	                	$delivery_date = $row['delivery_date'];
+	                	$delivery_date_in = $row['delivery_date'];
+	                	$delivery_date = $delivery_date_in->format('dd.mm.YYYY');
+						
 	                	$hangtag = $row['hangtag'];
 
 	                	$po = substr($order_code, 9, 5); // 
