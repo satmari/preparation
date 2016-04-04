@@ -39,14 +39,8 @@ class importController extends Controller {
 	            Excel::filter('chunk')->selectSheets($sheetName)->load(Request::file('file'))->chunk(50, function ($reader)
 	            
 	            {
-	                foreach($reader->toArray() as $sheet)
-	                {
-	                    //MainModel::create($sheet);
-	                    //$sheet->dump();
-
-	                }
-
-	                $readerarray = $reader->toArray();
+	               	
+	            	$readerarray = $reader->toArray();
 	                //var_dump($readerarray);
 
 	                foreach($readerarray as $row)
@@ -67,12 +61,22 @@ class importController extends Controller {
 	                	$product_des = $row['product_description'];
 	                	$qty = $row['total_qty'];
 	                	$flash = $row['flash'];
-	                	$delivery_date_in = $row['delivery_date'];
-	                	$delivery_date = $delivery_date_in->format('dd.mm.YYYY');
+	                	$delivery_date = $row['delivery_date'];
+	                	
+						
+						// $delivery_date = $row->delivery_date->format('d-m-Y');
+						// dd($delivery_date);
+
+						//$yourData = date('d.m.Y', strtotime($delivery_date_in));
+	                	//$long = strtotime($delivery_date_in);
+	                	//dd($yourData);
+	                	//dd($long);
+	                	// $delivery_date = date('d.m.Y', $delivery_date_in);
+	                	// dd($delivery_date);
 						
 	                	$hangtag = $row['hangtag'];
 
-	                	$po = substr($order_code, 9, 5); // 
+	                	$po = substr($order_code, 9, 5);
 	                	$size = substr($order_code, 23, 3);
 						
 						$style = substr($product, 0, 8);
