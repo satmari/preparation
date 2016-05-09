@@ -78,11 +78,12 @@
 					<span>Delivery date:</span>
 					{!! Form::input('string', 'delivery_date', null, ['class' => 'form-control']) !!}
 				</div>
+				@endif
 				<div class="panel-body">
 					<span>Hangtag:</span>
 					{!! Form::input('text', 'hangtag', null, ['class' => 'form-control']) !!}
 				</div>
-				@endif
+				
 
 				<div class="panel-body">
 					{!! Form::submit('Edit Po', ['class' => 'btn btn-warning center-block']) !!}
