@@ -97,7 +97,7 @@ ORDER BY cr.status desc,cr.created_at asc
 	public function log()
 	{
 		//$request_c = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM carelabel_requests ORDER BY created_at desc"));
-		$request_c = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM carelabel_requests WHERE created_at >= DATEADD(day,-15,GETDATE()) ORDER BY created_at desc"));
+		$request_c = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM carelabel_requests WHERE created_at >= DATEADD(day,-21,GETDATE()) ORDER BY created_at desc"));
  		return view('carelabelrequesttable.log', compact('request_c'));
 	}
 	public function logmodule()

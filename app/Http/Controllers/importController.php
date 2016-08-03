@@ -271,4 +271,13 @@ class importController extends Controller {
 		return redirect('/');
 	}
 	
+	public function deleteIssueTable() {
+	 	// dd("deleteIssueTable");
+
+	 	DB::connection('sqlsrv3')->delete(DB::raw("DELETE FROM [Gordon_LIVE].[dbo].[GORDON\$Handling Unit Issue]"));
+
+
+	 	return redirect('http://172.27.161.221/Reports_GPD/Pages/Report.aspx?ItemPath=%2fTEST+SSRS%2fIssueTempTable');
+	}
+	
 }

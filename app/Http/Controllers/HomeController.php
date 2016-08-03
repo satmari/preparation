@@ -44,6 +44,7 @@ class HomeController extends Controller {
 		//preparacija 2
 		//pogon 3 
 		//modul 4
+		
 
 		$msg = '';
 		$user = User::find(Auth::id());
