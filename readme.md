@@ -1,3 +1,5 @@
-## Laravel PHP Framework
+# Preparation  Application
 
-# Preparation  App by Satmari
+by
+
+Satmari Atila
