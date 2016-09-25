@@ -9,6 +9,7 @@ use App\Exceptions\Handler;
 
 use Illuminate\Http\Request;
 //use Gbrock\Table\Facades\Table;
+use Illuminate\Support\Facades\Redirect;
 
 use App\BarcodeRequest;
 use App\CarelabelRequest;

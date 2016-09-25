@@ -8,6 +8,8 @@ use Illuminate\Database\QueryException as QueryException;
 use App\Exceptions\Handler;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+
 //use Gbrock\Table\Facades\Table;
 
 use App\BarcodeStock;

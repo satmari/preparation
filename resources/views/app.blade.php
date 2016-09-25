@@ -97,6 +97,9 @@
 					<li><a href="{{ url('/') }}">Home</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
+					<li><a href="http://172.27.161.172/pdm"><big><span style="font-size: 20px; color:red; -webkit-text-stroke-width: 0.5px; -webkit-text-stroke-color: white;">PDM</span></big></a></li>
+				</ul>
+				<ul class="nav navbar-nav">
 					<li><a style="color:#D6E9C6" href="{{ url('/barcoderequesttablelogmodule') }}">Barcode request history</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
