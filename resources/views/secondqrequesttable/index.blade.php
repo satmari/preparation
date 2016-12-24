@@ -7,7 +7,7 @@
             <div class="panel panel-warning">
 				<div class="panel-heading h-q">II quality Request Table
                     <!-- <a href="{{ url('/secondqrequestupdate') }}" class="btn btn-warning btn-xs ">Import style and color</a> -->
-                    <a href="{{ url('/secondqrequestupdatenav') }}" class="btn btn-warning btn-xs"  style="float: right"> Import information form NAV</a>
+                    <a href="{{ url('/secondqrequestupdatenav') }}" class="btn btn-warning btn-xs"  style="float: right"> Import information from NAV</a>
                     
                 </div>
 

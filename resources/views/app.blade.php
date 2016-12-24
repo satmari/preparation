@@ -221,6 +221,24 @@ $(function() {
 });
 </script>
 
+
+{{-- 
+<script type="text/javascript">
+	$(document).ready(function() { 
+		$("img.source-image").hide();
+		var $source = $("img.source-image").attr("src");
+		$('#page-body').css({
+			'backgroundImage': 'url(' + $source +')',
+			'backgroundRepeat': 'no-repeat',
+			'backgroundPosition': 'top center'
+		});
+	}); 
+	</script>
+</head>
+<body id="page-body">
+	<img class="source-image" src="{{  asset('/css/images/cr/2.jpg') }}" alt="" />
+</body>
+--}}
 </body>
 </html>
 
