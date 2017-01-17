@@ -10,7 +10,9 @@
 		"illuminate/html": "^5.0",
 		"bican/roles": "1.7.*",
 		"maatwebsite/excel": "~2.0.0",
-		"gbrock/laravel-table": "dev-master"
+		"gbrock/laravel-table": "dev-master",
+		"doctrine/dbal": "v2.4.2"
+
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",
