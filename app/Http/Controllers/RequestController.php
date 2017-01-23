@@ -28,22 +28,12 @@ use Validator;
 
 class RequestController extends Controller {
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
 	public function index()
 	{
 		//
 		return view('Request.index');
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
 	public function check(Request $request)
 	{
 		//
@@ -223,7 +213,7 @@ class RequestController extends Controller {
 		}
 
 		if ($msg == "") {
-			$msg = '<p style="color:red;"><big>BARCODE AND CARELABEL NOT SELECTED !!!</big></p>';
+			$msg = '<p style="color:red;"><big>BARCODE OR CARELABEL NOT SELECTED !!!</big></p>';
 		}
 
 		if(time() < mktime(08, 30, 0)) {
@@ -235,7 +225,8 @@ class RequestController extends Controller {
 		}
 
 		//return view('Request.index');
-		return view('Request.success', compact('msg','del'));
+		// return view('Request.success', compact('msg','del'));
+		return Redirect::to('/');
 	}
 
 	public function storep(Request $request2)
@@ -382,7 +373,8 @@ class RequestController extends Controller {
 			$del = "Delivery tomorow at 07:00";
 		}
 
-		return view('Request.success', compact('msg','del'));
+		// return view('Request.success', compact('msg','del'));
+		return Redirect::to('/');
 	}
 
 	public function storesec(Request $request2)
@@ -494,51 +486,9 @@ class RequestController extends Controller {
 			$del = "Delivery tomorow at 07:00";
 		}
 
-		return view('Request.success', compact('msg','del'));
+		// return view('Request.success', compact('msg','del'));
+		return Redirect::to('/');
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
-	}
-
+	
 }

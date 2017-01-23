@@ -67,8 +67,9 @@
                             
                             <td>{{ $sto->type }}</td>
                             <td>{{ $sto->comment }}</td>
-                            <td>{{ $sto->created_at }}</td>
-                            <td>{{ $sto->updated_at }}</td>
+                            
+                            <td>{{ substr($sto->created_at, 0, 19) }}</td>
+                            <td>{{ substr($sto->updated_at, 0, 19) }}</td>
                             
                         </tr>
                     

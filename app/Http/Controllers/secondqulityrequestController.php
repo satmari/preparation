@@ -41,7 +41,7 @@ class secondqulityrequestController extends Controller {
 
 	public function log()
 	{
-		$request_q = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM secondq_requests ORDER BY created_at desc"));
+		$request_q = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM secondq_requests WHERE created_at >= DATEADD(day,-21,GETDATE()) ORDER BY created_at desc"));
  		return view('secondqrequesttable.log', compact('request_q'));
 	}
 	public function logmodule()

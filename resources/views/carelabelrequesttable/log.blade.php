@@ -69,8 +69,10 @@
                             <td>{{ $req->status }}</td>
                             <td>{{ $req->type }}</td>
                             <td>{{ $req->comment }}</td>
-                            <td>{{ $req->created_at }}</td>
-                            <td>{{ $req->updated_at }}</td>
+
+                            <td>{{ substr($req->created_at, 0, 19) }}</td>
+                            <td>{{ substr($req->created_at, 0, 19) }}</td>
+                           
                             
 
                         </tr>

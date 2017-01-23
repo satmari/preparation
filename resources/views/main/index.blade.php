@@ -76,8 +76,8 @@
                             <td>{{ $po->delivery_date }}</td>
                             <td>{{ $po->hangtag }}</td>
                             {{-- <td>{{ $po->comment }}</td> --}}
-                            <td>{{ $po->created_at }}</td>
-                            <td>{{ $po->updated_at }}</td>
+                            <td>{{ substr($po->created_at, 0, 19) }}</td>
+                            <td>{{ substr($po->updated_at, 0, 19) }}</td>
                             
                         </tr>
                     

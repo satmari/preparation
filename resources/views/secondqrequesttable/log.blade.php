@@ -5,7 +5,7 @@
     <div class="row vertical-center-row">
         <div class="text-center">
             <div class="panel panel-default">
-				<div class="panel-heading h-q">II quality Request Log Table</div>
+				<div class="panel-heading h-q">II quality Request Log Table  (last 21 days)</div>
 				
 				<div class="input-group"> <span class="input-group-addon">Filter</span>
                     <input id="filter" type="text" class="form-control" placeholder="Type here...">
@@ -69,9 +69,9 @@
                             <td>{{ $req->status }}</td>
                             <td>{{ $req->type }}</td>
                             <td>{{ $req->comment }}</td>
-                            <td>{{ $req->created_at }}</td>
-                            <td>{{ $req->updated_at }}</td>
                             
+                            <td>{{ substr($req->created_at, 0, 19) }}</td>
+                            <td>{{ substr($req->updated_at, 0, 19) }}</td>
 
                         </tr>
                     
