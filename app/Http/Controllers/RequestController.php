@@ -229,154 +229,6 @@ class RequestController extends Controller {
 		return Redirect::to('/');
 	}
 
-	public function storep(Request $request2)
-	{
-		//
-		//validation
-		//$this->validate($request2, ['po'=>'required|min:5|max:5','size'=>'required|min:1|max:2','qty'=>'required'/*,'module'=>'min:4|max:10'*/]);
-		
-		$validator = Validator::make($request2->all(), [
-            'po' => 'required|min:5|max:5',
-            'size' => 'required|min:1|max:3',
-            //'qty' => 'required',
-            'module' => 'required|min:4|max:5',
-            'leader' => 'required'
-        ]);
-		if ($validator->fails()) {
-            return redirect('/request')
-                ->withErrors($validator)
-                ->withInput();
-        }
-		
-		$forminput = $request2->all(); 
-		//dd($forminput);
-
-		$ponum = $forminput['po'];
-		$size = $forminput['size'];
-		$qty = $forminput['qty'];
-		$module = ucfirst($forminput['module']);
-		$leader = $forminput['leader'];
-		$comment = $forminput['comment'];
-		$key = $ponum.'-'.$size;
-
-		if (isset($forminput['barcode'])) {
-			$barcode = $forminput['barcode'];	
-		} else {
-			$barcode = '0';
-		}
-		if (isset($forminput['carelabel'])) {
-			$carelabel = $forminput['carelabel'];
-		} else {
-			$carelabel = '0';
-		}
-
-		$type = "preparation";
-
-		if (($qty <= 0) AND ($qty == NULL)) {
-			$qty = NULL;
-			$status = "pending";
-		} else {
-			$status = "confirmed";
-		}
-		
-		// virfy userId
-		if (Auth::check())
-		{
-		    $userId = Auth::user()->id;
-		    //$module = Auth::user()->name;
-		} else {
-			$msg = 'Modul or User is not autenticated';
-			return view('Request.errorp',compact('msg'));
-		}
-		
-
-		// verify po_id
-		try {
-		    $poid = Po::where('po_key', $key)->firstOrFail()->id;
-		} catch (ModelNotFoundException $e) {
-		    $msg = 'PO and size not exist in Po table';
-		    return view('Request.errorp',compact('msg'));
-		}
-
-		// verify po is closed
-		$po_closed = Po::where('po_key', $key)->firstOrFail()->closed_po;
-		if($po_closed == True) {
-			$msg = 'Komesa is Closed';
-		    return view('Request.errorp',compact('msg'));
-		}
-
-		$msg = "";
-
-		if ($barcode == '1') {
-
-			try {
-				$barcode = new BarcodeRequest;
-
-				$barcode->po_id = $poid;
-				$barcode->user_id = $userId;
-				$barcode->ponum = $ponum;
-				$barcode->size = $size;
-				$barcode->qty = $qty;
-				$barcode->module = $module;
-				$barcode->leader = $leader;
-				$barcode->status = $status;
-				$barcode->type = $type;
-				$barcode->comment = $comment;
-			
-				$barcode->save();
-			}
-			catch (\Illuminate\Database\QueryException $e) {
-				$msg = "Problem to save in barcode request table";
-				return view('Request.errorp',compact('msg'));			
-			}
-		//return view('Request.success');
-		$msg = '<p style="color:green;">Barcode request successfully saved</p>';
-		}
-
-		if ($carelabel == '1') {
-			
-			try {
-				$carelabel = new CarelabelRequest;
-
-				$carelabel->po_id = $poid;
-				$carelabel->user_id = $userId;
-				$carelabel->ponum = $ponum;
-				$carelabel->size = $size;
-				$carelabel->qty = $qty;
-				$carelabel->module = $module;
-				$carelabel->leader = $leader;
-				$carelabel->status = $status;
-				$carelabel->type = $type;
-				$carelabel->comment = $comment;
-			
-				$carelabel->save();
-			}
-			catch (\Illuminate\Database\QueryException $e) {
-				$msg = "Problem to save in carelabel request table";
-				return view('Request.errorp',compact('msg'));			
-			}
-		//return view('Request.success');
-		
-		$msg = $msg. '<p style="color:green;">Carelabel request successfully saved</p>';
-		}
-
-		if ($msg == "") {
-			$msg = '<p style="color:red;"><big>BARCODE AND CARELABEL NOT SELECTED !!!</big></p>';
-			return view('Request.errorp',compact('msg'));
-		}
-
-		if(time() < mktime(08, 30, 0)) {
-		    $del = "Delivery at 9:00";
-		} else if (time() < mktime(11, 30, 0)) {
-			$del = "Delivery at 12:00";
-		} else 	{
-			$del = "Delivery tomorow at 07:00";
-		}
-
-		// return view('Request.success', compact('msg','del'));
-		return Redirect::to('/');
-	}
-
 	public function storesec(Request $request2)
 	{
 		//
@@ -490,5 +342,158 @@ class RequestController extends Controller {
 		return Redirect::to('/');
 	}
 
+	public function storep(Request $request2)
+	{
+		//
+		//validation
+		//$this->validate($request2, ['po'=>'required|min:5|max:5','size'=>'required|min:1|max:2','qty'=>'required'/*,'module'=>'min:4|max:10'*/]);
+		
+		$validator = Validator::make($request2->all(), [
+            'po' => 'required|min:5|max:5',
+            'size' => 'required|min:1|max:3',
+            //'qty' => 'required',
+            // 'module' => 'required|min:4|max:5',
+            'module' => 'required',
+            'leader' => 'required'
+        ]);
+		if ($validator->fails()) {
+            return redirect('/requestcreatep')
+                ->withErrors($validator)
+                ->withInput();
+        }
+		
+		$forminput = $request2->all(); 
+		//dd($forminput);
+
+		$ponum = $forminput['po'];
+		$size = $forminput['size'];
+		$qty = $forminput['qty'];
+		$module = ucfirst($forminput['module']);
+		$leader = $forminput['leader'];
+		$comment = $forminput['comment'];
+		$key = $ponum.'-'.$size;
+
+		if (isset($forminput['barcode'])) {
+			$barcode = $forminput['barcode'];	
+		} else {
+			$barcode = '0';
+		}
+		if (isset($forminput['carelabel'])) {
+			$carelabel = $forminput['carelabel'];
+		} else {
+			$carelabel = '0';
+		}
+
+		$type = "preparation";
+
+		if (($qty <= 0) AND ($qty == NULL)) {
+			$qty = NULL;
+			$status = "pending";
+		} else {
+			$status = "confirmed";
+		}
+		
+		// virfy userId
+		if (Auth::check())
+		{
+		    $userId = Auth::user()->id;
+		    //$module = Auth::user()->name;
+		} else {
+			$msg = 'Modul or User is not autenticated';
+			return view('Request.errorp',compact('msg'));
+		}
+		
+
+		// verify po_id
+		try {
+		    $poid = Po::where('po_key', $key)->firstOrFail()->id;
+		} catch (ModelNotFoundException $e) {
+		    $msg = 'PO and size not exist in Po table';
+		    return view('Request.errorp',compact('msg'));
+		}
+
+		// verify po is closed
+		$po_closed = Po::where('po_key', $key)->firstOrFail()->closed_po;
+		// dd($key);
+		// dd($po_closed);
+
+		if($po_closed == "Closed") {
+			$msg = 'Komesa is Closed';
+		    return view('Request.errorp',compact('msg'));
+		}
+
+		$msg = "";
+
+		if ($barcode == '1') {
+
+			try {
+				$barcode = new BarcodeRequest;
+
+				$barcode->po_id = $poid;
+				$barcode->user_id = $userId;
+				$barcode->ponum = $ponum;
+				$barcode->size = $size;
+				$barcode->qty = $qty;
+				$barcode->module = $module;
+				$barcode->leader = $leader;
+				$barcode->status = $status;
+				$barcode->type = $type;
+				$barcode->comment = $comment;
+
+			
+				$barcode->save();
+			}
+			catch (\Illuminate\Database\QueryException $e) {
+				$msg = "Problem to save in barcode request table";
+				return view('Request.errorp',compact('msg'));			
+			}
+		//return view('Request.success');
+		$msg = '<p style="color:green;">Barcode request successfully saved</p>';
+		}
+
+		if ($carelabel == '1') {
+			
+			try {
+				$carelabel = new CarelabelRequest;
+
+				$carelabel->po_id = $poid;
+				$carelabel->user_id = $userId;
+				$carelabel->ponum = $ponum;
+				$carelabel->size = $size;
+				$carelabel->qty = $qty;
+				$carelabel->module = $module;
+				$carelabel->leader = $leader;
+				$carelabel->status = $status;
+				$carelabel->type = $type;
+				$carelabel->comment = $comment;
+				
+			
+				$carelabel->save();
+			}
+			catch (\Illuminate\Database\QueryException $e) {
+				$msg = "Problem to save in carelabel request table";
+				return view('Request.errorp',compact('msg'));			
+			}
+		//return view('Request.success');
+		
+		$msg = $msg. '<p style="color:green;">Carelabel request successfully saved</p>';
+		}
+
+		if ($msg == "") {
+			$msg = '<p style="color:red;"><big>BARCODE OR/AND CARELABEL NOT SELECTED !!!</big></p>';
+			return view('Request.errorp',compact('msg'));
+		}
+
+		if(time() < mktime(08, 30, 0)) {
+		    $del = "Delivery at 9:00";
+		} else if (time() < mktime(11, 30, 0)) {
+			$del = "Delivery at 12:00";
+		} else 	{
+			$del = "Delivery tomorow at 07:00";
+		}
+
+		// return view('Request.success', compact('msg','del'));
+		return Redirect::to('/');
+	}
 	
 }

@@ -37,11 +37,12 @@
 					<tr>
 						<td>Informacije:</td>
 					</tr>
-					<tr>
+					{{--<tr>
 						<td><span style="color:red"><b>Odmah posle potvrde narudzbe aplikacija ide na pocetnu stranicu!</b></span></td>
 					</tr>
+					--}}
 					<tr>
-						<td><span style="color:green"><b>Zatvarajte tab-ove odnosno prozore, jer je napolju minus.</b></span></td>
+						<td><span style="color:green"><b>Zatvarajte tab-ove</b></span></td>
 					</tr>
 					<tr>
 						<td><span style="color:darkorchid">Da li imate predlog za pozadinsku sliku aplikacije?</span></td>
