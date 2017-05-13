@@ -6,7 +6,6 @@ class SecondQRequest extends Model {
 
 	//
 	protected $table = 'secondq_requests';
-
 	protected $fillable = ['ponum','size','qty','module','leader','status','type','comment'];
 
     public function po()

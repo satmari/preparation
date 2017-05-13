@@ -484,6 +484,7 @@ class Guard implements GuardContract {
 		$this->session->set($this->getName(), $id);
 
 		$this->session->migrate(true);
+		// $this->session->migrate();
 	}
 
 	/**

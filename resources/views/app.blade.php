@@ -35,7 +35,16 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="{{ url('/') }}">Preparation Application</a>
+				<a class="navbar-brand" href="http://172.27.161.171/preparation"><b>Preparation App</b></a>
+				<a class="navbar-brand" href="">|</a>
+				@if(Auth::check() && Auth::user()->level() != 2)
+				<a class="navbar-brand" href="http://172.27.161.171/trebovanje"><b>Trebovanje App</b></a>
+				<a class="navbar-brand" href="">|</a>
+				@endif
+				@if(Auth::check() && Auth::user()->level() == 4)
+				<a class="navbar-brand" href="http://172.27.161.172/pdm"><span style="color:red;"><b>PDM</b></span></a></li>
+				<a class="navbar-brand" href="">|</a>
+				@endif
 			</div>
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -61,26 +70,23 @@
 					<li><a style="color:#BCE8F1" href="{{ url('/carelabelrequesttable') }}">Carelabel Requests</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/requestcreatep') }}"><span style="color:red;">Manual Request</span></a></li>
+				</ul>
+				<ul class="nav navbar-nav">
 					<li><a style="color:#FFBA8E" href="{{ url('/secondqrequesttable') }}">II quality Requests</a></li>
 				</ul>
-				
-				@if(Auth::check() && Auth::user()->level() <= 3)
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/import') }}">Import</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/log') }}">Log tables</a></li>
 				</ul>
-				@endif
-				
+
 				
 				@if(Auth::check() && Auth::user()->level() <= 1)
 
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/request') }}">Request from Modul</a></li>
-				</ul>
-				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/requestcreatep') }}">Request from Modul by mail</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/import') }}">Import</a></li>
@@ -93,9 +99,6 @@
 				@endif
 
 				@if(Auth::check() && Auth::user()->level() == 4)
-				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/') }}">Home</a></li>
-				</ul>
 				<ul class="nav navbar-nav">
 					<li><a style="color:#D6E9C6" href="{{ url('/barcoderequesttablelogmodule') }}">Barcode request history</a></li>
 				</ul>
@@ -111,7 +114,7 @@
 				<ul class="nav navbar-nav navbar-right">
 					@if (Auth::guest())
 						<li><a href="{{ url('/auth/login') }}">Login</a></li>
-						<li><a href="{{ url('/auth/register') }}">Register</a></li>
+						{{--<li><a href="{{ url('/auth/register') }}">Register</a></li>--}}
 					@else
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ Auth::user()->name }} <span class="caret"></span></a>
@@ -215,8 +218,30 @@ $(function() {
  	//    	console.log("col: "+myCol+" tr: "+$tr+" row:"+ myRow);
 	// });
 
+	
+
 });
 </script>
+
+
+{{-- 
+<script type="text/javascript">
+	$(document).ready(function() { 
+		$("img.source-image").hide();
+		var $source = $("img.source-image").attr("src");
+		$('#page-body').css({
+			'backgroundImage': 'url(' + $source +')',
+			'backgroundRepeat': 'no-repeat',
+			'backgroundPosition': 'top center'
+		});
+	}); 
+</script>
+</head>
+<body id="page-body">
+	<img class="source-image" src="{{  asset('/css/images/cr/2.jpg') }}" alt="" />
+</body>
+--}}
+
 
 </body>
 </html>

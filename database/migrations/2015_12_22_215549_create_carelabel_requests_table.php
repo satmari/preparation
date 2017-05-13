@@ -24,7 +24,7 @@ class CreateCarelabelRequestsTable extends Migration {
             $table->string('leader', 30)->nullable();
             $table->string('status', 12)->nullable();
             $table->string('type', 12)->nullable();
-            $table->text('comment')->nullable();;
+            $table->text('comment')->nullable();
 			$table->timestamps();
 		});
 	}

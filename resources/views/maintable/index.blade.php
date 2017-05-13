@@ -46,6 +46,7 @@
 				            <th data-sortable="true" calss="flash">Flash</th>
 				            <th data-sortable="true" class="brand">Brand</th>
 				            <th data-sortable="true" class="">Order Qty</th>
+				            <th data-sortable="true" class="">95%</th>
 				            <th data-sortable="true" class="h-bt">B. printed</th>
 				            <th data-sortable="true" class="h-bt to-print">B. to print</th>
 				            <th data-sortable="true" class="h-bt on-stock">B. on stock</th>
@@ -71,6 +72,7 @@
 				        	<td>{{ $po->flash }}</td>
 				        	<td>{{ $po->brand }}</td>
 				        	<td>{{ $po->total_order_qty }}</td>
+				        	<td>{{ round($po->total_order_qty*0.95) }}</td>
 
 				        	<td>{{ $po->stock_b }}</td>
 				        	<td>{{ $po->total_order_qty - $po->stock_b }}</td>

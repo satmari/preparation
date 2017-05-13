@@ -111,6 +111,11 @@ Route::post('/import4', 'importController@postImportUserRole');
 // Import Modules
 Route::get('/importmodules', 'importModulesController@index');
 Route::post('/importmodulesimport', 'importModulesController@create');
+// Clear data form Issuing table (Navision)
+Route::get('/import/deleteIssueTable', 'importController@deleteIssueTable');
+
+//Cartiglio
+Route::get('/cartiglio', 'cartiglioController@index');
 
 
 Route::any('getpodata', function() {

@@ -14,15 +14,16 @@
 				{{-- {!! Form::hidden('leader', $leader, ['class' => 'form-control']) !!} --}}
 
 				<div class="panel-body">
-					<p>Po/Komesa: </p>
+					<p>Po/Komesa: <span style="color:red">*</span></p>
 					{!! Form::number('po', null, ['id' => 'po', 'class' => 'form-control', 'autofocus' => 'autofocus']) !!}
 				</div>
 				<div class="panel-body">
-					<p>Size/Velicina: </p>
-					{!! Form::select('size', array(''=>'','S'=>'S','M'=>'M','L'=>'L','XL'=>'XL','XXL'=>'XXL','M/L'=>'M/L','S/M'=>'S/M'), '', array('class' => 'form-control')) !!} 
+					<p>Size/Velicina: <span style="color:red">*</span></p>
+					{!! Form::select('size', array(''=>'','XS'=>'XS','S'=>'S','M'=>'M','L'=>'L','XL'=>'XL','XXL'=>'XXL','M/L'=>'M/L','S/M'=>'S/M'), '', array('class' => 'form-control')) !!} 
 				</div>
 				<div class="panel-body">
 					<p>Qty/Kolicina: </p>
+					<p><i>Empty => order pending | Qty => order completed</i></p>
 					{!! Form::number('qty', null, ['class' => 'form-control']) !!}
 				</div>
 				<div class="panel-body">

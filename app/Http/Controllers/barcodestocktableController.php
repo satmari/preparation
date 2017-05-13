@@ -39,9 +39,9 @@ class barcodestocktableController extends Controller {
  			//$table = Table::create($rows, ['id','po_id','user_id','ponum','size','qty','module',/*'status',*/'type','comment','created_at']);
 		 //}
 
-		$stock_b = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM barcode_stocks"));
-
+		$stock_b = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM barcode_stocks ORDER BY created_at desc"));
  		return view('barcodestocktable.index', compact('stock_b'));
+ 		
 	}
 
 	/**

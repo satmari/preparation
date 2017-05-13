@@ -96,7 +96,8 @@ ORDER BY br.status desc,br.created_at asc
 
 	public function log()
 	{
-		$request_b = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM barcode_requests ORDER BY created_at desc"));
+		//$request_b = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM barcode_requests ORDER BY created_at desc"));
+		$request_b = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM barcode_requests WHERE created_at >= DATEADD(day,-21,GETDATE()) ORDER BY created_at desc"));
  		return view('barcoderequesttable.log', compact('request_b'));
 	}
 	public function logmodule()

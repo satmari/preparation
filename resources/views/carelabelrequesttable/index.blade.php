@@ -88,7 +88,8 @@
                             <td>{{ $req->stock_c-$req->request_c }}</td>
                             <!-- <td>{{-- $req->type --}}</td> -->
                             <td>{{ $req->comment }}</td>
-                            <td>{{ $req->created_at }}</td>
+
+                            <td>{{ substr($req->created_at, 0, 19) }}</td>
                             <!-- <td>{{-- $req->updated_at --}}</td> -->
                             
                         </tr>

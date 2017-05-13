@@ -1,3 +1,7 @@
+<?php
+header('Refresh: 3; URL=http://172.27.161.171/preparation/request');
+?>
+
 @extends('app')
 
 @section('content')

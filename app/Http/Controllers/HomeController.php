@@ -7,6 +7,9 @@ use Bican\Roles\Models\Permission;
 use Illuminate\Support\Facades\Redirect;
 use Auth;
 
+use App\BarcodeRequest;
+use DB;
+
 class HomeController extends Controller {
 
 	/*
@@ -44,6 +47,7 @@ class HomeController extends Controller {
 		//preparacija 2
 		//pogon 3 
 		//modul 4
+		
 
 		$msg = '';
 		$user = User::find(Auth::id());
@@ -100,7 +104,13 @@ class HomeController extends Controller {
 		// @if(Auth::check() && Auth::user()->level() >= 2)
 			// user has level 2 or higher
 		// @endiff
-		
+
+		//Statistic
+
+		// $today = date("Y-m-d"); 
+		// var_dump($today);
+		// $barcoderequests = DB::connection('sqlsrv')->select(DB::raw("SELECT count(id) FROM barcode_requests WHERE status = 'error' AND created_at > '".$today."'"));
+		// var_dump($barcoderequests);
 
 		return view('home', compact('msg'));
 		

@@ -41,7 +41,7 @@ class secondqulityrequestController extends Controller {
 
 	public function log()
 	{
-		$request_q = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM secondq_requests ORDER BY created_at desc"));
+		$request_q = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM secondq_requests WHERE created_at >= DATEADD(day,-21,GETDATE()) ORDER BY created_at desc"));
  		return view('secondqrequesttable.log', compact('request_q'));
 	}
 	public function logmodule()
@@ -235,10 +235,10 @@ class secondqulityrequestController extends Controller {
 		return Redirect::to('/secondqrequesttable');	
 	}
 
-	public function secondqrequestupdatenav(Request $request) {
+	public function secondqrequestupdatenav() {
 
-		$request_q = DB::connection('sqlsrv')->select(DB::raw("SELECT id,style,color,size,status FROM secondq_requests"));
-		//dd($request_q);
+		$request_q = DB::connection('sqlsrv')->select(DB::raw("SELECT id,style,color,size,status FROM secondq_requests WHERE status = 'pending'"));
+		// dd($request_q);
 
 		foreach($request_q as $row) {
 
@@ -248,9 +248,8 @@ class secondqulityrequestController extends Controller {
 			$size = $row->size;
 			$status = $row->status;
 			
-			if($status == "pending") {
-
-				//dd($id." ".$po." ".$size);
+			try {
+				
 				$po = DB::connection('sqlsrv3')->select(DB::raw("SELECT [Item No_]
 																      ,[Color]
 																      ,[TG]
@@ -265,23 +264,43 @@ class secondqulityrequestController extends Controller {
 																  	AND [Color] = '".$color."' 
 																  	AND [TG] = '".$size."'"));
 
+				// dd($po);
 
-				$materiale = $po['0']->materiale;
-				$desc = $po['0']->des;
-				$tg2 = $po['0']->tg2;
-				$ccc = $po['0']->ccc;
-				$cd = $po['0']->cd;
-				$barcode = $po['0']->barcode;
+				if(isset($po[0]->materiale) OR isset($po[0]->des) OR isset($po[0]->tg2) OR isset($po[0]->ccc) OR isset($po[0]->cd) OR isset($po[0]->barcode)) {
+					// continnue
+				} else {
+					$msg = "Problem to find in table: ".$style." ". $color." ". $size." , salji mail u Italiju, i zovi Dekija :)" ;
+					return view('secondqrequesttable.error',compact('msg'));
+				}
 
-				$update = SecondQRequest::findOrFail($id);
-				
-				$update->materiale = $materiale;
-				$update->desc = $desc;
-				$update->tg2 = $tg2;
-				$update->ccc = $ccc;
-				$update->cd = $cd;
-				$update->barcode = $barcode;
-				$update->save();
+				$materiale = $po[0]->materiale;
+				$desc = $po[0]->des;
+				$tg2 = $po[0]->tg2;
+				$ccc = $po[0]->ccc;
+				$cd = $po[0]->cd;
+				$barcode = $po[0]->barcode;
+   			
+					try {
+
+					$update = SecondQRequest::findOrFail($id);
+					
+					$update->materiale = $materiale;
+					$update->desc = $desc;
+					$update->tg2 = $tg2;
+					$update->ccc = $ccc;
+					$update->cd = $cd;
+					$update->barcode = $barcode;
+					$update->save();
+
+					}
+						catch (\Illuminate\Database\QueryException $e) {
+							$msg = "Problem to save in table";
+							return view('secondqrequesttable.error',compact('msg'));
+					}
+			}
+				catch (\Illuminate\Database\QueryException $e) {
+					$msg = "Problem";
+					return view('secondqrequesttable.error',compact('msg'));
 			}
 		}
 

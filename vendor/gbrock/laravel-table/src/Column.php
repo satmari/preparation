@@ -40,7 +40,7 @@ class Column
                     $class->setLabel(ucwords(str_replace('_', ' ', $args[0])));
                 } elseif (is_array($args[0])) {
                     // Just an array was sent; set the parameters.
-                    $class->setParameters($args);
+                    $class->setParameters($args[0]);
                 }
                 break;
             case 2: // two arguments
@@ -273,6 +273,13 @@ class Column
     public function addClass($class)
     {
         $this->classes[] = $class;
+
+        return $this;
+    }
+    
+    public function setClasses($class)
+    {
+        $this->classes = explode(" ", $class);
 
         return $this;
     }

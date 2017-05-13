@@ -48,7 +48,9 @@
                             <th data-sortable="true">Flash</th>
                             <th data-sortable="true">Closed po</th>
                             <th data-sortable="true">Brand</th>
-                            <th>Comment</th>
+                            <th data-sortable="true">Delivery</th>
+                            <th data-sortable="true">Hangtag</th>
+                            <!-- <th>Comment</th> -->
                             <th data-sortable="true">Created</th>
                             <th data-sortable="true">Updated</th>
                             
@@ -71,9 +73,11 @@
                             <td>{{ $po->flash }}</td>
                             <td>{{ $po->closed_po }}</td>
                             <td>{{ $po->brand }}</td>
-                            <td>{{ $po->comment }}</td>
-                            <td>{{ $po->created_at }}</td>
-                            <td>{{ $po->updated_at }}</td>
+                            <td>{{ $po->delivery_date }}</td>
+                            <td>{{ $po->hangtag }}</td>
+                            {{-- <td>{{ $po->comment }}</td> --}}
+                            <td>{{ substr($po->created_at, 0, 19) }}</td>
+                            <td>{{ substr($po->updated_at, 0, 19) }}</td>
                             
                         </tr>
                     

@@ -14,13 +14,13 @@
 
 				<div class="panel-body">
 					<div class="">
-						<a href="{{url('/carelabelstockcreatefrommodule')}}" class="btn btn-c2 center-block">Back from module</a>
+						<a href="{{url('/carelabelstockcreatefrommodule')}}" class="btn btn-c1 center-block">Back from module</a>
 					</div>
 				</div>
 
 				<div class="panel-body">
 					<div class="">
-						<a href="{{url('/carelabelstockcreateundo')}}" class="btn btn-c3 center-block">Reduce from Carelabel Stock</a>
+						<a href="{{url('/carelabelstockcreateundo')}}" class="btn btn-c1 center-block">Reduce from Carelabel Stock</a>
 					</div>
 				</div>
 

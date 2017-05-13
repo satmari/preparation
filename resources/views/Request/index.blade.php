@@ -33,8 +33,24 @@
 
 		<div class="text-center col-md-8 col-md-offset-2">
 			<div class="panel panel-default">
-				
 				<table class="table" style="font-size: large">
+					<tr>
+						<td>Informacije:</td>
+					</tr>
+					{{--<tr>
+						<td><span style="color:red"><b>Odmah posle potvrde narudzbe aplikacija ide na pocetnu stranicu!</b></span></td>
+					</tr>
+					--}}
+					<tr>
+						<td><span style="color:green"><b>Zatvarajte tab-ove</b></span></td>
+					</tr>
+					<tr>
+						<td><span style="color:darkorchid">Da li imate predlog za pozadinsku sliku aplikacije?</span></td>
+					</tr>
+				</table>
+				<hr>
+				<table class="table" style="font-size: large">
+				
 				<tr>
 					<td>ORDER MADE <span style="color:red">TILL  8:30</span></td>	
 					<td>=====></td>

@@ -42,7 +42,7 @@ class carelabelstocktableController extends Controller {
  		//}
 
 
- 		$stock_c = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM carelabel_stocks"));
+ 		$stock_c = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM carelabel_stocks ORDER BY created_at desc"));
 
  		return view('carelabelstocktable.index', compact('stock_c'));
 	}
