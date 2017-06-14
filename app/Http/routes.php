@@ -82,6 +82,15 @@ Route::post('/carelabelstockstorenew', 'CarelabelStockController@storenew');
 Route::post('/carelabelstockstorefrommodule', 'CarelabelStockController@storefrommodule');
 Route::post('/carelabelstockstoreundo', 'CarelabelStockController@storeundo');
 
+// Stock
+Route::get('/stock', 'StockController@index');
+Route::get('/stockcreatenew', 'StockController@createnew');
+Route::get('/stockcreatefrommodule', 'StockController@createfrommodule');
+Route::get('/stockcreateundo', 'StockController@createundo');
+Route::post('/stockstorenew', 'StockController@storenew');
+Route::post('/stockstorefrommodule', 'StockController@storefrommodule');
+Route::post('/stockstoreundo', 'StockController@storeundo');
+
 // Request
 Route::get('/request', 'RequestController@index');
 Route::get('/requestcheck', 'RequestController@check');

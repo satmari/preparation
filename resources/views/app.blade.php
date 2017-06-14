@@ -57,11 +57,16 @@
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/main') }}">Po Table</a></li>
 				</ul>
+				{{-- 
 				<ul class="nav navbar-nav">
 					<li><a style="color:#D6E9C6" href="{{ url('/barcodestock') }}">Barcode Stock</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
 					<li><a style="color:#BCE8F1" href="{{ url('/carelabelstock') }}">Carelabel Stock</a></li>
+				</ul>
+				--}}
+				<ul class="nav navbar-nav">
+					<li><a style="color:#FFF" href="{{ url('/stock') }}">Stock</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
 					<li><a style="color:#D6E9C6" href="{{ url('/barcoderequesttable') }}">Barcode Requests</a></li>

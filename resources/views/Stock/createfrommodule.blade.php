@@ -5,34 +5,29 @@
 	<div class="row vertical-center-row">
 		<div class="text-center col-md-4 col-md-offset-4">
 			<div class="panel panel-default">
-				{{--<div class="panel-heading">Create new Request<span class="pull-right">Majstorica: <b>{{$leader->leader}}</b></span></div>--}}
-				<div class="panel-heading">Create new Request</div>
-				<div class="panel-heading"><span>Majstorica: <b>{{$leader}}</b></span></div>
+				<div class="panel-heading h-s">Returned Barcode/Carelabel from module add to Stock</div>
 
-				{!! Form::open(['method'=>'GET', 'url'=>'/requeststore']) !!}
-
-				{!! Form::hidden('leader', $leader, ['class' => 'form-control']) !!}
+				{!! Form::open(['method'=>'POST', 'url'=>'/stockstorefrommodule']) !!}
 
 				<div class="panel-body">
 					<p>Po/Komesa: </p>
-					{!! Form::number('po', null, ['id' => 'po', 'class' => 'form-control', 'autofocus' => 'autofocus']) !!}
+					{!! Form::text('po', null, ['id' => 'po', 'class' => 'form-control', 'autofocus' => 'autofocus']) !!}
 				</div>
 				<div class="panel-body">
 					<p>Size/Velicina: </p>
 					{!! Form::select('size', array(''=>'','XS'=>'XS','S'=>'S','M'=>'M','L'=>'L','XL'=>'XL','XXL'=>'XXL','M/L'=>'M/L','S/M'=>'S/M'), '', array('class' => 'form-control')) !!} 
 				</div>
-				{{--
 				<div class="panel-body">
 					<p>Qty/Kolicina: </p>
 					{!! Form::number('qty', null, ['class' => 'form-control']) !!}
+					<div class="alert alert-success">
+  							Insert positive number and application will reduce form barcode stock.
+					</div>
 				</div>
-				--}}
-				{{--
 				<div class="panel-body">
 					<p>Module: </p>
 					{!! Form::text('module', null, ['id' => 'module', 'class' => 'form-control']) !!} 
 				</div>
-				--}}
 				<div class="panel-body">
 					<table>
 						<!-- <th> -->
@@ -52,7 +47,6 @@
 				</div>
 				<div class="panel-body">
 					<p>Comment: </p>
-					<p><span style="color:red;">** Obavezno u komentar unesite kolicinu **</span></p>
 					{!! Form::text('comment', null, ['class' => 'form-control']) !!}
 				</div>
 
@@ -62,14 +56,6 @@
 
 				@include('errors.list')
 				{!! Form::close() !!}
-
-				
-				{{--
-				<hr>
-				<div class="panel-body">
-					<a href="{{url('/')}}" class="btn btn-default center-block">Back</a>
-				</div>
-				--}}
 				
 			</div>
 		</div>

@@ -97,7 +97,8 @@ class RequestController extends Controller {
             'po' => 'required|min:5|max:5',
             'size' => 'required|min:1|max:3',
             //'qty' => 'required',
-            'leader' => 'required'
+            'leader' => 'required',
+            'comment' => 'required'
         ]);
 		if ($validator->fails()) {
             return redirect('/request')
@@ -214,6 +215,7 @@ class RequestController extends Controller {
 
 		if ($msg == "") {
 			$msg = '<p style="color:red;"><big>BARCODE OR CARELABEL NOT SELECTED !!!</big></p>';
+			return view('Request.error',compact('msg'));
 		}
 
 		if(time() < mktime(08, 30, 0)) {
@@ -350,11 +352,11 @@ class RequestController extends Controller {
 		
 		$validator = Validator::make($request2->all(), [
             'po' => 'required|min:5|max:5',
-            'size' => 'required|min:1|max:3',
+            'size' => 'required|min:1|max:3'
             //'qty' => 'required',
             // 'module' => 'required|min:4|max:5',
-            'module' => 'required',
-            'leader' => 'required'
+            // 'module' => 'required',
+            // 'leader' => 'required'
         ]);
 		if ($validator->fails()) {
             return redirect('/requestcreatep')
@@ -368,10 +370,11 @@ class RequestController extends Controller {
 		$ponum = $forminput['po'];
 		$size = $forminput['size'];
 		$qty = $forminput['qty'];
-		$module = ucfirst($forminput['module']);
-		$leader = $forminput['leader'];
 		$comment = $forminput['comment'];
 		$key = $ponum.'-'.$size;
+
+		$module = ucfirst($forminput['module']);
+		$leader = $forminput['leader'];
 
 		if (isset($forminput['barcode'])) {
 			$barcode = $forminput['barcode'];	

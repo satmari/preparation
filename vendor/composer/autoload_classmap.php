@@ -23,6 +23,7 @@ return array(
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\HomeController' => $baseDir . '/app/Http/Controllers/HomeController.php',
     'App\\Http\\Controllers\\RequestController' => $baseDir . '/app/Http/Controllers/RequestController.php',
+    'App\\Http\\Controllers\\StockController' => $baseDir . '/app/Http/Controllers/StockController.php',
     'App\\Http\\Controllers\\WelcomeController' => $baseDir . '/app/Http/Controllers/WelcomeController.php',
     'App\\Http\\Controllers\\addRollController' => $baseDir . '/app/Http/Controllers/addRollController.php',
     'App\\Http\\Controllers\\barcoderequesttableController' => $baseDir . '/app/Http/Controllers/barcoderequesttableController.php',
