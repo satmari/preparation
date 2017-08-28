@@ -30,7 +30,11 @@ class cartiglioController extends Controller {
 		//
 		// dd("test");
 
-		$data = DB::connection('sqlsrvc')->select(DB::raw("SELECT [id]
+		$data = DB::connection('sqlsrv4');
+
+		dd($data);
+
+		$data = DB::connection('sqlsrv4')->select(DB::raw("SELECT [id]
 	      ,[Cod_Bar]
 	      ,[Cod_Art_CZ]
 	      ,[Cod_Col_CZ]

@@ -118,21 +118,21 @@ table.dataTable tbody td {
 .btn-s1 {
     /* border-bottom: 1px solid #326EB7; */
     /*background-image: linear-gradient(#59A9FB, #2273D8 60%, #396BA8);*/
-    color: #ffffff;
+    color: #000;
     background-color: #73a839; 
     border-color: #333333;
 }
 .btn-s2 {
     /*border-bottom: 1px solid #59822c; */
     /*background-image: linear-gradient(#55A5F9, #2F5B8E 60%, #53A2F4);*/
-    color: #ffffff;
+    color: #000;
     background-color: #73a839; 
     border-color: #333333;
 }
 .btn-s3 {
     /*border-bottom: 1px solid #59822c;*/
     /*background-image: linear-gradient(#3669A2, #55A5F9 60%, #336298);*/
-    color: #ffffff;
+    color: #000;
     background-color: #73a839;
     border-color: #333333;
 }
