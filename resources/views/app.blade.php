@@ -86,6 +86,9 @@
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/log') }}">Log tables</a></li>
 				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/bb_by_marker') }}">BB by Marker</a></li>
+				</ul>
 
 				
 				@if(Auth::check() && Auth::user()->level() <= 1)

@@ -126,6 +126,11 @@ Route::get('/import/deleteIssueTable', 'importController@deleteIssueTable');
 //Cartiglio
 Route::get('/cartiglio', 'cartiglioController@index');
 
+// BB by marker
+Route::get('/bb_by_marker', 'bb_by_markerController@index');
+Route::post('/search_by_marker', 'bb_by_markerController@search_by_marker');
+Route::get('/print_labels/{id}', 'bb_by_markerController@print_labels');
+
 
 Route::any('getpodata', function() {
 	$term = Input::get('term');

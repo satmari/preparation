@@ -5,12 +5,14 @@
 	<div class="row vertical-center-row">
 		<div class="text-center">
 			<div class="panel panel-default">
-				<div class="panel-heading h-n">Main Table</div>
+				
 				
 				<div class="input-group"> <span class="input-group-addon">Filter</span>
 				    <input id="filter" type="text" class="form-control" placeholder="Type here...">
 				</div>
 				<table class="table table-striped table-bordered" id="sort" 
+       			data-show-export="true"
+       			data-export-types="['excel']"
        			>
 				<!--
 				data-show-export="true"
