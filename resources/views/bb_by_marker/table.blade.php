@@ -7,15 +7,16 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">BB by Marker {{ $marker }}</div>
                 
-                <a href="{{ url('/print_labels/'.$marker) }}" class="btn btn-default center-block">Print labels</a>
+                <a href="{{ url('/print_labels/'.$marker) }}" class="btn btn-default center-block">Print all labels</a>
+                <a href="{{ url('/print_labels_not/'.$marker) }}" class="btn btn-default center-block">Print not printed labels</a>
 				<div class="input-group"> <span class="input-group-addon">Filter</span>
                     <input id="filter" type="text" class="form-control" placeholder="Type here...">
                 </div>
 
-
+                <!--
                 <table class="table table-striped table-bordered" id="sort" 
                 >
-                <!--
+                
                 data-show-export="true"
                 data-export-types="['excel']"
                 data-search="true"
@@ -36,7 +37,28 @@
                            }
                          }
                        }'
-                -->
+                
+
+                <table class="table">
+                        <tr>
+                            <td>
+                                Total boxes:
+                            </td>
+                            <td>
+                            <big><b></b></big>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="table">
+                        <thead>
+                            <td>Cartonbox</td>
+                            <td>Po</td>
+                            <td>Style</td>
+                            <td>Size</td>
+                            <td>Color</td>
+                            <td>Qty</td>
+                        </thead>
+                    @if(isset($bb))
                     <thead>
                         <tr>
                             <th>Marker</th>
@@ -45,26 +67,93 @@
                             <th>Style</th>
                             <th>Variant</th>
                             <th>Created</th>
+                            <th>Printed</th>
                             
                         </tr>
                     </thead>
                     <tbody class="searchable">
-                    
-                    @foreach ($inteosmarker as $line)
+                -->
+              
+                    <table class="table">
+                        <thead>
+                            <td>marker</td>
+                            <td>bb</td>
+                            <td>qty</td>
+                            <td>style</td>
+                            <td>variant</td>
+                            <td>created at</td>
+                            <td>printed</td>
+                        </thead>
+                    @foreach ($bb as $line)
 
                         <tr>
-                            <td>{{ $line->marker }}</td>
-                            <td>{{ substr($line->bb,0,5) }} <b>{{ substr($line->bb,5,3) }}</b></td>
-                            <td>{{ $line->qty }}</td>
-                            <td>{{ $line->style }}</td>
-                            <td>{{ $line->variant }}</td>
-                            <td>{{ substr($line->created, 0, 19) }}</td>
-                            
-                            
+                            <td>
+                                @foreach($line as $key => $value)
+                                    @if($key == 'marker')
+                                        {{ $value }}
+                                    @endif
+                                @endforeach
+                            </td>
+                        
+                            <td>
+                                @foreach($line as $key => $value)
+                                    @if($key == 'bb')
+                                        {{ $value }}
+                                    @endif
+                                @endforeach
+                            </td>
+                       
+                            <td>
+                                @foreach($line as $key => $value)
+                                    @if($key == 'qty')
+                                        {{ $value }}
+                                    @endif
+                                @endforeach
+                            </td>
+                        
+                        
+                            <td>
+                                @foreach($line as $key => $value)
+                                    @if($key == 'style')
+                                        {{ $value }}
+                                    @endif
+                                @endforeach
+                            </td>
+                        
+                            <td>
+                                @foreach($line as $key => $value)
+                                    @if($key == 'variant')
+                                        {{ $value }}
+                                    @endif
+                                @endforeach
+                            </td>
+
+                            <td>
+                                @foreach($line as $key => $value)
+                                    @if($key == 'created_at')
+                                        {{ substr($value, 0, 19) }}
+                                    @endif
+                                @endforeach
+                            </td>
+                        
+                            <td>
+                                @foreach($line as $key => $value)
+                                    @if($key == 'printed')
+                                        @if($value == 0)
+                                        <b>NO</b>
+                                        @else
+                                        <b>YES</b>
+                                        @endif
+                                    @endif
+                                @endforeach
+                            </td>
                         </tr>
-                    
+                         
+
                     @endforeach
+
                     </tbody>
+                    @endif
 
 
 				<hr>

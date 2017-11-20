@@ -17,6 +17,8 @@ use Bican\Roles\Models\Role;
 use Bican\Roles\Models\Permission;
 use Auth;
 
+use Session;
+
 class bb_by_markerController extends Controller {
 
 	public function index()
@@ -33,6 +35,8 @@ class bb_by_markerController extends Controller {
 
 		$marker = $input['marker'];
 		// dd($marker);
+
+		Session::set('bbarray', null);
 
 		$inteosmarker = DB::connection('sqlsrv2')->select(DB::raw("SELECT 
       SUBSTRING(bb.[BlueBoxNum],10,8) as bb
@@ -54,8 +58,57 @@ class bb_by_markerController extends Controller {
 		"));
 
 		// dd($inteosmarker);
+		$bb = array();
 
-		return view('bb_by_marker.table',compact('marker', 'inteosmarker'));
+		if ($inteosmarker != []) {
+			foreach ($inteosmarker as $line) {
+
+				$komesa = substr($line->bb,0,5);
+				$bb = substr($line->bb,5,3);
+
+				$bbprinted = DB::connection('sqlsrv')->select(DB::raw("SELECT created_at
+				  FROM [preparation].[dbo].[print_b_b_labels]
+				  WHERE komesa = '".$komesa."' AND bb = '".$bb."' AND marker = '".$marker."' "));
+
+				// dd($bbprinted->printed);
+
+				if ($bbprinted == []) {
+					$printed = 0;
+					$created_at = "";
+				} else {
+					$printed = 1;
+					$created_at = $bbprinted[0]->created_at;
+				}
+				
+	        	$bbarray = array(
+	        		'komesa' => $komesa,
+					'bb' => $bb,
+					'marker' => $line->marker,
+					'style' => $line->style,
+					'variant' => $line->variant,
+					'qty' => $line->qty,
+					'printed' => $printed,
+					'created_at' => $created_at
+				);
+				
+				// dd($bbarray);
+				// array_push($bb, $bbarray);
+
+				Session::push('bbarray',$bbarray);
+			}
+
+			$bblist = Session::get('bbarray');
+			$bb = array_map("unserialize", array_unique(array_map("serialize", $bblist)));
+			// dd($bb);
+			Session::set('bbarray', null);
+
+			return view('bb_by_marker.table',compact('marker', 'bb'));			
+		} else {
+
+			return view('bb_by_marker.table',compact('marker', 'bb'));
+		}
+
+
 	}
 
 	public function print_labels ($id)
@@ -90,6 +143,16 @@ class bb_by_markerController extends Controller {
 			$bb = substr($line->bb,5,3);
 			// dd($komesa);
 
+			/*
+			$searchinprinted = DB::connection('sqlsrv')->select(DB::raw("SELECT *
+  				FROM [print_b_b_labels]
+  				WHERE komesa = '".$komesa."' AND bb = '".$bb."' AND marker = '".$marker."'
+			"));
+			*/
+
+			// dd($searchinprinted);
+			
+			
 			try {
 			$table = new PrintBBLabels;
 
@@ -99,6 +162,7 @@ class bb_by_markerController extends Controller {
 			$table->style = $line->style;
 			$table->variant = $line->variant;
 			$table->qty = $line->qty;
+			$table->printed = 0; // set 0
 			
 			
 			$table->save();
