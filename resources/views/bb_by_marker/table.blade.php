@@ -8,7 +8,7 @@
 				<div class="panel-heading">BB by Marker {{ $marker }}</div>
                 
                 <a href="{{ url('/print_labels/'.$marker) }}" class="btn btn-default center-block">Print all labels</a>
-                <a href="{{ url('/print_labels_not/'.$marker) }}" class="btn btn-default center-block">Print not printed labels</a>
+                <a href="{{ url('/print_labels_no/'.$marker) }}" class="btn btn-default center-block">Print only not printed labels</a>
 				<div class="input-group"> <span class="input-group-addon">Filter</span>
                     <input id="filter" type="text" class="form-control" placeholder="Type here...">
                 </div>

@@ -130,6 +130,7 @@ Route::get('/cartiglio', 'cartiglioController@index');
 Route::get('/bb_by_marker', 'bb_by_markerController@index');
 Route::post('/search_by_marker', 'bb_by_markerController@search_by_marker');
 Route::get('/print_labels/{id}', 'bb_by_markerController@print_labels');
+Route::get('/print_labels_no/{id}', 'bb_by_markerController@print_labels_no');
 
 
 Route::any('getpodata', function() {

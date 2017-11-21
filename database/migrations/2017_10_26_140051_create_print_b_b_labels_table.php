@@ -21,6 +21,7 @@ class CreatePrintBBLabelsTable extends Migration {
 			$table->string('marker')->nullable();
 			$table->string('style')->nullable();
 			$table->string('variant')->nullable();
+			$table->string('size')->nullable();
 			$table->string('qty')->nullable();
 
 			$table->tinyInteger('printed');
