@@ -269,7 +269,7 @@ class secondqulityrequestController extends Controller {
 				if(isset($po[0]->materiale) OR isset($po[0]->des) OR isset($po[0]->tg2) OR isset($po[0]->ccc) OR isset($po[0]->cd) OR isset($po[0]->barcode)) {
 					// continnue
 				} else {
-					$msg = "Problem to find in table: ".$style." ". $color." ". $size." , salji mail u Italiju, i zovi Dekija :)" ;
+					$msg = "Problem to find in table: ".$style." ". $color." ". $size." , salji mail u Italiju, i zovi MARKONIJA :)" ;
 					return view('secondqrequesttable.error',compact('msg'));
 				}
 
