@@ -36,10 +36,12 @@
 					<span class="icon-bar"></span>
 				</button>
 				<a class="navbar-brand" href="http://172.27.161.171/preparation"><b>Preparation App</b></a>
-				<a class="navbar-brand" href="">|</a>
+				<a class="navbar-brand" href="#">|</a>
 				@if(Auth::check() && Auth::user()->level() != 2)
 				<a class="navbar-brand" href="http://172.27.161.171/trebovanje"><b>Trebovanje App</b></a>
-				<a class="navbar-brand" href="">|</a>
+				<a class="navbar-brand" href="#">|</a>
+				<a class="navbar-brand" href="http://172.27.161.171/downtime"><b>Downtime App</b></a>
+				<a class="navbar-brand" href="#">|</a>
 				@endif
 				@if(Auth::check() && Auth::user()->level() == 4)
 				<a class="navbar-brand" href="http://172.27.161.172/pdm"><span style="color:red;"><b>PDM</b></span></a></li>
@@ -108,13 +110,13 @@
 
 				@if(Auth::check() && Auth::user()->level() == 4)
 				<ul class="nav navbar-nav">
-					<li><a style="color:#D6E9C6" href="{{ url('/barcoderequesttablelogmodule') }}">Barcode request history</a></li>
+					<li><a style="color:#D6E9C6" href="{{ url('/barcoderequesttablelogmodule') }}">Barcode history</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
-					<li><a style="color:#BCE8F1" href="{{ url('/carelabelrequesttablelogmodule') }}">Carelabel request history</a></li>
+					<li><a style="color:#BCE8F1" href="{{ url('/carelabelrequesttablelogmodule') }}">Carelabel history</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
-					<li><a style="color:#FFBA8E" href="{{ url('/secondqrequesttablelogmodule') }}">II quality request history</a></li>
+					<li><a style="color:#FFBA8E" href="{{ url('/secondqrequesttablelogmodule') }}">II quality history</a></li>
 				</ul>
 				@endif
 				
