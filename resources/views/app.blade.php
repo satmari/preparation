@@ -37,12 +37,16 @@
 				</button>
 				<a class="navbar-brand" href="http://172.27.161.171/preparation"><b>Preparation App</b></a>
 				<a class="navbar-brand" href="#">|</a>
-				@if(Auth::check() && Auth::user()->level() != 2)
+				@if(Auth::check() && Auth::user()->level() == 2)
+				
+				@else
 				<a class="navbar-brand" href="http://172.27.161.171/trebovanje"><b>Trebovanje App</b></a>
 				<a class="navbar-brand" href="#">|</a>
 				<a class="navbar-brand" href="http://172.27.161.171/downtime"><b>Downtime App</b></a>
 				<a class="navbar-brand" href="#">|</a>
 				@endif
+
+
 				@if(Auth::check() && Auth::user()->level() == 4)
 				<a class="navbar-brand" href="http://172.27.161.172/pdm"><span style="color:red;"><b>PDM</b></span></a></li>
 				<a class="navbar-brand" href="">|</a>
