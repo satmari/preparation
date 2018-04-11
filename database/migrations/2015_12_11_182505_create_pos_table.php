@@ -20,7 +20,7 @@ class CreatePosTable extends Migration {
 			$table->increments('id');
             $table->string('po_key', 10)->unique();
             $table->string('order_code', 30)->nullable();
-            $table->string('po', 5)->nullable();
+            $table->string('po', 6)->nullable();			// change to 6
             $table->string('size', 3)->nullable();
             $table->string('style', 8)->nullable();
             $table->string('color', 4)->nullable();

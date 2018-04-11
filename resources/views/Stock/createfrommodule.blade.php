@@ -10,7 +10,7 @@
 				{!! Form::open(['method'=>'POST', 'url'=>'/stockstorefrommodule']) !!}
 
 				<div class="panel-body">
-					<p>Po/Komesa: </p>
+					<p>Po/Komesa: <span style="color:red">Obavezno 6 cifara</span></p>
 					{!! Form::text('po', null, ['id' => 'po', 'class' => 'form-control', 'autofocus' => 'autofocus']) !!}
 				</div>
 				<div class="panel-body">

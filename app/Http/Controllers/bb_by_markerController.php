@@ -41,7 +41,7 @@ class bb_by_markerController extends Controller {
 		Session::set('bbarray', null);
 
 		$inteosmarker = DB::connection('sqlsrv2')->select(DB::raw("SELECT 
-      SUBSTRING(bb.[BlueBoxNum],10,8) as bb
+      SUBSTRING(bb.[BlueBoxNum],9,9) as bb
       ,bb.[BoxQuant] as qty
       ,bb.[CREATEDATE] as created
       ,bb.[IDMarker] as marker
@@ -65,8 +65,8 @@ class bb_by_markerController extends Controller {
 		if ($inteosmarker != []) {
 			foreach ($inteosmarker as $line) {
 
-				$komesa = substr($line->bb,0,5);
-				$bb = substr($line->bb,5,3);
+				$komesa = substr($line->bb,0,6);
+				$bb = substr($line->bb,6,3);
 
 				$bbprinted = DB::connection('sqlsrv')->select(DB::raw("SELECT created_at
 				  FROM [preparation].[dbo].[print_b_b_labels]

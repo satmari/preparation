@@ -14,7 +14,7 @@
 				{!! Form::hidden('leader', $leader, ['class' => 'form-control']) !!}
 
 				<div class="panel-body">
-					<p>Po/Komesa: </p>
+					<p>Po/Komesa: <span style="color:red">Obavezno 6 cifara</span></p>
 					{!! Form::number('po', null, ['id' => 'po', 'class' => 'form-control', 'autofocus' => 'autofocus']) !!}
 				</div>
 				<div class="panel-body">

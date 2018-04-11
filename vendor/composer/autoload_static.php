@@ -372,6 +372,7 @@ class ComposerStaticInit7734f12ecb1af9828120828a65668830
         'Carbon\\Carbon' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Carbon.php',
         'Carbon\\CarbonInterval' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonInterval.php',
         'Carbon\\Exceptions\\InvalidDateException' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Exceptions/InvalidDateException.php',
+        'ChangePoTo6' => __DIR__ . '/../..' . '/database/migrations/2018_04_10_173007_change_po_to_6.php',
         'ClassPreloader\\Application' => __DIR__ . '/..' . '/classpreloader/classpreloader/src/Application.php',
         'ClassPreloader\\ClassList' => __DIR__ . '/..' . '/classpreloader/classpreloader/src/ClassList.php',
         'ClassPreloader\\ClassLoader' => __DIR__ . '/..' . '/classpreloader/classpreloader/src/ClassLoader.php',

@@ -76,7 +76,7 @@ class importController extends Controller {
 						
 	                	$hangtag = $row['hangtag'];
 
-	                	$po = substr($order_code, 9, 5);
+	                	$po = substr($order_code, 8, 6);
 	                	$size = substr($order_code, 23, 3);
 						
 						$style = substr($product, 0, 8);

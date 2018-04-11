@@ -66,7 +66,7 @@ class BarcodeStockController extends Controller {
 	{
 		//
 		//validation
-		$this->validate($request, ['po'=>'required|min:5|max:5','size'=>'required','qty'=>'required']);
+		$this->validate($request, ['po'=>'required|min:6|max:6','size'=>'required','qty'=>'required']);
 		$forminput = $request->all(); 
 
 		$ponum = $forminput['po'];
@@ -129,7 +129,7 @@ class BarcodeStockController extends Controller {
 	{
 		//
 		//validation
-		$this->validate($request, ['po'=>'required|min:5|max:5','size'=>'required','qty'=>'required','module'=>'max:8']);
+		$this->validate($request, ['po'=>'required|min:6|max:6','size'=>'required','qty'=>'required','module'=>'max:8']);
 		$forminput = $request->all(); 
 
 		$ponum = $forminput['po'];
@@ -199,7 +199,7 @@ class BarcodeStockController extends Controller {
 	{
 		//
 		//validation
-		$this->validate($request, ['po'=>'required|min:5|max:5','size'=>'required','qty'=>'required']);
+		$this->validate($request, ['po'=>'required|min:6|max:6','size'=>'required','qty'=>'required']);
 		$forminput = $request->all(); 
 
 		$ponum = $forminput['po'];

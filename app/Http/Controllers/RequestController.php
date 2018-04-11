@@ -91,10 +91,10 @@ class RequestController extends Controller {
 	{
 		//
 		//validation
-		//$this->validate($request2, ['po'=>'required|min:5|max:5','size'=>'required|min:1|max:2','qty'=>'required'/*,'module'=>'min:4|max:10'*/]);
+		//$this->validate($request2, ['po'=>'required|min:6|max:6','size'=>'required|min:1|max:2','qty'=>'required'/*,'module'=>'min:4|max:10'*/]);
 		
 		$validator = Validator::make($request2->all(), [
-            'po' => 'required|min:5|max:5',
+            'po' => 'required|min:6|max:6',
             'size' => 'required|min:1|max:3',
             //'qty' => 'required',
             'leader' => 'required',
@@ -235,10 +235,10 @@ class RequestController extends Controller {
 	{
 		//
 		//validation
-		//$this->validate($request2, ['po'=>'required|min:5|max:5','size'=>'required|min:1|max:2','qty'=>'required'/*,'module'=>'min:4|max:10'*/]);
+		//$this->validate($request2, ['po'=>'required|min:6|max:6','size'=>'required|min:1|max:2','qty'=>'required'/*,'module'=>'min:4|max:10'*/]);
 		
 		$validator = Validator::make($request2->all(), [
-            'po' => 'required|min:5|max:5',
+            'po' => 'required|min:6|max:6',
             'size' => 'required|min:1|max:3',
             'qty' => 'required',
             'leader' => 'required'
@@ -348,10 +348,10 @@ class RequestController extends Controller {
 	{
 		//
 		//validation
-		//$this->validate($request2, ['po'=>'required|min:5|max:5','size'=>'required|min:1|max:2','qty'=>'required'/*,'module'=>'min:4|max:10'*/]);
+		//$this->validate($request2, ['po'=>'required|min:6|max:6','size'=>'required|min:1|max:2','qty'=>'required'/*,'module'=>'min:4|max:10'*/]);
 		
 		$validator = Validator::make($request2->all(), [
-            'po' => 'required|min:5|max:5',
+            'po' => 'required|min:6|max:6',
             'size' => 'required|min:1|max:3'
             //'qty' => 'required',
             // 'module' => 'required|min:4|max:5',
