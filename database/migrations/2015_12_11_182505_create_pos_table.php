@@ -13,7 +13,7 @@ class CreatePosTable extends Migration {
 	public function up()
 	{
 
-		Schema::dropIfExists('pos');
+		// Schema::dropIfExists('pos');
 
 		Schema::create('pos', function(Blueprint $table)
 		{
@@ -21,7 +21,7 @@ class CreatePosTable extends Migration {
             $table->string('po_key', 10)->unique();
             $table->string('order_code', 30)->nullable();
             $table->string('po', 6)->nullable();			// change to 6
-            $table->string('size', 3)->nullable();
+            $table->string('size', 5)->nullable();			// change to 5
             $table->string('style', 8)->nullable();
             $table->string('color', 4)->nullable();
             $table->string('color_desc', 30)->nullable();
