@@ -95,7 +95,7 @@ class RequestController extends Controller {
 		
 		$validator = Validator::make($request2->all(), [
             'po' => 'required|min:6|max:6',
-            'size' => 'required|min:1|max:3',
+            'size' => 'required|min:1|max:5',
             //'qty' => 'required',
             'leader' => 'required',
             'comment' => 'required'
@@ -148,7 +148,7 @@ class RequestController extends Controller {
 		    $poid = Po::where('po_key', $key)->firstOrFail()->id;
 		    $po_closed = Po::where('po_key', $key)->firstOrFail()->closed_po;
 		} catch (ModelNotFoundException $e) {
-		    $msg = 'PO and size not exist in Po table';
+		    $msg = 'PO and size not exist in Po table1';
 		    return view('Request.error',compact('msg'));
 		}
 
@@ -239,7 +239,7 @@ class RequestController extends Controller {
 		
 		$validator = Validator::make($request2->all(), [
             'po' => 'required|min:6|max:6',
-            'size' => 'required|min:1|max:3',
+            'size' => 'required|min:1|max:5',
             'qty' => 'required',
             'leader' => 'required'
         ]);
@@ -291,11 +291,11 @@ class RequestController extends Controller {
 		    // $po_closed = Po::where('po_key', $key)->firstOrFail()->closed_po;
 		} 
 		catch (ModelNotFoundException $e) {
-		    $msg = 'PO and size not exist in Po table';
+		    $msg = 'PO and size not exist in Po table2';
 		    return view('Request.error',compact('msg'));
 		}
 		catch (\Exception $e) {
-		    $msg = 'PO and size not exist in Po table';
+		    $msg = 'PO and size not exist in Po table3';
 		    return view('Request.error',compact('msg'));
 		}
 
@@ -352,7 +352,7 @@ class RequestController extends Controller {
 		
 		$validator = Validator::make($request2->all(), [
             'po' => 'required|min:6|max:6',
-            'size' => 'required|min:1|max:3'
+            'size' => 'required|min:1|max:5'
             //'qty' => 'required',
             // 'module' => 'required|min:4|max:5',
             // 'module' => 'required',
@@ -411,7 +411,7 @@ class RequestController extends Controller {
 		try {
 		    $poid = Po::where('po_key', $key)->firstOrFail()->id;
 		} catch (ModelNotFoundException $e) {
-		    $msg = 'PO and size not exist in Po table';
+		    $msg = 'PO and size not exist in Po table3';
 		    return view('Request.errorp',compact('msg'));
 		}
 

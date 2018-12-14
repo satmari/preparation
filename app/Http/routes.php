@@ -25,6 +25,7 @@ Route::controllers([
 ]);
 
 Route::get('/maintable', 'maintableController@index');
+Route::get('/maintable_planer', 'maintableController@index_planer');
 
 Route::get('/main', 'mainController@index');
 Route::get('/main/edit/{id}', 'mainController@edit');
@@ -113,9 +114,10 @@ Route::post('/requeststoresec', 'RequestController@storesec');
 Route::get('/import', 'importController@index');
 Route::get('/importresult', 'importController@show');
 Route::post('/import', 'importController@postImportPo');
-Route::post('/import2', 'importController@postImportUser');
-Route::post('/import3', 'importController@postImportRoll');
-Route::post('/import4', 'importController@postImportUserRole');
+Route::post('/import1', 'importController@postImportHangtag');
+// Route::post('/import2', 'importController@postImportUser');
+// Route::post('/import3', 'importController@postImportRoll');
+// Route::post('/import4', 'importController@postImportUserRole');
 
 // Import Modules
 Route::get('/importmodules', 'importModulesController@index');

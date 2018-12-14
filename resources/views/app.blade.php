@@ -10,6 +10,7 @@
     <!-- <link href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css" rel='stylesheet' type='text/css'> -->
     <!-- <link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css' > -->
 
+
 	<link href="{{ asset('/css/app.css') }}" rel='stylesheet' type='text/css'>
 	<link href="{{ asset('/css/font.css') }}" rel='stylesheet' type='text/css'>
 	<link href="{{ asset('/css/bootstrap.min.css') }}" rel='stylesheet' type='text/css'>
@@ -35,14 +36,16 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="http://172.27.161.171/preparation"><b>Preparation App</b></a>
+				<a class="navbar-brand" href="http://172.27.161.171/preparation"><b>Preparation</b></a>
 				<a class="navbar-brand" href="#">|</a>
 				@if(Auth::check() && Auth::user()->level() == 2)
 				
 				@else
-				<a class="navbar-brand" href="http://172.27.161.171/trebovanje"><b>Trebovanje App</b></a>
+				<a class="navbar-brand" href="http://172.27.161.171/trebovanje"><b>Trebovanje</b></a>
 				<a class="navbar-brand" href="#">|</a>
-				<a class="navbar-brand" href="http://172.27.161.171/downtime"><b>Downtime App</b></a>
+				<a class="navbar-brand" href="http://172.27.161.171/downtime"><b>Downtime</b></a>
+				<a class="navbar-brand" href="#">|</a>
+				<a class="navbar-brand" href="http://172.27.161.171/cutting"><b>Cutting</b></a>
 				<a class="navbar-brand" href="#">|</a>
 				@endif
 
@@ -50,6 +53,11 @@
 				@if(Auth::check() && Auth::user()->level() == 4)
 				<a class="navbar-brand" href="http://172.27.161.172/pdm"><span style="color:red;"><b>PDM</b></span></a></li>
 				<a class="navbar-brand" href="">|</a>
+				{{--
+				<a class="navbar-brand" href="http://172.27.161.212"><span style="color:green;"><b>IntApp</b></span></a></li>
+				<a class="navbar-brand" href="">|</a>
+				--}}
+				
 				@endif
 			</div>
 
@@ -59,6 +67,9 @@
 												
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/maintable') }}">Main Table</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/maintable_planer') }}">Main Table (planers)</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/main') }}">Po Table</a></li>
@@ -114,13 +125,13 @@
 
 				@if(Auth::check() && Auth::user()->level() == 4)
 				<ul class="nav navbar-nav">
-					<li><a style="color:#D6E9C6" href="{{ url('/barcoderequesttablelogmodule') }}">Barcode history</a></li>
+					<li><a style="color:#D6E9C6" href="{{ url('/barcoderequesttablelogmodule') }}">History</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
-					<li><a style="color:#BCE8F1" href="{{ url('/carelabelrequesttablelogmodule') }}">Carelabel history</a></li>
+					<li><a style="color:#BCE8F1" href="{{ url('/carelabelrequesttablelogmodule') }}">History</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
-					<li><a style="color:#FFBA8E" href="{{ url('/secondqrequesttablelogmodule') }}">II quality history</a></li>
+					<li><a style="color:#FFBA8E" href="{{ url('/secondqrequesttablelogmodule') }}">History</a></li>
 				</ul>
 				@endif
 				

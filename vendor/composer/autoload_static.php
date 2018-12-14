@@ -311,6 +311,7 @@ class ComposerStaticInit7734f12ecb1af9828120828a65668830
 
     public static $classMap = array (
         'AddNameToPassReset' => __DIR__ . '/../..' . '/database/migrations/2016_07_07_160414_add_name_to_pass_reset.php',
+        'ChangePoKey' => __DIR__ . '/../..' . '/database/migrations/2018_08_30_151518_change_po_key.php',
         'ChangePoTo6' => __DIR__ . '/../..' . '/database/migrations/2018_04_10_173007_change_po_to_6.php',
         'ChangeSizeForAll' => __DIR__ . '/../..' . '/database/migrations/2018_04_27_082235_change_size_for_all.php',
         'CreateBarcodeRequestsTable' => __DIR__ . '/../..' . '/database/migrations/2015_12_15_182853_create_barcode_requests_table.php',

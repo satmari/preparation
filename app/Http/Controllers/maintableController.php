@@ -16,11 +16,6 @@ use Auth;
 
 class maintableController extends Controller {
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
 	public function index()
 	{
 		
@@ -53,7 +48,9 @@ class maintableController extends Controller {
 					pos.season,
 					pos.flash,
 					pos.brand,
-					pos.total_order_qty"
+					pos.total_order_qty
+		ORDER BY pos.po asc,
+			     pos.size desc"
 		));
 
 		//dd($postable);
@@ -61,68 +58,48 @@ class maintableController extends Controller {
 		return view('maintable.index',compact('postable'));
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
+	public function index_planer()
 	{
-		//
-	}
+		
+		$postable = DB::connection('sqlsrv')->select(DB::raw("SELECT  pos.id,
+		pos.po,
+		pos.size,
+		pos.style,
+		pos.color,
+		pos.color_desc,
+		pos.season,
+		pos.flash,
+		pos.brand,
+		pos.total_order_qty,
+		pos.hangtag,
+		(SELECT SUM(barcode_stocks.qty)  FROM barcode_stocks WHERE barcode_stocks.po_id = pos.id ) stock_b,
+		(SELECT SUM(barcode_requests.qty)  FROM barcode_requests WHERE barcode_requests.po_id = pos.id AND barcode_requests.status != 'error') request_b,
+		(SELECT SUM(carelabel_stocks.qty)  FROM carelabel_stocks WHERE carelabel_stocks.po_id = pos.id ) stock_c,
+		(SELECT SUM(carelabel_requests.qty)  FROM carelabel_requests WHERE carelabel_requests.po_id = pos.id AND carelabel_requests.status != 'error') request_c
+		FROM pos
+		LEFT JOIN barcode_stocks ON barcode_stocks.po_id = pos.id
+		LEFT JOIN barcode_requests ON barcode_requests.po_id = pos.id
+		LEFT JOIN carelabel_stocks ON carelabel_stocks.po_id = pos.id
+		LEFT JOIN carelabel_requests ON carelabel_requests.po_id = pos.id
+		WHERE pos.closed_po = 'Open'
+		GROUP BY	pos.id,
+					pos.po,
+					pos.size,
+					pos.style,
+					pos.color,
+					pos.color_desc,
+					pos.season,
+					pos.flash,
+					pos.brand,
+					pos.total_order_qty,
+					pos.hangtag
+		ORDER BY pos.po asc,
+			     pos.size desc"
+		));
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		//
-	}
+		//dd($postable);
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show()
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
+		return view('maintable.index_planer',compact('postable'));
 	}
 
 }

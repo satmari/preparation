@@ -151,7 +151,20 @@ class bb_by_markerController extends Controller {
 			}
 
 			// dd($bb);
-			list($color, $size) = explode('-', $variant);
+			// list($color, $size) = explode('-', $variant);
+
+			$brlinija = substr_count($variant,"-");
+			// echo $brlinija." ";
+
+			if ($brlinija == 2)
+			{
+				list($color, $size1, $size2) = explode('-', $variant);
+				$size = $size1."-".$size2;
+				// echo $color." ".$size;	
+			} else {
+				list($color, $size) = explode('-', $variant);
+				// echo $color." ".$size;
+			}
 
 			try {
 				$table = new PrintBBLabels;
@@ -218,7 +231,20 @@ class bb_by_markerController extends Controller {
 			}
 
 			// dd($bb);
-			list($color, $size) = explode('-', $variant);
+			// list($color, $size) = explode('-', $variant);
+
+			$brlinija = substr_count($variant,"-");
+			// echo $brlinija." ";
+
+			if ($brlinija == 2)
+			{
+				list($color, $size1, $size2) = explode('-', $variant);
+				$size = $size1."-".$size2;
+				// echo $color." ".$size;	
+			} else {
+				list($color, $size) = explode('-', $variant);
+				// echo $color." ".$size;
+			}
 
 			if ($printed == '0') {
 				try {

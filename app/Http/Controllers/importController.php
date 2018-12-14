@@ -77,8 +77,9 @@ class importController extends Controller {
 	                	$hangtag = $row['hangtag'];
 
 	                	$po = substr($order_code, 8, 6);
-	                	$size = substr($order_code, 23, 3);
-						
+	                	$size = substr($order_code, 23, 5);
+						var_dump($size);
+
 						$style = substr($product, 0, 8);
 						$color = substr($product, 9, 4);
 
@@ -161,6 +162,42 @@ class importController extends Controller {
 	    //return view('import.importresult', compact('reader'));
 	}
 
+	public function postImportHangtag(Request $request) {
+	    $getSheetName = Excel::load(Request::file('file1'))->getSheetNames();
+	    
+	    foreach($getSheetName as $sheetName)
+	    {
+	        //if ($sheetName === 'Product-General-Table')  {
+	    	//selectSheetsByIndex(0)
+	           	//DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+	            //DB::table('users')->truncate();
+	
+	            //Excel::selectSheets($sheetName)->load($request->file('file'), function ($reader)
+	            //Excel::selectSheets($sheetName)->load(Input::file('file'), function ($reader)
+	            //Excel::filter('chunk')->selectSheetsByIndex(0)->load(Request::file('file'))->chunk(50, function ($reader)
+	            Excel::filter('chunk')->selectSheets($sheetName)->load(Request::file('file1'))->chunk(50, function ($reader)
+	            
+	            {
+	                $readerarray = $reader->toArray();
+	                //var_dump($readerarray);
+
+	                foreach($readerarray as $row)
+	                {
+	                	
+	                	$po = $row['po'];
+						$hangtag = $row['hangtag'];
+
+	                	$data = DB::connection('sqlsrv')->update(DB::raw("UPDATE pos
+							SET [hangtag] = '".$hangtag."' 
+							WHERE [po] = '".$po."' "));
+					}
+
+	            });
+	    }
+		return redirect('/');
+	}
+
+	/*
 	public function postImportUser(Request $request) {
 	    $getSheetName = Excel::load(Request::file('file2'))->getSheetNames();
 	    
@@ -218,7 +255,7 @@ class importController extends Controller {
 
 	                foreach($readerarray as $row)
 	                {
-	                	/*
+	                	
 						$userbulk = new User;
 						$userbulk->name = $row['user'];;
 						$userbulk->email = $row['email'];
@@ -227,7 +264,7 @@ class importController extends Controller {
 						//$userbulk->updated_at = date(2015-12-22);
 												
 						$userbulk->save();
-						*/
+						
 	                }
 	            });
 	    }
@@ -255,7 +292,7 @@ class importController extends Controller {
 
 	                foreach($readerarray as $row)
 	                {
-	                	/*
+	                	
 						$userbulk = new User;
 						$userbulk->name = $row['user'];;
 						$userbulk->email = $row['email'];
@@ -264,12 +301,13 @@ class importController extends Controller {
 						//$userbulk->updated_at = date(2015-12-22);
 												
 						$userbulk->save();
-						*/
+						
 	                }
 	            });
 	    }
 		return redirect('/');
 	}
+	*/
 	
 	public function deleteIssueTable() {
 	 	// dd("deleteIssueTable");
@@ -277,7 +315,7 @@ class importController extends Controller {
 	 	DB::connection('sqlsrv3')->delete(DB::raw("DELETE FROM [Gordon_LIVE].[dbo].[GORDON\$Handling Unit Issue]"));
 
 
-	 	return redirect('http://172.27.161.221/Reports_GPD/Pages/Report.aspx?ItemPath=%2fTEST+SSRS%2fIssueTempTable');
+	 	return redirect('http://172.27.161.221/Reports_GPD/Pages/Report.aspx?ItemPath=%2fTEST+SSRS%2fWarehouse%2fIssueTempTable');
 	}
 	
 }

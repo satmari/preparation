@@ -7,7 +7,7 @@
 		<div class="text-center col-md-4 col-md-offset-4">
 
 			<div class="panel panel-default">
-				<div class="panel-heading">Import PO form Excel file</div>
+				<div class="panel-heading">Import PO from Excel file</div>
 				
 				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportPo']]) !!}
 					<div class="panel-body">
@@ -21,59 +21,24 @@
 
 				<!-- <hr> -->
 			</div>
-				
 
-			<!-- 
-			
+
 			<div class="panel panel-default">
-				<div class="panel-heading">Import users form Excel file</div>
-
-				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportUser']]) !!}
+				<div class="panel-heading">Update Hangtag PO from Excel file</div>
+				
+				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportHangtag']]) !!}
 					<div class="panel-body">
-						{!! Form::file('file2', ['class' => 'center-block']) !!}
+						{!! Form::file('file1', ['class' => 'center-block']) !!}
 					</div>
 					<div class="panel-body">
-						{!! Form::submit('Import User', ['class' => 'btn btn-warning center-block']) !!}
+						{!! Form::submit('Import Hangtag', ['class' => 'btn btn-warning center-block']) !!}
 					</div>
 					@include('errors.list')
 				{!! Form::close() !!}
 
+				<!-- <hr> -->
+			</div>
 				
-			</div>
-			
-			<div class="panel panel-default">
-				<div class="panel-heading">Import roles form Excel file</div>
-
-				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportRoll']]) !!}
-					<div class="panel-body">
-						{!! Form::file('file3', ['class' => 'center-block']) !!}
-					</div>
-					<div class="panel-body">
-						{!! Form::submit('Import Roles', ['class' => 'btn btn-warning center-block']) !!}
-					</div>
-					@include('errors.list')
-				{!! Form::close() !!}
-
-			</div>
-
-			<div class="panel panel-default">
-				<div class="panel-heading">Import user_rolls form Excel file</div>
-
-				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportUserRole']]) !!}
-					<div class="panel-body">
-						{!! Form::file('file4', ['class' => 'center-block']) !!}
-					</div>
-					<div class="panel-body">
-						{!! Form::submit('Import user-role', ['class' => 'btn btn-warning center-block']) !!}
-					</div>
-					@include('errors.list')
-				{!! Form::close() !!}
-
-				
-			</div>
-			-->
-
-			
 			<div class="panel panel-default">
 				<div class="panel-body">
 					<div class="">
