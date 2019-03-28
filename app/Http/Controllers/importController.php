@@ -1,5 +1,4 @@
-<?php 
-namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -76,9 +75,16 @@ class importController extends Controller {
 						
 	                	$hangtag = $row['hangtag'];
 
-	                	$po = substr($order_code, 8, 6);
-	                	$size = substr($order_code, 23, 5);
-						var_dump($size);
+	                	// $po = substr($order_code, 8, 6);
+	                	$po_array = explode('::', $order_code);
+	                	// dd($po_array);
+	                	$po = substr($po_array[0], -6);
+	                	// dd($po);
+
+	                	// $size = substr($order_code, 23, 5);
+	                	$size = $po_array[2];
+						// dd($size);
+
 
 						$style = substr($product, 0, 8);
 						$color = substr($product, 9, 4);
@@ -93,7 +99,13 @@ class importController extends Controller {
 						} elseif ($brand == "C") {
 							$brand	= "CALZEDONIA";
 						} else {
-							$brand = "";
+							if ($style = 'LTD50C') {
+								$brand	= "INTIMISSIMI";
+							} elseif ($style = 'CMU05A') {
+								$brand	= "INTIMISSIMI";
+							} else {
+								$brand = "";	
+							}
 						}
 
 						if ($flash == 'N') {
@@ -197,7 +209,7 @@ class importController extends Controller {
 		return redirect('/');
 	}
 
-	/*
+	
 	public function postImportUser(Request $request) {
 	    $getSheetName = Excel::load(Request::file('file2'))->getSheetNames();
 	    
@@ -224,8 +236,8 @@ class importController extends Controller {
 						$userbulk->name = $row['user'];;
 						$userbulk->email = $row['email'];
 						$userbulk->password = bcrypt($row['pass']);
-						//$userbulk->created_at = date(2015-12-22);
-						//$userbulk->updated_at = date(2015-12-22);
+						// $userbulk->created_at = date('2019-00-00');
+						// $userbulk->updated_at = date('2019-00-00');
 												
 						$userbulk->save();
 	                }
@@ -307,7 +319,7 @@ class importController extends Controller {
 	    }
 		return redirect('/');
 	}
-	*/
+	
 	
 	public function deleteIssueTable() {
 	 	// dd("deleteIssueTable");

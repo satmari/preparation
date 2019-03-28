@@ -51,6 +51,7 @@
 				            <th data-sortable="true" class="">95%</th>
 				            <th data-sortable="true" class="">Hangtag</th>
 				            <th data-sortable="true" class="h-bt">B. printed</th>
+				            <th data-sortable="true" class="h-bt">%</th>
 				            <th data-sortable="true" class="h-bt to-print">B. to print</th>
 				            <th data-sortable="true" class="h-bt on-stock">B. on stock</th>
 				            <th data-sortable="true" class="h-bt">B. in modules</th>
@@ -79,6 +80,7 @@
 				        	<td>{{ $po->hangtag }}</td>
 
 				        	<td>{{ $po->stock_b }}</td>
+				        	<td>{{ round(($po->stock_b / $po->total_order_qty) *100,2)}}</td>
 				        	<td>{{ $po->total_order_qty - $po->stock_b }}</td>
 				        	<td>{{ $po->stock_b - $po->request_b }}</td>
 				        	<td>{{ $po->request_b }}</td>

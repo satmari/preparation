@@ -38,6 +38,22 @@
 
 				<!-- <hr> -->
 			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">Import Users</div>
+				
+				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportUser']]) !!}
+					<div class="panel-body">
+						{!! Form::file('file1', ['class' => 'center-block']) !!}
+					</div>
+					<div class="panel-body">
+						{!! Form::submit('Import', ['class' => 'btn btn-warning center-block']) !!}
+					</div>
+					@include('errors.list')
+				{!! Form::close() !!}
+
+				<!-- <hr> -->
+			</div>
 				
 			<div class="panel panel-default">
 				<div class="panel-body">
