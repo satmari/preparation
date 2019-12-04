@@ -329,5 +329,31 @@ class importController extends Controller {
 
 	 	return redirect('http://172.27.161.221/Reports_GPD/Pages/Report.aspx?ItemPath=%2fTEST+SSRS%2fWarehouse%2fIssueTempTable');
 	}
+
+	public function postImportUpdatePass() {
+	    
+	    
+	    
+	    $sql = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM users"));
+
+	    for ($i=0; $i < count($sql) ; $i++) { 
+	    	
+	    	// dd($sql[$i]->password);
+
+	    	$password = bcrypt($sql[$i]->name);
+	    	// dd($password);
+
+			$sql2 = DB::connection('sqlsrv')->select(DB::raw("
+					SET NOCOUNT ON;
+					UPDATE [preparation].[dbo].[users]
+					SET password = '".$password."'
+					WHERE name = '".$sql[$i]->name."';
+					SELECT TOP 1 [id] FROM [preparation].[dbo].[users];
+				"));	    	
+
+	    }
+
+		return redirect('/');
+	}
 	
 }

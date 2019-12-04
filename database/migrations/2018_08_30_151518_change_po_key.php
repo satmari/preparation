@@ -14,8 +14,8 @@ class ChangePoKey extends Migration {
 	{
 		//
 
-		Schema::table('pos', function (Blueprint $table) {
-    		$table->string('po_key', 12)->change();
+		Schema::table('secondq_requests', function (Blueprint $table) {
+    		$table->string('desc', 50)->change();
 		});
 
 	}

@@ -29,9 +29,9 @@ class CreateSecondQRequestsTable extends Migration {
             $table->string('color',12)->nullable();
             $table->string('materiale',12)->nullable();
             $table->string('tg2', 12)->nullable();
-            $table->string('desc', 32)->nullable();
+            $table->string('desc', 32)->nullable();	// change to 40
             $table->string('ccc', 12)->nullable();
-            $table->string('cd', 32)->nullable();
+            $table->string('cd', 32)->nullable();			
             $table->string('barcode', 32)->nullable();
 			$table->timestamps();
 		});

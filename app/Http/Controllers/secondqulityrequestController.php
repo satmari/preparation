@@ -264,7 +264,7 @@ class secondqulityrequestController extends Controller {
 																  	AND [Color] = '".$color."' 
 																  	AND [TG] = '".$size."'"));
 
-				// dd($po);
+				// var_dump($po);
 
 				if(isset($po[0]->materiale) OR isset($po[0]->des) OR isset($po[0]->tg2) OR isset($po[0]->ccc) OR isset($po[0]->cd) OR isset($po[0]->barcode)) {
 					// continnue

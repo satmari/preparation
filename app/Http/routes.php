@@ -118,6 +118,7 @@ Route::post('/import1', 'importController@postImportHangtag');
 Route::post('/import2', 'importController@postImportUser');
 Route::post('/import3', 'importController@postImportRoll');
 Route::post('/import4', 'importController@postImportUserRole');
+Route::get('/postImportUpdatePass', 'importController@postImportUpdatePass');
 
 // Import Modules
 Route::get('/importmodules', 'importModulesController@index');
