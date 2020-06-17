@@ -53,10 +53,22 @@ class RequestController extends Controller {
 		}
 		*/
 		$inteosleaders = DB::connection('sqlsrv2')->select(DB::raw("SELECT Name FROM BdkCLZG.dbo.WEA_PersData WHERE (Func = 23) and (FlgAct = 1) and (PinCode = ".$pin.")"));
+		/*
+		$inteosleaders = DB::connection('sqlsrv2')->select(DB::raw("SELECT 
+			Name 
+		FROM [BdkCLZG].[dbo].[WEA_PersData] 
+		WHERE (Func = 23) and (FlgAct = 1) and (PinCode = ".$pin.")
+		UNION ALL
+		SELECT 
+			Name 
+		FROM [SBT-SQLDB01P\\INTEOSKKA].[BdkCLZKKA].[dbo].[WEA_PersData]
+		WHERE (Func = 23) and (FlgAct = 1) and (PinCode = ".$pin.")"));
+		*/
 
 		if (empty($inteosleaders)) {
 			$msg = 'LineLeader with this PIN not exist';
 		    return view('Request.error',compact('msg'));
+
 		
 		} else {
 			foreach ($inteosleaders as $row) {

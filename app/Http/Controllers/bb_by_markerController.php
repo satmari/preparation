@@ -40,14 +40,15 @@ class bb_by_markerController extends Controller {
 
 		Session::set('bbarray', null);
 
+		/*
 		$inteosmarker = DB::connection('sqlsrv2')->select(DB::raw("SELECT 
       bb.[BlueBoxNum] as bb
       ,bb.[BoxQuant] as qty
       ,bb.[CREATEDATE] as created
       ,bb.[IDMarker] as marker
-      /*,bb.IntKeyPO
-      ,po.SKUKEY
-      ,sku.STYKEY*/
+      --,bb.IntKeyPO
+      --,po.SKUKEY
+      --,sku.STYKEY
       ,sku.Variant as variant
       ,st.StyCod as style
       
@@ -57,6 +58,36 @@ class bb_by_markerController extends Controller {
 	  JOIN [BdkCLZG].[dbo].[CNF_STYLE] st ON st.INTKEY = sku.STYKEY
 	  WHERE IDMarker = '".$marker."'
 	  ORDER BY sku.Variant desc
+		"));
+		*/
+		
+		$inteosmarker = DB::connection('sqlsrv2')->select(DB::raw("SELECT 
+      bb.[BlueBoxNum] as bb
+      ,bb.[BoxQuant] as qty
+      ,bb.[CREATEDATE] as created
+      ,bb.[IDMarker] as marker
+      ,sku.Variant as variant
+      ,st.StyCod as style
+	  FROM [BdkCLZG].[dbo].[CNF_BlueBox] bb
+	  JOIN [BdkCLZG].[dbo].[CNF_PO] po ON po.INTKEY = bb.IntKeyPO
+	  JOIN [BdkCLZG].[dbo].[CNF_SKU] sku ON sku.INTKEY = po.SKUKEY
+	  JOIN [BdkCLZG].[dbo].[CNF_STYLE] st ON st.INTKEY = sku.STYKEY
+	  WHERE IDMarker = '".$marker."'
+UNION ALL
+SELECT 
+      bb.[BlueBoxNum] as bb
+      ,bb.[BoxQuant] as qty
+      ,bb.[CREATEDATE] as created
+      ,bb.[IDMarker] as marker
+      ,sku.Variant as variant
+      ,st.StyCod as style
+FROM [SBT-SQLDB01P\INTEOSKKA].[BdkCLZKKA].[dbo].[CNF_BlueBox] as bb
+	  JOIN [SBT-SQLDB01P\INTEOSKKA].[BdkCLZKKA].[dbo].[CNF_PO] as po ON po.INTKEY = bb.IntKeyPO
+	  JOIN [SBT-SQLDB01P\INTEOSKKA].[BdkCLZKKA].[dbo].[CNF_SKU] as sku ON sku.INTKEY = po.SKUKEY
+	  JOIN [SBT-SQLDB01P\INTEOSKKA].[BdkCLZKKA].[dbo].[CNF_STYLE]  as st ON st.INTKEY = sku.STYKEY
+	  WHERE IDMarker = '".$marker."'
+ORDER BY sku.Variant desc
+
 		"));
 
 		// dd($inteosmarker);
