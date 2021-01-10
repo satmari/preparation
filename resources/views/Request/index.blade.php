@@ -51,9 +51,7 @@
 					<tr>
 						<td><span style="color:green"><b>Zatvarajte tabove u browseru!</b></span></td>
 					</tr>
-					<tr>
-						<td><span style="color:darkorchid">Da li imate predlog za pozadinsku sliku aplikacije?</span></td>
-					</tr>
+					
 				</table>
 				<hr>
 				<table class="table" style="font-size: large">

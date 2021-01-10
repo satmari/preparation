@@ -5,7 +5,7 @@
 <div class="container container-table">
 	<div class="row vertical-center-row">
 		<div class="text-center col-md-4 col-md-offset-4">
-
+			<!-- 
 			<div class="panel panel-default">
 				<div class="panel-heading">Import PO from Excel file</div>
 				
@@ -19,11 +19,11 @@
 					@include('errors.list')
 				{!! Form::close() !!}
 
-				<!-- <hr> -->
+			
 			</div>
+ 			-->
 
-
-			<div class="panel panel-default">
+			<!-- <div class="panel panel-default">
 				<div class="panel-heading">Update Hangtag PO from Excel file</div>
 				
 				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportHangtag']]) !!}
@@ -36,15 +36,14 @@
 					@include('errors.list')
 				{!! Form::close() !!}
 
-				<!-- <hr> -->
-			</div>
+			</div> -->
 
-			<div class="panel panel-default">
+			<!-- <div class="panel panel-default">
 				<div class="panel-heading">Import Users</div>
 				
 				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportUser']]) !!}
 					<div class="panel-body">
-						{!! Form::file('file1', ['class' => 'center-block']) !!}
+						{!! Form::file('file2', ['class' => 'center-block']) !!}
 					</div>
 					<div class="panel-body">
 						{!! Form::submit('Import', ['class' => 'btn btn-warning center-block']) !!}
@@ -52,9 +51,17 @@
 					@include('errors.list')
 				{!! Form::close() !!}
 
-				<!-- <hr> -->
+			</div> -->
+		
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="">
+						<a href="{{url('/update_po_from_posummary')}}" class="btn btn-warning btn center-block">Update PRO from POSummary</a>
+					</div>
+				</div>
+
 			</div>
-				
+
 			<div class="panel panel-default">
 				<div class="panel-body">
 					<div class="">

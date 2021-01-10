@@ -17,7 +17,7 @@ class CreateCarelabelStocksTable extends Migration {
 			$table->increments('id');
 			$table->integer('po_id')->unsigned();
 			$table->integer('user_id')->unsigned();
-			$table->string('ponum', 6)->nullable(); // change to 6
+			$table->string('ponum', 10)->nullable(); // change to 6 
             $table->string('size', 5)->nullable();	// change to 5
             $table->integer('qty')->nullable();
             $table->string('module', 20)->nullable();

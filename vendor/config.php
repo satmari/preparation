@@ -225,6 +225,33 @@
         'password' => 'gordon2013',
         'prefix' => '',
       ),
+      'sqlsrv5' => 
+      array (
+        'driver' => 'sqlsrv',
+        'host' => '172.27.161.222',
+        'database' => 'settings',
+        'username' => 'sa',
+        'password' => 'gordon2013',
+        'prefix' => '',
+      ),
+      'sqlsrv6' => 
+      array (
+        'driver' => 'sqlsrv',
+        'host' => '172.27.161.221\\GPD',
+        'database' => 'posummary',
+        'username' => 'sa',
+        'password' => 'gordon2013',
+        'prefix' => '',
+      ),
+      'sqlsrv7' => 
+      array (
+        'driver' => 'sqlsrv',
+        'host' => '172.27.161.221\\GPD',
+        'database' => 'trebovanje',
+        'username' => 'sa',
+        'password' => 'gordon2013',
+        'prefix' => '',
+      ),
     ),
     'migrations' => 'migrations',
     'redis' => 

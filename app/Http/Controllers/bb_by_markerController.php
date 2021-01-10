@@ -97,7 +97,20 @@ ORDER BY sku.Variant desc
 			foreach ($inteosmarker as $line) {
 
 				// dd($line->bb);
-				$komesa = substr($line->bb,-9,6);
+				// $komesa = substr($line->bb,-9,6);
+
+				$brcrtica = substr_count($line->bb,"-");
+				// echo $brcrtica." ";
+
+				if ($brcrtica == 1)
+				{
+					list($one, $two) = explode('-', $line->bb);
+					$komesa = $one;
+					
+				} else {
+					$komesa = substr($line->bb,-9,6);
+				}
+
 				$bb = substr($line->bb,-3);
 				// dd($bb);
 

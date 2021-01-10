@@ -119,6 +119,8 @@ Route::post('/import2', 'importController@postImportUser');
 Route::post('/import3', 'importController@postImportRoll');
 Route::post('/import4', 'importController@postImportUserRole');
 Route::get('/postImportUpdatePass', 'importController@postImportUpdatePass');
+Route::get('/update_po_from_posummary', 'importController@update_po_from_posummary');
+
 
 // Import Modules
 Route::get('/importmodules', 'importModulesController@index');
