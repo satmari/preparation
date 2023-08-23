@@ -36,6 +36,11 @@ class CreatePosTable extends Migration {
             $table->string('delivery_date', 20)->nullable();
             $table->text('hangtag')->nullable();
             $table->string('sap_material')->nullable(); 	// new
+            $table->string('skeda')->nullable(); 	// new
+            $table->string('no_lines_by_skeda')->nullable(); 	// new
+
+            $table->string('po_new')->nullable(); 	// new
+            
             $table->timestamps();
 		});
 	}

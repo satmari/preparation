@@ -15,7 +15,7 @@
 				</div>
 				<div class="panel-body">
 					<p>Size/Velicina: </p>
-					{!! Form::select('size', array(''=>'','XS'=>'XS','S'=>'S','M'=>'M','L'=>'L','XL'=>'XL','XXL'=>'XXL','M/L'=>'M/L','S/M'=>'S/M','XS/S'=>'XS/S','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','3-4'=>'3-4','5-6'=>'5-6','7-8'=>'7-8','9-10'=>'9-10','11-12'=>'11-12','LSHO'=>'LSHO','SSHO'=>'SSHO','MSHO'=>'MSHO','XSSHO'=>'XSSHO','TU'=>'TU','1/2'=>'1/2','3/4'=>'3/4'), '', array('class' => 'form-control')) !!} 
+					{!! Form::select('size', array(''=>'','XS'=>'XS','S'=>'S','M'=>'M','L'=>'L','XL'=>'XL','XXL'=>'XXL','M/L'=>'M/L','S/M'=>'S/M','XS/S'=>'XS/S','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','3-4'=>'3-4','5-6'=>'5-6','7-8'=>'7-8','9-10'=>'9-10','11-12'=>'11-12','LSHO'=>'LSHO','SSHO'=>'SSHO','MSHO'=>'MSHO','XSSHO'=>'XSSHO','XLSHO'=>'XLSHO','TU'=>'TU','1/2'=>'1/2','3/4'=>'3/4'), '', array('class' => 'form-control')) !!} 
 				</div>
 				<div class="panel-body">
 					<p>Qty/Kolicina: </p>
@@ -23,20 +23,37 @@
 				</div>
 				<div class="panel-body">
 					<table>
-						<!-- <th> -->
-						<div class="col-md-6">
-							<b>Barcode</b>
-							{!! Form::checkbox('barcode', 1 , null, ['id' => 'check', 'class' => 'form-control']); !!}
-						</div>
-						<!-- </th> -->
-						<!-- <th> -->
-						<div class="col-md-6">
-							<b>Carelabel</b>
-							{!! Form::checkbox('carelabel', 1 ,null , ['id' => 'check', 'class' => 'form-control']); !!}
-						</div>
-						<!-- </th> -->
+						<td>
+							<tr>
+								<div class="col-md-6">
+									<b>Barcode</b>
+									{!! Form::checkbox('barcode', 1 , null, ['id' => 'check', 'class' => 'form-control']); !!}
+								</div>
+							</tr>
+							<tr>
+								<div class="col-md-6">
+									<b>Carelabel</b>
+									{!! Form::checkbox('carelabel', 1 ,null , ['id' => 'check', 'class' => 'form-control']); !!}
+								</div>
+							</tr>
+						</td>
+						<td>
+							<tr>
+								<div class="col-md-6">
+									<br>
+									<input type="radio" name="machine" value="AUTOTEX"> AUTOTEX <br>
+  									<input type="radio" name="machine" value="SGF"> SGF &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+  									<input type="radio" name="machine" value="NOVEXX"> NOVEXX &nbsp;<br>
+  									<input type="radio" name="machine" value="ZEBRA 600"> ZEBRA 600 <br>
+								</div>
+							</tr>
+							<tr>
+								<div class="col-md-6">
+								
+								</div>
+							</tr>
+						</td>
 					</table>
-
 				</div>
 				<div class="panel-body">
 					<p>Comment: </p>

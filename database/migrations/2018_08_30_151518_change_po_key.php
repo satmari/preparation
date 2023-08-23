@@ -14,8 +14,14 @@ class ChangePoKey extends Migration {
 	{
 		//
 
-		Schema::table('pos', function (Blueprint $table) {
-    		$table->string('po_key')->unique()->change();
+		// Schema::table('pos', function (Blueprint $table) {
+  //   		// $table->string('po_key')->unique()->change();
+  //   		// $table->string('skeda')->nullable(); 	// new
+		// });
+
+		Schema::table('barcode_stocks', function (Blueprint $table) {
+    		
+    		// $table->text('machine')->nullable(); // added 2023.05.22 
 		});
 
 	}

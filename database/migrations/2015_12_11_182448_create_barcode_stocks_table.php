@@ -24,6 +24,9 @@ class CreateBarcodeStocksTable extends Migration {
             $table->string('status', 12)->nullable();
             $table->string('type', 12)->nullable();
             $table->text('comment')->nullable();
+
+			$table->text('machine')->nullable(); // added 2023.05.22
+
             $table->timestamps();
 		});
 	}

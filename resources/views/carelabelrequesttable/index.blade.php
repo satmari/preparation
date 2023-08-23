@@ -67,15 +67,13 @@
                             <!-- <td>{{-- $req->po_id --}}</td> -->
                             <!-- <td>{{-- $req->user_id --}}</td> -->
 
-                            @if(Auth::check() && Auth::user()->level() == 1)
-                            <td><a href="{{ url('/carelabelrequesttable/edit/'.$req->id) }}" class="btn btn-info btn-xs center-block">Edit</a></td>
-                            @endif
-
-                            @if(Auth::check() && Auth::user()->level() == 2)
+                            @if(Auth::check() && Auth::user()->level() == 2 AND ($req->status != 'done'))
                             <td><a href="{{ url('/carelabelrequesttablep/edit/'.$req->id) }}" class="btn btn-info btn-xs center-block">Edit</a></td>
+                            @else
+                            <td><a href="{{ url('/carelabelrequesttable/edit/'.$req->id) }}" class="btn btn-info btn-xs center-block" disabled>Edit</a></td>
                             @endif
                             
-                            <td>{{ $req->ponum }}</td>
+                            <td>{{ $req->po_new }}</td>
                             <td>{{ $req->size }}</td>
                             <td>{{ $req->qty }}</td>
                             <td>{{ $req->style }}</td>

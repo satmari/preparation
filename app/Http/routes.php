@@ -39,19 +39,23 @@ Route::get('/barcoderequesttable', 'barcoderequesttableController@index');
 Route::get('/barcoderequesttable/edit/{id}', 'barcoderequesttableController@edit');
 Route::get('/barcoderequesttablep/edit/{id}', 'barcoderequesttableController@editp');
 Route::post('/barcoderequesttable-error/{id}', 'barcoderequesttableController@error');
+Route::post('/barcoderequesttable-rfid/{id}', 'barcoderequesttableController@rfid');
 Route::patch('/barcoderequesttable/{id}', 'barcoderequesttableController@update');
 Route::patch('/barcoderequesttablep/{id}', 'barcoderequesttableController@updatep');
 Route::get('/barcoderequesttablelog', 'barcoderequesttableController@log');
 Route::get('/barcoderequesttablelogmodule', 'barcoderequesttableController@logmodule');
+Route::post('/print_request_b', 'barcoderequesttableController@print_request_b');
 
 Route::get('/carelabelrequesttable', 'carelabelrequesttableController@index');
 Route::get('/carelabelrequesttable/edit/{id}', 'carelabelrequesttableController@edit');
 Route::get('/carelabelrequesttablep/edit/{id}', 'carelabelrequesttableController@editp');
 Route::post('/carelabelrequesttable-error/{id}', 'carelabelrequesttableController@error');
+Route::post('/carelabelrequesttable-rfid/{id}', 'carelabelrequesttableController@rfid');
 Route::patch('/carelabelrequesttable/{id}', 'carelabelrequesttableController@update');
 Route::patch('/carelabelrequesttablep/{id}', 'carelabelrequesttableController@updatep');
 Route::get('/carelabelrequesttablelog', 'carelabelrequesttableController@log');
 Route::get('/carelabelrequesttablelogmodule', 'carelabelrequesttableController@logmodule');
+Route::post('/print_request_c', 'carelabelrequesttableController@print_request_c');
 
 Route::get('/secondqrequesttable', 'secondqulityrequestController@index');
 Route::get('/secondqrequesttable/edit/{id}', 'secondqulityrequestController@edit');
@@ -88,9 +92,19 @@ Route::get('/stock', 'StockController@index');
 Route::get('/stockcreatenew', 'StockController@createnew');
 Route::get('/stockcreatefrommodule', 'StockController@createfrommodule');
 Route::get('/stockcreateundo', 'StockController@createundo');
+Route::get('/stockcreattransfer', 'StockController@createtransfer');
+Route::get('/throw_away', 'StockController@createthrow_away');
+Route::get('/stockcreateleftover', 'StockController@createleftover');
+Route::get('/leftover', 'StockController@leftover');
+Route::get('/leftover_full', 'StockController@leftover_full');
 Route::post('/stockstorenew', 'StockController@storenew');
 Route::post('/stockstorefrommodule', 'StockController@storefrommodule');
 Route::post('/stockstoreundo', 'StockController@storeundo');
+Route::post('/stockstoretransfer', 'StockController@stockstoretransfer');
+Route::post('/stockthow_away', 'StockController@stockthow_away');
+Route::post('/stockstoreleftover', 'StockController@stockstoreleftover');
+Route::post('use_leftover', 'StockController@use_leftover');
+
 
 // Request
 Route::get('/request', 'RequestController@index');
@@ -120,7 +134,9 @@ Route::post('/import3', 'importController@postImportRoll');
 Route::post('/import4', 'importController@postImportUserRole');
 Route::get('/postImportUpdatePass', 'importController@postImportUpdatePass');
 Route::get('/update_po_from_posummary', 'importController@update_po_from_posummary');
-
+Route::get('/update_po_from_posummary_close', 'importController@update_po_from_posummary_close');
+Route::post('postImportLeftoverPos', 'importController@postImportLeftoverPos');
+Route::post('postImportLeftoverNeg', 'importController@postImportLeftoverNeg');
 
 // Import Modules
 Route::get('/importmodules', 'importModulesController@index');
@@ -147,6 +163,7 @@ Route::any('getpodata', function() {
 	}
 return Response::json($retun_array);
 });
+
 Route::any('getmoduledata', function() {
 	$term = Input::get('term');
 
@@ -155,4 +172,4 @@ Route::any('getmoduledata', function() {
 		$retun_array[] = array('value' => $v->module);
 	}
 return Response::json($retun_array);
-}); 
+});

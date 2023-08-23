@@ -56,10 +56,43 @@
 			<div class="panel panel-default">
 				<div class="panel-body">
 					<div class="">
-						<a href="{{url('/update_po_from_posummary')}}" class="btn btn-warning btn center-block">Update PRO from POSummary</a>
+						<a href="{{url('/update_po_from_posummary')}}" class="btn btn-warning btn center-block">Inset new and update PRO from POSummary</a>
+					</div>
+					<br>
+					
+					<div class="">
+						<a href="{{url('/update_po_from_posummary_close')}}" class="btn btn-warning btn center-block">Close PRO from POSummary</a>
 					</div>
 				</div>
 
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">Import Leftover <big>ON STOCK</big></div>
+				
+				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportLeftoverPos']]) !!}
+					<div class="panel-body">
+						{!! Form::file('file3', ['class' => 'center-block']) !!}
+					</div>
+					<div class="panel-body">
+						{!! Form::submit('Import', ['class' => 'btn btn-warning center-block']) !!}
+					</div>
+					@include('errors.list')
+				{!! Form::close() !!}
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">Import Leftover <big>USED</big></div>
+				
+				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportLeftoverNeg']]) !!}
+					<div class="panel-body">
+						{!! Form::file('file4', ['class' => 'center-block']) !!}
+					</div>
+					<div class="panel-body">
+						{!! Form::submit('Import', ['class' => 'btn btn-warning center-block']) !!}
+					</div>
+					@include('errors.list')
+				{!! Form::close() !!}
 			</div>
 
 			<div class="panel panel-default">

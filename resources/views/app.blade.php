@@ -18,6 +18,8 @@
 	<!-- <link href="{{ asset('/css/jquery.dataTables.min.css') }}" rel='stylesheet' type='text/css'> -->
 	<link href="{{ asset('/css/jquery-ui.min.css') }}" rel='stylesheet' type='text/css'>
 	<link href="{{ asset('/css/custom.css') }}" rel='stylesheet' type='text/css'>
+	<link href="{{ asset('/css/choosen.css') }}" rel='stylesheet' type='text/css'>
+	<!-- <link rel="manifest" href="{{ asset('/css/manifest.json') }}"> -->
 		
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -106,6 +108,9 @@
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/bb_by_marker') }}">BB by Marker</a></li>
 				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/leftover') }}">Leftover</a></li>
+				</ul>
 
 				
 				@if(Auth::check() && Auth::user()->level() <= 1)
@@ -169,6 +174,7 @@
 	<!--<script src="{{ asset('/js/jspdf.min.js') }}" type="text/javascript" ></script>-->
 	<script src="{{ asset('/js/FileSaver.min.js') }}" type="text/javascript" ></script>
 	<script src="{{ asset('/js/bootstrap-table-export.js') }}" type="text/javascript" ></script>
+	<script src="{{ asset('/js/choosen.js') }}" type="text/javascript" ></script>
     
 <script type="text/javascript">
 $(function() {
@@ -208,6 +214,8 @@ $(function() {
   		// 	$(this).index().addClass('tezenis');
   		// }
 	});
+
+	$(".chosen").chosen();
 
 	$('.to-print').each(function(){
 		var qty = $(this).html();

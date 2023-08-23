@@ -11,12 +11,12 @@ use App\BarcodeStock;
 use Request;
 use App\Po;
 use App\User;
+use App\leftover;
 use DB;
 
 class importController extends Controller {
 
-	public function index()
-	{
+	public function index() {
 		//
 		return view('import.index');
 	}
@@ -36,9 +36,7 @@ class importController extends Controller {
 	            //Excel::selectSheets($sheetName)->load(Input::file('file'), function ($reader)
 	            //Excel::filter('chunk')->selectSheetsByIndex(0)->load(Request::file('file'))->chunk(50, function ($reader)
 	            Excel::filter('chunk')->selectSheets($sheetName)->load(Request::file('file'))->chunk(50, function ($reader)
-	            
 	            {
-	               	
 	            	$readerarray = $reader->toArray();
 	                //var_dump($readerarray);
 
@@ -111,7 +109,6 @@ class importController extends Controller {
 	                	$size = $po_array[2];
 						// dd($size);
 
-
 						$style = substr($product, 0, 8);
 						$color = substr($product, 9, 4);
 
@@ -179,7 +176,6 @@ class importController extends Controller {
 						$porder->hangtag = $hangtag;
 						$porder->sap_material = $product;
 						// $porder->save();
-						
 
 						// $order_id =DB::connection('sqlsrv')->select(DB::raw("SELECT id FROM pos WHERE order_code = '".$order_code."' "));
 						// dd($order_id);
@@ -209,11 +205,8 @@ class importController extends Controller {
 						$carelabel->type = "insert";;
 						$carelabel->comment;
 						// $carelabel->save();
-						
-
 	                }
 	            });
-	       
 	    }
 		
 	    //Session::flash('file_uploaded_successfully', 'File has been uploaded successfully and has also updated the database.');
@@ -250,7 +243,6 @@ class importController extends Controller {
 							SET [hangtag] = '".$hangtag."' 
 							WHERE [po] = '".$po."' "));
 					}
-
 	            });
 	    }
 		return redirect('/');
@@ -277,8 +269,6 @@ class importController extends Controller {
 
 	                foreach($readerarray as $row)
 	                {	
-
-
 						/*
 						$userbulk = new User;
 						$userbulk->name = $row['user'];;
@@ -286,7 +276,6 @@ class importController extends Controller {
 						$userbulk->password = bcrypt($row['pass']);
 						// $userbulk->created_at = date('2019-00-00');
 						// $userbulk->updated_at = date('2019-00-00');
-												
 						$userbulk->save();
 
 						*/
@@ -404,32 +393,25 @@ class importController extends Controller {
 	}
 
 	public function update_po_from_posummary() {
-	    	    
+	    
+	//OPEN PRO	
+
 	    // dd("test");
-	    $posummary = DB::connection('sqlsrv6')->select(DB::raw("SELECT * FROM [posummary].[dbo].[pro] where status_int != 'Closed'  AND created_fr > '2020-06-30' "));
+	    $posummary = DB::connection('sqlsrv6')->select(DB::raw("SELECT * FROM [posummary].[dbo].[pro]
+	     WHERE status_int != 'Closed'  AND created_fr > '2020-06-30' AND deleted != 'DELETED' "));
 	    // dd($posummary);
 
-	    // if (isset($posummary[0]->id)) {
-	    	$x = 0;
-	    	$y = 0;
-
-			
-
-	    	for ($i=0; $i < count($posummary); $i++) 
-	    	{ 
-	    		// var_dump($i);
-				// // $pro_fr = substr($posummary[$i]->pro_fr, 3);
-				// // // dd($pro_fr);
-				// var_dump($posummary[$i]->pro_fr);
-				// var_dump($posummary[$i]->po);
-				// dd($posummary[$i]->po);
+	    $x = 0;
+	    $y = 0;
+	
+	    for ($i=0; $i < count($posummary); $i++) { 
 
 	    		$pos = DB::connection('sqlsrv')->select(DB::raw("
 	    			SELECT * FROM [preparation].[dbo].[pos] 
-	    			WHERE po = '".$posummary[$i]->po."' AND size = '".$posummary[$i]->size."' "));
+	    			WHERE SUBSTRING(order_code, 0,10) = '".$posummary[$i]->pro."' "));
+
 	    		// dd($pos);
 	    		// var_dump($pos);
-
 	    		
 	    		if (empty($pos[0]->id)) {
 
@@ -446,6 +428,8 @@ class importController extends Controller {
 	                	$qty = (int)$posummary[$i]->qty;
 	                	$flash = $posummary[$i]->segment;
 	                	$delivery_date = substr($posummary[$i]->delivery_date_orig,0,10);
+	                	$skeda = $posummary[$i]->skeda;
+	                	$no_lines_by_skeda = $posummary[$i]->no_lines_by_skeda;
 	                	
 						
 	                	// $po = substr($order_code, 8, 6);
@@ -453,6 +437,9 @@ class importController extends Controller {
 	                	// dd($po_array);
 	                	$po = substr($po_array[0], -6);
 	                	// dd($po);
+
+	                	$po_new = substr($po_array[0], -7);
+	                	// dd($po_new);
 
 	                	// $size = substr($order_code, 23, 5);
 	                	$size = $po_array[2];
@@ -497,6 +484,7 @@ class importController extends Controller {
 						$porder->po_key = $po_key;
 						$porder->order_code = $order_code;
 						$porder->po = $po;
+						$porder->po_new = $po_new;
 						$porder->size = $size;
 						$porder->style = $style;
 						$porder->color = $color;
@@ -512,6 +500,8 @@ class importController extends Controller {
 						$porder->delivery_date = $delivery_date;
 						$porder->hangtag = $hangtag;
 						$porder->sap_material = $product;
+						$porder->skeda = $skeda;
+						$porder->no_lines_by_skeda = $no_lines_by_skeda;
 						$porder->save();
 						
 						// $order_id =DB::connection('sqlsrv')->select(DB::raw("SELECT id FROM pos WHERE order_code = '".$order_code."' "));
@@ -555,7 +545,9 @@ class importController extends Controller {
 	                	$qty = (int)$posummary[$i]->qty;
 	                	$flash = $posummary[$i]->segment;
 	                	$delivery_date = substr($posummary[$i]->delivery_date_orig,0,10);
-	                	
+	                	$skeda = $posummary[$i]->skeda;
+	                	$no_lines_by_skeda = $posummary[$i]->no_lines_by_skeda;
+
 						$hangtag = ''; ///////////////////////////////////////////////////////////////?
 						$hang =DB::connection('sqlsrv7')->select(DB::raw("SELECT material
 						  FROM [trebovanje].[dbo].[sap_coois]
@@ -597,33 +589,10 @@ class importController extends Controller {
 						$style = str_replace(' ', '', $style);
 						$size = str_replace(' ', '', $size);
 						$color = str_replace(' ', '', $color);
+
+						$da = date("Y-m-d H:i:s");
 						
-						// $porder = new Po;
-						// $porder->po_key = $po_key;
-						// $porder->order_code = $order_code;
-						// $porder->po = $po;
-						// $porder->size = $size;
-						// $porder->style = $style;
-						// $porder->color = $color;
-						// $porder->color_desc = $product_des;
-						// $porder->season = $season;
-						// $porder->total_order_qty = $qty;
-						// $porder->flash = $flash;
-						// $porder->closed_po = $closed;
-						// $porder->brand = $brand;
-						// $porder->status;
-						// $porder->type;
-						// $porder->comment;
-						// $porder->delivery_date = $delivery_date;
-						// $porder->hangtag = $hangtag;
-						// $porder->sap_material = $product;
-						// $porder->save();
-
-						// var_dump('kraj');
-						// var_dump($posummary[$i]->po);
-
-						$sql2 = DB::connection('sqlsrv')->select(DB::raw("
-							SET NOCOUNT ON;
+						$sql2 = DB::connection('sqlsrv')->update(DB::raw("
 							UPDATE [preparation].[dbo].[pos]
 							SET 
 							 season = '".$season."',
@@ -632,22 +601,194 @@ class importController extends Controller {
 							 closed_po = '".$closed."',
 							 brand = '".$brand."',
 							 delivery_date = '".$delivery_date."',
-							 hangtag = '".$hangtag."'
+							 hangtag = '".$hangtag."',
+							 skeda = '".$skeda."',
+							 no_lines_by_skeda = '".$no_lines_by_skeda."',
+							 updated_at = '".$da."'
 
-							WHERE po = '".$posummary[$i]->po."' AND size = '".$posummary[$i]->size."';
-							SELECT TOP 1 [id] FROM [preparation].[dbo].[pos];"));
+							WHERE SUBSTRING(order_code, 0,10) = '".$posummary[$i]->pro."'
+							"));
 
-						// var_dump($sql2);
+						//WHERE po = '".$posummary[$i]->po."' AND size = '".$posummary[$i]->size."';
+						//SUBSTRING(order_code, 0,10) = '".$posummary[$i]->pro."'
 
 	    		}
+	    }
+	//	    
 
-	    	}
+	/*
+	//CLOSED PRO
+	    $posummary_closed = DB::connection('sqlsrv6')->select(DB::raw("SELECT * FROM [posummary].[dbo].[pro]
+	    WHERE status_int = 'Closed'  AND created_fr > '2020-06-30' AND deleted = 'DELETED' "));
 
-	    	//dd("created pro: ".$x." , upradetd pro: ".$y);
-	    	$msg = "Created PO: ".$x."   ,  Updated PO:  ".$y ;
-	    	return view('import.importresult', compact('msg'));
-	    // }
+	    $z = 0;
+
+	    for ($k=0; $k < count($posummary_closed); $k++) { 
+
+	  		  	$pos_closed = DB::connection('sqlsrv')->select(DB::raw("
+	    			SELECT * FROM [preparation].[dbo].[pos] 
+	    			WHERE SUBSTRING(order_code, 0,10) = '".$posummary_closed[$i]->pro."' and closed_po = 'Open' "));
+
+	  		  	if (empty($pos_closed[0]->id)) {
+
+	  		  		// Already closed
+
+	  		  	} else {
+	  		  		$z = $z + 1;
+					
+					$da = date("Y-m-d H:i:s");
+
+	  		  		$sql3 = DB::connection('sqlsrv')->update(DB::raw("
+						UPDATE [preparation].[dbo].[pos]
+						SET 
+						closed_po = 'Closed',
+						updated_at = '".$da."'
+						WHERE SUBSTRING(order_code, 0,10) = '".$posummary_closed[$i]->pro."'
+
+						"));
+	  		  	}
+	    }
+
+
+	//
+		//dd("created pro: ".$x." , upradetd pro: ".$y);
+		 $msg = "Created PO: ".$x."   ,  Updated PO:  ".$y."     , Closed PO:   ".$z. "";
+	*/
+	    $msg = "Created PO: ".$x."   ,  Updated PO:  ".$y." ";
+	    return view('import.importresult', compact('msg'));
+	    
 		// return redirect('/');
 	}
+
+	public function update_po_from_posummary_close() {
+
+	//CLOSED PRO
+	    $posummary_closed = DB::connection('sqlsrv6')->select(DB::raw("SELECT * FROM [posummary].[dbo].[pro]
+	    WHERE (status_int = 'Closed' OR deleted = 'DELETED') AND created_fr > '2020-06-30' "));
+
+	    $z = 0;
+
+	    for ($k=0; $k < count($posummary_closed); $k++) { 
+
+	  		  	$pos_closed = DB::connection('sqlsrv')->select(DB::raw("
+	    			SELECT * FROM [preparation].[dbo].[pos] 
+	    			WHERE SUBSTRING(order_code, 0,10) = '".$posummary_closed[$k]->pro."' and closed_po = 'Open' "));
+
+	  		  	if (empty($pos_closed[0]->id)) {
+
+	  		  		// Already closed
+
+	  		  	} else {
+	  		  		$z = $z + 1;
+
+	  		  		$da = date("Y-m-d H:i:s");
+
+	  		  		$sql3 = DB::connection('sqlsrv')->update(DB::raw("
+						UPDATE [preparation].[dbo].[pos]
+						SET 
+						closed_po = 'Closed',
+						updated_at = '".$da."'
+						WHERE SUBSTRING(order_code, 0,10) = '".$posummary_closed[$k]->pro."'
+
+						"));
+	  		  	}
+	    }
+	//
+		
+		$msg = " Closed PO:   ".$z. "";
+		return view('import.importresult', compact('msg'));
+	}
+
+	public function postImportLeftoverPos(Request $request) {
+	    $getSheetName = Excel::load(Request::file('file3'))->getSheetNames();
+	    
+	    foreach($getSheetName as $sheetName)
+	    {
+	        //if ($sheetName === 'Product-General-Table')  {
+	    	//selectSheetsByIndex(0)
+	           	//DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+	            //DB::table('users')->truncate();
+	
+	            //Excel::selectSheets($sheetName)->load($request->file('file'), function ($reader)
+	            //Excel::selectSheets($sheetName)->load(Input::file('file'), function ($reader)
+	            //Excel::filter('chunk')->selectSheetsByIndex(0)->load(Request::file('file'))->chunk(50, function ($reader)
+	    		
+	            Excel::filter('chunk')->selectSheets($sheetName)->load(Request::file('file3'))->chunk(5000, function ($reader)
+	            
+	            {
+	                $readerarray = $reader->toArray();
+	                //var_dump($readerarray);
+
+	                foreach($readerarray as $row)
+	                {	
+
+	                	if ($row['place'] == '') {
+	                		$place = null;
+	                	} else {
+	                		$place = $row['place'];
+	                	}
+
+						$tablec = new leftover;
+
+						$tablec->material = trim($row['material']);
+						$tablec->sku = trim($row['sku']);
+						$tablec->price = round($row['price'],2);
+						$tablec->location = $row['location'];
+						$tablec->place = $place;
+						$tablec->qty = (int)$row['qty'];
+						$tablec->status = 'ON STOCK';
+						$tablec->save();
+					}
+	            });
+	    }
+		return redirect('/');
+	}
+
+	public function postImportLeftoverNeg(Request $request) {
+	    $getSheetName = Excel::load(Request::file('file4'))->getSheetNames();
+	    
+	    foreach($getSheetName as $sheetName)
+	    {
+	        //if ($sheetName === 'Product-General-Table')  {
+	    	//selectSheetsByIndex(0)
+	           	//DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+	            //DB::table('users')->truncate();
+	
+	            //Excel::selectSheets($sheetName)->load($request->file('file'), function ($reader)
+	            //Excel::selectSheets($sheetName)->load(Input::file('file'), function ($reader)
+	            //Excel::filter('chunk')->selectSheetsByIndex(0)->load(Request::file('file'))->chunk(50, function ($reader)
+	    		
+	            Excel::filter('chunk')->selectSheets($sheetName)->load(Request::file('file4'))->chunk(5000, function ($reader)
+	            
+	            {
+	                $readerarray = $reader->toArray();
+	                //var_dump($readerarray);
+
+	                foreach($readerarray as $row)
+	                {
+	                	
+	                	if ($row['place'] == '') {
+	                		$place = null;
+	                	} else {
+	                		$place = $row['place'];
+	                	}
+
+						$tablec = new leftover;
+
+						$tablec->material = trim($row['material']);
+						$tablec->sku = trim($row['sku']);
+						$tablec->price = round($row['price'],2);
+						$tablec->location = $row['location'];
+						$tablec->place = $place;
+						$tablec->qty = (int)$row['qty'] * -1;
+						$tablec->status = 'USED';
+						$tablec->save();
+	                }
+	            });
+	            
+	    }
+		return redirect('/');
+	}
+	
 	
 }

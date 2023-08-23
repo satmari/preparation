@@ -4,13 +4,13 @@
 <div class="container container-table">
 	<div class="row vertical-center-row">
 		<div class="text-center col-md-4 col-md-offset-4">
-			<div class="panel panel-default">
-				<div class="panel-heading h-c">Reduce Carelabel from Stock</div>
+			<div class="panel panel-default" >
+				<div class="panel-heading">Transfer Barcode/Carelabel to Kikinda</div>
 
-				{!! Form::open(['method'=>'POST', 'url'=>'/carelabelstockstoreundo']) !!}
+				{!! Form::open(['method'=>'POST', 'url'=>'/stockstoretransfer']) !!}
 
 				<div class="panel-body">
-					<p>Po/Komesa: </p>
+					<p>Po/Komesa: <span style="color:red">Obavezno 6 cifara</span></p>
 					{!! Form::text('po', null, ['id' => 'po', 'class' => 'form-control', 'autofocus' => 'autofocus']) !!}
 				</div>
 				<div class="panel-body">
@@ -20,9 +20,26 @@
 				<div class="panel-body">
 					<p>Qty/Kolicina: </p>
 					{!! Form::number('qty', null, ['class' => 'form-control']) !!}
-					<div class="alert alert-info">
+					<div class="alert alert-success">
   							Insert positive number and application will reduce form barcode stock.
 					</div>
+				</div>
+				<div class="panel-body">
+					<table>
+						<!-- <th> -->
+						<div class="col-md-6">
+							<b>Barcode</b>
+							{!! Form::checkbox('barcode', 1 , null, ['id' => 'check', 'class' => 'form-control']); !!}
+						</div>
+						<!-- </th> -->
+						<!-- <th> -->
+						<div class="col-md-6">
+							<b>Carelabel</b>
+							{!! Form::checkbox('carelabel', 1 ,null , ['id' => 'check', 'class' => 'form-control']); !!}
+						</div>
+						<!-- </th> -->
+					</table>
+
 				</div>
 				<div class="panel-body">
 					<p>Comment: </p>
@@ -31,7 +48,7 @@
 				
 
 				<div class="panel-body">
-					{!! Form::submit('Confirm', ['class' => 'btn btn-success center-block']) !!}
+					{!! Form::submit('Confirm', ['class' => 'btn btn-success center-block disabled']) !!}
 				</div>
 
 				@include('errors.list')

@@ -1,0 +1,11 @@
+{ 
+
+  "name": "Preparation app", 
+
+  "short_name": "Preparation app", 
+
+  "start_url": "http://172.27.161.171/preparation", 
+
+  "display": "standalone"
+
+}

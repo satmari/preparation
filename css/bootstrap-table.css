@@ -194,8 +194,8 @@
 .fixed-table-toolbar .search,
 .fixed-table-toolbar .columns {
     position: relative;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
     line-height: 34px;
 }
 

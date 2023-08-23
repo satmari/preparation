@@ -38,11 +38,12 @@ body {
     font-size: 12px !important;
     /*font-stretch: semi-condensed;*/
 }
-/*
-.navbar-default {
-    border-color: #DC3ACF !important;
+
+.navbar {
+    /*border-color: #DC3ACF !important;*/
+    margin-bottom: 0px !important;
 }
-*/
+
 .navbar-default {
     /* border-color: #faebcc !important; */
     /* background-image: linear-gradient(#FFFFFF, #F1F1F1 60%, #EAEAEA) !important; */

@@ -49,16 +49,18 @@
 				            <th data-sortable="true" class="brand">Brand</th>
 				            <th data-sortable="true" class="">Order Qty</th>
 				            <th data-sortable="true" class="">95%</th>
+				            <th data-sortable="true" class="">Skeda</th>
 				            <th data-sortable="true" class="">Hangtag</th>
+				            <th data-sortable="true" class="">No of Lines</th>
 				            <th data-sortable="true" class="h-bt">B. printed</th>
 				            <th data-sortable="true" class="h-bt">%</th>
 				            <th data-sortable="true" class="h-bt to-print">B. to print</th>
 				            <th data-sortable="true" class="h-bt on-stock">B. on stock</th>
-				            <th data-sortable="true" class="h-bt">B. in modules</th>
+				            <th data-sortable="true" class="h-bt">B. in production</th>
 				            <th data-sortable="true" class="h-ct">C. printed</th>
 				            <th data-sortable="true" class="h-ct to-print">C. to print</th>
 				            <th data-sortable="true" class="h-ct on-stock">C. on stock</th>
-				            <th data-sortable="true" class="h-ct">C. in modules</th>
+				            <th data-sortable="true" class="h-ct">C. in production</th>
 				        </tr>
 				    </thead>
 				    <tbody class="searchable">
@@ -67,7 +69,7 @@
 
 				        <tr>
 				        	{{--<td>{{ $po->id }}</td>--}}
-				        	<td>{{ $po->po }}</td>
+				        	<td>{{ $po->po_new }}</td>
 				        	<td>{{ $po->size }}</td>
 				        	<td>{{ $po->style }}</td>
 				        	<td>{{ $po->color }}</td>
@@ -77,7 +79,9 @@
 				        	<td>{{ $po->brand }}</td>
 				        	<td>{{ $po->total_order_qty }}</td>
 				        	<td>{{ round($po->total_order_qty*0.95) }}</td>
+				        	<td>{{ $po->skeda }}</td>
 				        	<td>{{ $po->hangtag }}</td>
+				        	<td>{{ $po->no_lines_by_skeda }}</td>
 
 				        	<td>{{ $po->stock_b }}</td>
 				        	<td>{{ round(($po->stock_b / $po->total_order_qty) *100,2)}}</td>

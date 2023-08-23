@@ -1,7 +1,7 @@
 <?php return array (
   'app' => 
   array (
-    'debug' => false,
+    'debug' => true,
     'url' => 'http://localhost',
     'timezone' => 'CET',
     'locale' => 'en',
@@ -248,6 +248,15 @@
         'driver' => 'sqlsrv',
         'host' => '172.27.161.221\\GPD',
         'database' => 'trebovanje',
+        'username' => 'sa',
+        'password' => 'gordon2013',
+        'prefix' => '',
+      ),
+       'sqlsrv8' => 
+      array (
+        'driver' => 'sqlsrv',
+        'host' => '172.27.161.221\\GPD',
+        'database' => 'bbstock',
         'username' => 'sa',
         'password' => 'gordon2013',
         'prefix' => '',

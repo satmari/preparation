@@ -138,6 +138,15 @@ return [
 			'prefix'   => '',
 		],
 
+		'sqlsrv8' => [
+			'driver'   => 'sqlsrv',
+			'host'     => env('DB_HOST8', 'localhost'),
+			'database' => env('DB_DATABASE8', 'forge'),
+			'username' => env('DB_USERNAME8', 'forge'),
+			'password' => env('DB_PASSWORD8', ''),
+			'prefix'   => '',
+		],
+
 
 	],
 

@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 //use Gbrock\Traits\Sortable;
 
 use App\BarcodeRequest;
+use App\print_request_label;
 use DB;
 
 use App\User;
@@ -55,7 +56,8 @@ br.*,
 
 pos.total_order_qty,
 pos.style,
-pos.color
+pos.color,
+pos.po_new
 
 FROM barcode_requests as br
 
@@ -86,7 +88,8 @@ br.updated_at,
 barcode_requests.po_id,
 pos.total_order_qty,
 pos.style,
-pos.color
+pos.color,
+pos.po_new
 
 ORDER BY br.status desc,br.created_at asc
 "));
@@ -246,5 +249,66 @@ ORDER BY br.status desc,br.created_at asc
 		//return view('main.index');
 		return Redirect::to('/barcoderequesttable');
 	}
+
+	public function rfid($id, Request $request) {
+		
+		$request_b = BarcodeRequest::findOrFail($id);
+		//$request_b->update($request->all());
+
+		$input = $request->all(); 
+		// dd($input);
+
+		$request_b->id = $input['id'];
+		$request_b->qty = NULL;
+		$request_b->status = 'done';
+		$request_b->save();
+
+		//return view('main.index');
+		return Redirect::to('/barcoderequesttable');
+	}
+
+	public function print_request_b(Request $request) {
+		
+		$input = $request->all(); 
+		// dd($input['id']);
+
+		$request_b = DB::connection('sqlsrv')->select(DB::raw("SELECT	p.[id] as po_id
+				,p.[po_new]
+		      ,p.[style]
+		      ,p.[color]
+		      ,p.[size]
+		      ,b.[module]
+		      ,b.[leader]
+		      ,b.[comment]
+		      ,b.[created_at]
+		      ,b.[qty]
+		  FROM [preparation].[dbo].[barcode_requests] as b
+		  JOIN [preparation].[dbo].[pos] as p ON p.[id] = b.[po_id]
+		  WHERE b.[id] = '".$input['id']."' "));
+		// dd($request_b[0]->po_new);
+
+
+		$b = new print_request_label;
+		$b->po_id = $request_b[0]->po_id;
+		$b->po = 	$request_b[0]->po_new;
+		$b->type = 'Barcode';
+		$b->style = $request_b[0]->style;
+		$b->color = $request_b[0]->color;
+		$b->size =  $request_b[0]->size;
+		$b->module = $request_b[0]->module;
+		$b->leader = $request_b[0]->leader;
+
+		$b->comment = 	$request_b[0]->comment;
+		$b->created =  	substr($request_b[0]->created_at, 0, 16);
+
+		$b->printer =  'Preparacija Zebra';
+		$b->qty =  $request_b[0]->qty;
+		$b->save();
+
+		return Redirect::to('/barcoderequesttable');
+		
+	}
+
+
 
 }

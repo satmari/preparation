@@ -24,6 +24,24 @@
 					</div>
 				</div>
 
+				<!-- <div class="panel-body">
+					<div class="">
+						<a hr ef="{{url('/stockcreattransfer')}}" class="btn btn-default center-block">Transfer to Kikinda</a>
+					</div>
+				</div> -->
+
+				<div class="panel-body">
+					<div class="">
+						<a href="{{url('/throw_away')}}" class="btn btn-default center-block">Throw away</a>
+					</div>
+				</div>
+
+				<div class="panel-body">
+					<div class="">
+						<a href="{{url('/stockcreateleftover')}}" class="btn btn-default center-block">Leftover</a>
+					</div>
+				</div>
+
 			</div>
 		</div>
 	</div>

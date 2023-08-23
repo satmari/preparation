@@ -3,17 +3,18 @@
 @section('content')
 <div class="container-fluid">
     <div class="row vertical-center-row">
-        <div class="text-center">
+        <div class="text-center col-md-6 col-md-offset-3">
             <div class="panel panel-default">
-				<div class="panel-heading h-c">Carelabel Request Log Table (last 21 days)</div>
-				
-				<div class="input-group"> <span class="input-group-addon">Filter</span>
-                    <input id="filter" type="text" class="form-control" placeholder="Type here...">
+                <div class="panel-heading "><big>Leftover FULL Table</big> &nbsp; &nbsp; &nbsp;
+                    <a href="{{url('/leftover')}}" class="btn btn-success btn-xs">SUM table</a>
+                    <a href="{{url('/import')}}" class="btn btn-info btn-xs">Import</a>
                 </div>
 
-                <table class="table table-striped table-bordered" id="sort"
-                data-show-export="true"
-                data-export-types="['excel']" 
+                <div class="input-group"> <span class="input-group-addon">Filter</span>
+                    <input id="filter" type="text" class="form-control" placeholder="Type here...">
+                </div>
+                <table class="table table-striped table-bordered" id="sort" 
+
                 >
                 <!--
                 data-show-export="true"
@@ -39,52 +40,43 @@
                 -->
                     <thead>
                         <tr>
-                            <th data-sortable="true">Id</th>
-                            <th>Po_Id</th>
-                            <th>User_ID</th>
-                            <th data-sortable="true">Po</th>
-                            <th>Size</th>
-                            <th data-sortable="true">Qty</th>
-                            <th data-sortable="true">Module</th>
-                            <th data-sortable="true">Leader</th>
-                            <th data-sortable="true">Status</th>
-                            <th>Type</th>
-                            <th>Comment</th>
-                            <th data-sortable="true">Created</th>
-                            <th data-sortable="true">Updated</th>
+                            <!-- <th data-sortable="true">Id</th> -->
                             
+                            <th data-sortable="true">Material</th>
+                            <th data-sortable="true">SKU</th>
+                            <th data-sortable="true">Price</th>
+                            <th data-sortable="true">Location</th>
+                            <th data-sortable="true">Place</th>
+                            <th data-sortable="true">Qty</th>
+                            <th data-sortable="true">Status</th>
+                            <th data-sortable="true">Updated</th>
+
                         </tr>
                     </thead>
                     <tbody class="searchable">
                     
-                    @foreach ($request_c as $req)
+                    @foreach ($leftovers as $po)
 
                         <tr>
-                            <td>{{ $req->id }}</td>
-                            <td>{{ $req->po_id }}</td>
-                            <td>{{ $req->user_id }}</td>
-                            <td>{{ $req->ponum }}</td>
-                            <td>{{ $req->size }}</td>
-                            <td>{{ $req->qty }}</td>
-                            <td>{{ $req->module }}</td>
-                            <td>{{ $req->leader }}</td>
-                            <td>{{ $req->status }}</td>
-                            <td>{{ $req->type }}</td>
-                            <td>{{ $req->comment }}</td>
-
-                            <td>{{ substr($req->created_at, 0, 19) }}</td>
-                            <td>{{ substr($req->created_at, 0, 19) }}</td>
-                           
                             
-
+                            <td><pre>{{ $po->material }}</pre></td>
+                            <td><pre>{{ $po->sku }}</pre></td>
+                            <td><pre>{{ round($po->price,2) }}</pre></td>
+                            <td>{{ $po->location }}</td>
+                            <td>{{ $po->place }}</td>
+                            <td>{{ $po->qty }}</td>
+                            <td>{{ $po->status }}</td>
+                            <td>{{ $po->updated_at }}</td>
+                            
                         </tr>
                     
                     @endforeach
                     </tbody>
 
-					
-			</div>
-		</div>
-	</div>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
+
 @endsection

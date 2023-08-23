@@ -42,7 +42,12 @@ class ChangePoTo6 extends Migration {
 		// });
 
 		// Schema::table('pos', function (Blueprint $table) {
-  //   		$table->string('sap_material')->nullable();
+  //   		// $table->string('no_lines_by_skeda')->nullable(); 	// new
+  //   		$table->string('po_new')->nullable(); 	// new
+		// });
+
+		// Schema::table('leftovers', function (Blueprint $table) {
+  //   		$table->string('place')->nullable();
 		// });
 	}
 

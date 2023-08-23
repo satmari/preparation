@@ -74,7 +74,7 @@
                             <td><a href="{{ url('/barcoderequesttablep/edit/'.$req->id) }}" class="btn btn-success btn-xs center-block">Edit</a></td>
                             @endif
 
-                            <td>{{ $req->ponum }}</td>
+                            <td>{{ $req->po_new }}</td>
                             <td>{{ $req->size }}</td>
                             <td>{{ $req->qty }}</td>
                             <td>{{ $req->style }}</td>

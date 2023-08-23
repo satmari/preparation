@@ -73,7 +73,7 @@ class RequestController extends Controller {
 		} else {
 			foreach ($inteosleaders as $row) {
     			$leader = $row->Name;
-    			Session::set('leader', $leader);		
+    			Session::set('leader', $leader);	
     		}
     		//dd($leader);
     		return view('Request.select', compact('leader'));
@@ -95,8 +95,16 @@ class RequestController extends Controller {
 	}
 
 	public function createp(Request $request)
-	{
-		return view('Request.createp');
+	{	
+
+		$lines = DB::connection('sqlsrv8')->select(DB::raw("SELECT [id]
+		      ,[location]
+		      ,[location_type]
+		      ,[location_dest]
+		  FROM [bbStock].[dbo].[locations]"));
+		// dd($lines);
+
+		return view('Request.createp', compact('lines'));
 	}
 
 	public function store(Request $request2)
@@ -317,6 +325,20 @@ class RequestController extends Controller {
 		    return view('Request.error',compact('msg'));
 		}
 
+		// dd('Style: '.$style.' Color: '.$color);
+		// check if is 1_to_1 or 1_to_many
+		$check_method = DB::connection('sqlsrv')->select(DB::raw("SELECT [Serie] FROM [Barcode Table Quality] WHERE [Item No_] = '".$style."' AND [Color] = '".$color."' "));
+		// dd($heck_method);
+		// dd($check_method[0]->Serie);
+
+		if (isset($check_method[0])) {
+			
+			if ($check_method[0]->Serie == '1_to_1') {
+				$msg = 'Article has barcode as first quality, that means you don\'t need this label';
+			    return view('Request.error',compact('msg'));
+			}
+		}
+
 		$msg = "";
 
 			try {
@@ -364,10 +386,10 @@ class RequestController extends Controller {
 		
 		$validator = Validator::make($request2->all(), [
             'po' => 'required|min:6|max:6',
-            'size' => 'required|min:1|max:5'
+            'size' => 'required|min:1|max:5',
             //'qty' => 'required',
             // 'module' => 'required|min:4|max:5',
-            // 'module' => 'required',
+            'module' => 'required',
             // 'leader' => 'required'
         ]);
 		if ($validator->fails()) {
