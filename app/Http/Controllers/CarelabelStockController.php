@@ -24,48 +24,35 @@ use Auth;
 
 class CarelabelStockController extends Controller {
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
 	public function index()
 	{
 		//
 		return view('CarelabelStock.index');
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
 	public function createnew()
 	{
 		//
 		return view('CarelabelStock.createnew');
 	}
+
 	public function createfrommodule()
 	{
 		//
 		return view('CarelabelStock.createfrommodule');
 	}
+
 	public function createundo()
 	{
 		//
 		return view('CarelabelStock.createundo');
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
 	public function storenew(Request $request)
 	{
 		//
 		//validation
-		$this->validate($request, ['po'=>'required|min:5|max:5','size'=>'required','qty'=>'required']);
+		$this->validate($request, ['po'=>'required|min:6|max:6','size'=>'required','qty'=>'required']);
 		$forminput = $request->all(); 
 
 		$ponum = $forminput['po'];
@@ -128,7 +115,7 @@ class CarelabelStockController extends Controller {
 	{
 		//
 		//validation
-		$this->validate($request, ['po'=>'required|min:5|max:5','size'=>'required','qty'=>'required','module'=>'max:8']);
+		$this->validate($request, ['po'=>'required|min:6|max:6','size'=>'required','qty'=>'required','module'=>'max:8']);
 		$forminput = $request->all(); 
 
 		$ponum = $forminput['po'];
@@ -197,7 +184,7 @@ class CarelabelStockController extends Controller {
 	{
 		//
 		//validation
-		$this->validate($request, ['po'=>'required|min:5|max:5','size'=>'required','qty'=>'required']);
+		$this->validate($request, ['po'=>'required|min:6|max:6','size'=>'required','qty'=>'required']);
 		$forminput = $request->all(); 
 
 		$ponum = $forminput['po'];
@@ -257,48 +244,5 @@ class CarelabelStockController extends Controller {
 		return view('CarelabelStock.success');
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
-	}
-
+	
 }

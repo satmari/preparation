@@ -46,6 +46,7 @@
                             <th data-sortable="true">Season</th>
                             <th data-sortable="true">Total Order Qty</th>
                             <th data-sortable="true">Flash</th>
+                            <th data-sortable="true">Skeda</th>
                             <th data-sortable="true">Closed po</th>
                             <th data-sortable="true">Brand</th>
                             <th data-sortable="true">Delivery</th>
@@ -63,7 +64,7 @@
                         <tr>
                             {{-- <td>{{ $po->id }}</td> --}}
                             <td><a href="{{ url('/main/edit/'.$po->id) }}" class="btn btn-info btn-xs center-block">Edit</a></td>
-                            <td>{{ $po->po }}</td>
+                            <td>{{ $po->po_new }}</td>
                             <td>{{ $po->size }}</td>
                             <td>{{ $po->style }}</td>
                             <td>{{ $po->color }}</td>
@@ -71,6 +72,7 @@
                             <td>{{ $po->season }}</td>
                             <td>{{ $po->total_order_qty }}</td>
                             <td>{{ $po->flash }}</td>
+                            <td>{{ $po->skeda }}</td>
                             <td>{{ $po->closed_po }}</td>
                             <td>{{ $po->brand }}</td>
                             <td>{{ $po->delivery_date }}</td>

@@ -20,11 +20,6 @@ use Auth;
 
 class secondqulityrequestController extends Controller {
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
 	public function index()
 	{
 		
@@ -240,6 +235,8 @@ class secondqulityrequestController extends Controller {
 		$request_q = DB::connection('sqlsrv')->select(DB::raw("SELECT id,style,color,size,status FROM secondq_requests WHERE status = 'pending'"));
 		// dd($request_q);
 
+		// dd(" Javi IT sektoru da koristite ovu funkciju");
+		
 		foreach($request_q as $row) {
 
 			$id = $row->id;
@@ -250,7 +247,22 @@ class secondqulityrequestController extends Controller {
 			
 			try {
 				
-				$po = DB::connection('sqlsrv3')->select(DB::raw("SELECT [Item No_]
+				// $po = DB::connection('sqlsrv3')->select(DB::raw("SELECT [Item No_]
+				// 												      ,[Color]
+				// 												      ,[TG]
+				// 												      ,[Materiale] as materiale
+				// 												      ,[Description Model] as des
+				// 												      ,[TG2] as tg2
+				// 												      ,[Commersial Color code] as ccc
+				// 												      ,[Color decstionption] as cd
+				// 												      ,[Barcode] as barcode
+				// 												  FROM [Gordon_LIVE].[dbo].[GORDON\$Barocde Table Quality]
+				// 												  WHERE [Item No_] = '".$style."' 
+				// 												  	AND [Color] = '".$color."' 
+				// 												  	AND [TG] = '".$size."'"));
+
+
+				$po = DB::connection('sqlsrv')->select(DB::raw("SELECT [Item No_]
 																      ,[Color]
 																      ,[TG]
 																      ,[Materiale] as materiale
@@ -259,17 +271,18 @@ class secondqulityrequestController extends Controller {
 																      ,[Commersial Color code] as ccc
 																      ,[Color decstionption] as cd
 																      ,[Barcode] as barcode
-																  FROM [Gordon_LIVE].[dbo].[GORDON\$Barocde Table Quality]
+																  FROM [preparation].[dbo].[Barcode Table Quality]
 																  WHERE [Item No_] = '".$style."' 
 																  	AND [Color] = '".$color."' 
 																  	AND [TG] = '".$size."'"));
 
-				// dd($po);
+
+				// var_dump($po);
 
 				if(isset($po[0]->materiale) OR isset($po[0]->des) OR isset($po[0]->tg2) OR isset($po[0]->ccc) OR isset($po[0]->cd) OR isset($po[0]->barcode)) {
 					// continnue
 				} else {
-					$msg = "Problem to find in table: ".$style." ". $color." ". $size." , salji mail u Italiju, i zovi Dekija :)" ;
+					$msg = "Problem to find in table: ".$style." ". $color." ". $size." , salji mail u Italiju, i zovi Aslanija :)" ;
 					return view('secondqrequesttable.error',compact('msg'));
 				}
 

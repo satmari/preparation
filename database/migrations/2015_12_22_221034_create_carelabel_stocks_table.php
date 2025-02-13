@@ -17,13 +17,16 @@ class CreateCarelabelStocksTable extends Migration {
 			$table->increments('id');
 			$table->integer('po_id')->unsigned();
 			$table->integer('user_id')->unsigned();
-			$table->string('ponum', 5)->nullable();
-            $table->string('size', 3)->nullable();
+			$table->string('ponum', 10)->nullable(); // change to 6 
+            $table->string('size', 5)->nullable();	// change to 5
             $table->integer('qty')->nullable();
             $table->string('module', 20)->nullable();
             $table->string('status', 12)->nullable();
             $table->string('type', 12)->nullable();
             $table->text('comment')->nullable();
+
+            $table->text('machine')->nullable(); // added 2024.01.16
+
             $table->timestamps();
 		});
 	}

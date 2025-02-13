@@ -18,11 +18,6 @@ use DB;
 
 class importModulesController extends Controller {
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
 	public function index()	{
 
 		$rows = Module::all();
@@ -32,11 +27,6 @@ class importModulesController extends Controller {
  		return view('importmodules.index', compact('table'));
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
 	public function create(Request $request)
 	{
 		//
@@ -55,8 +45,9 @@ class importModulesController extends Controller {
 		));*/
 		// Live database
 
-		DB::table('modules')->truncate();
-
+		// DB::table('modules')->truncate();
+			
+		
 		//$inteosmodules = DB::connection('sqlsrv2')->select(DB::raw("SELECT DISTINCT mod.ModNam,per.Name,per.BadgeNum,per.PinCode FROM [BdkCLZG].[dbo].[CNF_Operators] as op JOIN [BdkCLZG].[dbo].[WEA_PersData] as per ON op.IntKeyPers = per.PersNum JOIN [BdkCLZG].[dbo].[CNF_Modules] as mod ON op.Module = mod.Module WHERE  (op.PersTyp = 2) and (per.FlgAct = 1) ORDER BY mod.ModNam"));
 		$inteosmodules = DB::connection('sqlsrv2')->select(DB::raw("SELECT DISTINCT mod.ModNam,per.Name,per.BadgeNum,per.PinCode FROM [BdkCLZG].[dbo].[CNF_Operators] as op JOIN [BdkCLZG].[dbo].[WEA_PersData] as per ON op.IntKeyPers = per.PersNum JOIN [BdkCLZG].[dbo].[CNF_Modules] as mod ON op.Module = mod.Module WHERE  (op.PersTyp = 2) ORDER BY mod.ModNam"));
 
@@ -83,7 +74,7 @@ class importModulesController extends Controller {
     			$module->leader_num=$leader_num;
     			$module->leader_pin=$pin;
 	
-	   			$module->save();	
+	   			// $module->save();	
 	   		//}
 			/*
 			catch (\Illuminate\Database\QueryException $e) {
@@ -95,8 +86,9 @@ class importModulesController extends Controller {
    			
     	}
 
-    	return view('importmodules.success');
+    	// return view('importmodules.success');
 
+    	
 		/*
 		if ($inteosmodules) {
 			//continue

@@ -40,13 +40,18 @@
 					{{--<tr>
 						<td><span style="color:red"><b>Odmah posle potvrde narudzbe aplikacija ide na pocetnu stranicu!</b></span></td>
 					</tr>
+					
+					<tr>
+						<td><span style="color:red"><b>Paznja: Komese su prebacene sa 5 na 6 cifara!!!</b></span></td>
+					</tr>
 					--}}
 					<tr>
-						<td><span style="color:green"><b>Zatvarajte tab-ove</b></span></td>
+						<td><span style="color:red"><b>Sve probleme obavezno prijaviti IT sektoru.</b></span></td>
 					</tr>
 					<tr>
-						<td><span style="color:darkorchid">Da li imate predlog za pozadinsku sliku aplikacije?</span></td>
+						<td><span style="color:green"><b>Zatvarajte tabove u browseru!</b></span></td>
 					</tr>
+					
 				</table>
 				<hr>
 				<table class="table" style="font-size: large">

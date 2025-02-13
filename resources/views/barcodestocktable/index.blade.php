@@ -11,7 +11,9 @@
                     <input id="filter" type="text" class="form-control" placeholder="Type here...">
                 </div>
 
-                <table class="table table-striped table-bordered" id="sort" 
+                <table class="table table-striped table-bordered" id="sort"
+                data-show-export="true"
+                data-export-types="['excel']" 
                 >
                 <!--
                 data-show-export="true"
@@ -47,6 +49,7 @@
                             
                             <th data-sortable="true">Type</th>
                             <th>Comment</th>
+                            <th data-sortable="true">Machine</th>
                             <th data-sortable="true">Created</th>
                             <th data-sortable="true">Updated</th>
                             
@@ -67,6 +70,7 @@
                             
                             <td>{{ $sto->type }}</td>
                             <td>{{ $sto->comment }}</td>
+                            <td>{{ $sto->machine }}</td>
                             
                             <td>{{ substr($sto->created_at, 0, 19) }}</td>
                             <td>{{ substr($sto->updated_at, 0, 19) }}</td>

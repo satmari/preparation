@@ -52,16 +52,28 @@ class RequestController extends Controller {
 		    return view('Request.error',compact('msg'));
 		}
 		*/
-		$inteosleaders = DB::connection('sqlsrv2')->select(DB::raw("SELECT Name FROM BdkCLZG.dbo.WEA_PersData WHERE (Func = 23) and (FlgAct = 1) and (PinCode = ".$pin.")"));
+		$inteosleaders = DB::connection('sqlsrv2')->select(DB::raw("SELECT Name FROM [BdkCLZG].[dbo].[WEA_PersData] WHERE (Func = 23) and (FlgAct = 1) and (PinCode = ".$pin.")"));
+		/*
+		$inteosleaders = DB::connection('sqlsrv2')->select(DB::raw("SELECT 
+			Name 
+		FROM [BdkCLZG].[dbo].[WEA_PersData] 
+		WHERE (Func = 23) and (FlgAct = 1) and (PinCode = ".$pin.")
+		UNION ALL
+		SELECT 
+			Name 
+		FROM [SBT-SQLDB01P\\INTEOSKKA].[BdkCLZKKA].[dbo].[WEA_PersData]
+		WHERE (Func = 23) and (FlgAct = 1) and (PinCode = ".$pin.")"));
+		*/
 
 		if (empty($inteosleaders)) {
 			$msg = 'LineLeader with this PIN not exist';
 		    return view('Request.error',compact('msg'));
+
 		
 		} else {
 			foreach ($inteosleaders as $row) {
     			$leader = $row->Name;
-    			Session::set('leader', $leader);		
+    			Session::set('leader', $leader);	
     		}
     		//dd($leader);
     		return view('Request.select', compact('leader'));
@@ -83,21 +95,30 @@ class RequestController extends Controller {
 	}
 
 	public function createp(Request $request)
-	{
-		return view('Request.createp');
+	{	
+
+		$lines = DB::connection('sqlsrv8')->select(DB::raw("SELECT [id]
+		      ,[location]
+		      ,[location_type]
+		      ,[location_dest]
+		  FROM [bbStock].[dbo].[locations]"));
+		// dd($lines);
+
+		return view('Request.createp', compact('lines'));
 	}
 
 	public function store(Request $request2)
 	{
 		//
 		//validation
-		//$this->validate($request2, ['po'=>'required|min:5|max:5','size'=>'required|min:1|max:2','qty'=>'required'/*,'module'=>'min:4|max:10'*/]);
+		//$this->validate($request2, ['po'=>'required|min:6|max:6','size'=>'required|min:1|max:2','qty'=>'required'/*,'module'=>'min:4|max:10'*/]);
 		
 		$validator = Validator::make($request2->all(), [
-            'po' => 'required|min:5|max:5',
-            'size' => 'required|min:1|max:3',
+            'po' => 'required|min:6|max:6',
+            'size' => 'required|min:1|max:5',
             //'qty' => 'required',
-            'leader' => 'required'
+            'leader' => 'required',
+            'comment' => 'required'
         ]);
 		if ($validator->fails()) {
             return redirect('/request')
@@ -147,7 +168,7 @@ class RequestController extends Controller {
 		    $poid = Po::where('po_key', $key)->firstOrFail()->id;
 		    $po_closed = Po::where('po_key', $key)->firstOrFail()->closed_po;
 		} catch (ModelNotFoundException $e) {
-		    $msg = 'PO and size not exist in Po table';
+		    $msg = 'PO and size not exist in Po table1';
 		    return view('Request.error',compact('msg'));
 		}
 
@@ -214,6 +235,7 @@ class RequestController extends Controller {
 
 		if ($msg == "") {
 			$msg = '<p style="color:red;"><big>BARCODE OR CARELABEL NOT SELECTED !!!</big></p>';
+			return view('Request.error',compact('msg'));
 		}
 
 		if(time() < mktime(08, 30, 0)) {
@@ -233,11 +255,11 @@ class RequestController extends Controller {
 	{
 		//
 		//validation
-		//$this->validate($request2, ['po'=>'required|min:5|max:5','size'=>'required|min:1|max:2','qty'=>'required'/*,'module'=>'min:4|max:10'*/]);
+		//$this->validate($request2, ['po'=>'required|min:6|max:6','size'=>'required|min:1|max:2','qty'=>'required'/*,'module'=>'min:4|max:10'*/]);
 		
 		$validator = Validator::make($request2->all(), [
-            'po' => 'required|min:5|max:5',
-            'size' => 'required|min:1|max:3',
+            'po' => 'required|min:6|max:6',
+            'size' => 'required|min:1|max:5',
             'qty' => 'required',
             'leader' => 'required'
         ]);
@@ -289,11 +311,11 @@ class RequestController extends Controller {
 		    // $po_closed = Po::where('po_key', $key)->firstOrFail()->closed_po;
 		} 
 		catch (ModelNotFoundException $e) {
-		    $msg = 'PO and size not exist in Po table';
+		    $msg = 'PO and size not exist in Po table2';
 		    return view('Request.error',compact('msg'));
 		}
 		catch (\Exception $e) {
-		    $msg = 'PO and size not exist in Po table';
+		    $msg = 'PO and size not exist in Po table3';
 		    return view('Request.error',compact('msg'));
 		}
 
@@ -301,6 +323,20 @@ class RequestController extends Controller {
 		if($po_closed == "Closed") {
 			$msg = 'Komesa is Closed';
 		    return view('Request.error',compact('msg'));
+		}
+
+		// dd('Style: '.$style.' Color: '.$color);
+		// check if is 1_to_1 or 1_to_many
+		$check_method = DB::connection('sqlsrv')->select(DB::raw("SELECT [Serie] FROM [Barcode Table Quality] WHERE [Item No_] = '".$style."' AND [Color] = '".$color."' "));
+		// dd($heck_method);
+		// dd($check_method[0]->Serie);
+
+		if (isset($check_method[0])) {
+			
+			if ($check_method[0]->Serie == '1_to_1') {
+				$msg = 'Article has barcode as first quality, that means you don\'t need this label';
+			    return view('Request.error',compact('msg'));
+			}
 		}
 
 		$msg = "";
@@ -346,15 +382,15 @@ class RequestController extends Controller {
 	{
 		//
 		//validation
-		//$this->validate($request2, ['po'=>'required|min:5|max:5','size'=>'required|min:1|max:2','qty'=>'required'/*,'module'=>'min:4|max:10'*/]);
+		//$this->validate($request2, ['po'=>'required|min:6|max:6','size'=>'required|min:1|max:2','qty'=>'required'/*,'module'=>'min:4|max:10'*/]);
 		
 		$validator = Validator::make($request2->all(), [
-            'po' => 'required|min:5|max:5',
-            'size' => 'required|min:1|max:3',
+            'po' => 'required|min:6|max:6',
+            'size' => 'required|min:1|max:5',
             //'qty' => 'required',
             // 'module' => 'required|min:4|max:5',
             'module' => 'required',
-            'leader' => 'required'
+            // 'leader' => 'required'
         ]);
 		if ($validator->fails()) {
             return redirect('/requestcreatep')
@@ -368,10 +404,11 @@ class RequestController extends Controller {
 		$ponum = $forminput['po'];
 		$size = $forminput['size'];
 		$qty = $forminput['qty'];
-		$module = ucfirst($forminput['module']);
-		$leader = $forminput['leader'];
 		$comment = $forminput['comment'];
 		$key = $ponum.'-'.$size;
+
+		$module = ucfirst($forminput['module']);
+		$leader = $forminput['leader'];
 
 		if (isset($forminput['barcode'])) {
 			$barcode = $forminput['barcode'];	
@@ -408,7 +445,7 @@ class RequestController extends Controller {
 		try {
 		    $poid = Po::where('po_key', $key)->firstOrFail()->id;
 		} catch (ModelNotFoundException $e) {
-		    $msg = 'PO and size not exist in Po table';
+		    $msg = 'PO and size not exist in Po table3';
 		    return view('Request.errorp',compact('msg'));
 		}
 

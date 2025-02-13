@@ -5,9 +5,9 @@
 <div class="container container-table">
 	<div class="row vertical-center-row">
 		<div class="text-center col-md-4 col-md-offset-4">
-
+			<!-- 
 			<div class="panel panel-default">
-				<div class="panel-heading">Import PO form Excel file</div>
+				<div class="panel-heading">Import PO from Excel file</div>
 				
 				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportPo']]) !!}
 					<div class="panel-body">
@@ -19,61 +19,82 @@
 					@include('errors.list')
 				{!! Form::close() !!}
 
-				<!-- <hr> -->
-			</div>
-				
-
-			<!-- 
 			
-			<div class="panel panel-default">
-				<div class="panel-heading">Import users form Excel file</div>
+			</div>
+ 			-->
 
+			<!-- <div class="panel panel-default">
+				<div class="panel-heading">Update Hangtag PO from Excel file</div>
+				
+				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportHangtag']]) !!}
+					<div class="panel-body">
+						{!! Form::file('file1', ['class' => 'center-block']) !!}
+					</div>
+					<div class="panel-body">
+						{!! Form::submit('Import Hangtag', ['class' => 'btn btn-warning center-block']) !!}
+					</div>
+					@include('errors.list')
+				{!! Form::close() !!}
+
+			</div> -->
+
+			<!-- <div class="panel panel-default">
+				<div class="panel-heading">Import Users</div>
+				
 				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportUser']]) !!}
 					<div class="panel-body">
 						{!! Form::file('file2', ['class' => 'center-block']) !!}
 					</div>
 					<div class="panel-body">
-						{!! Form::submit('Import User', ['class' => 'btn btn-warning center-block']) !!}
+						{!! Form::submit('Import', ['class' => 'btn btn-warning center-block']) !!}
 					</div>
 					@include('errors.list')
 				{!! Form::close() !!}
 
-				
-			</div>
-			
+			</div> -->
+		
 			<div class="panel panel-default">
-				<div class="panel-heading">Import roles form Excel file</div>
+				<div class="panel-body">
+					<div class="">
+						<a href="{{url('/update_po_from_posummary')}}" class="btn btn-warning btn center-block">Inset new and update PRO from POSummary</a>
+					</div>
+					<br>
+					
+					<div class="">
+						<a href="{{url('/update_po_from_posummary_close')}}" class="btn btn-warning btn center-block">Close PRO from POSummary</a>
+					</div>
+				</div>
 
-				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportRoll']]) !!}
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">Import Leftover <big>ON STOCK</big></div>
+				
+				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportLeftoverPos']]) !!}
 					<div class="panel-body">
 						{!! Form::file('file3', ['class' => 'center-block']) !!}
 					</div>
 					<div class="panel-body">
-						{!! Form::submit('Import Roles', ['class' => 'btn btn-warning center-block']) !!}
+						{!! Form::submit('Import', ['class' => 'btn btn-warning center-block']) !!}
 					</div>
 					@include('errors.list')
 				{!! Form::close() !!}
-
 			</div>
 
 			<div class="panel panel-default">
-				<div class="panel-heading">Import user_rolls form Excel file</div>
-
-				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportUserRole']]) !!}
+				<div class="panel-heading">Import Leftover <big>USED</big></div>
+				
+				{!! Form::open(['files'=>True, 'method'=>'POST', 'action'=>['importController@postImportLeftoverNeg']]) !!}
 					<div class="panel-body">
 						{!! Form::file('file4', ['class' => 'center-block']) !!}
 					</div>
 					<div class="panel-body">
-						{!! Form::submit('Import user-role', ['class' => 'btn btn-warning center-block']) !!}
+						{!! Form::submit('Import', ['class' => 'btn btn-warning center-block']) !!}
 					</div>
 					@include('errors.list')
 				{!! Form::close() !!}
-
-				
 			</div>
-			-->
 
-			
 			<div class="panel panel-default">
 				<div class="panel-body">
 					<div class="">

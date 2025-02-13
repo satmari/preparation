@@ -12,11 +12,20 @@
 						<a href="{{url('/requestcreate')}}" class="btn btn-bc center-block">Barcode and Carelabel</a>
 					</div>
 				</div>
-				<div class="panel-body">
-					<div class="">
-						<a href="{{url('/requestcreatesec')}}" class="btn btn-warning center-block">II Quality</a>
+
+				@if ($leader == 'Sanela Mihaljević J.')
+					<div class="panel-body">
+						<div class="">
+							<a href="{{url('/requestcreatesec')}}" class="btn btn-warning center-block">II Quality</a>
+						</div>
 					</div>
-				</div>
+				@else
+					<div class="panel-body">
+						<div class="">
+							<a href="{{url('/requestcreatesec')}}" class="btn btn-warning center-block disabled">II Quality</a>
+						</div>
+					</div>
+				@endif
 				
 				{{--
 				<hr>

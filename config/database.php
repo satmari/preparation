@@ -102,19 +102,6 @@ return [
 			'prefix'   => '',
 		],
 
-
-		'sqlsrvc' => [
-			'driver'   => 'sqlsrv',
-			'host'     => env('DB_HOSTc', 'localhost'),
-			'database' => env('DB_DATABASEc', 'forge'),
-			'username' => env('DB_USERNAMEc', 'forge'),
-			'password' => env('DB_PASSWORDc', ''),
-			'prefix'   => '',
-		],
-
-
-
-		/*
 		'sqlsrv4' => [
 			'driver'   => 'sqlsrv',
 			'host'     => env('DB_HOST4', 'localhost'),
@@ -122,8 +109,44 @@ return [
 			'username' => env('DB_USERNAME4', 'forge'),
 			'password' => env('DB_PASSWORD4', ''),
 			'prefix'   => '',
-		]
-		*/
+		],
+
+		'sqlsrv5' => [
+			'driver'   => 'sqlsrv',
+			'host'     => env('DB_HOST5', 'localhost'),
+			'database' => env('DB_DATABASE5', 'forge'),
+			'username' => env('DB_USERNAME5', 'forge'),
+			'password' => env('DB_PASSWORD5', ''),
+			'prefix'   => '',
+		],
+
+		'sqlsrv6' => [
+			'driver'   => 'sqlsrv',
+			'host'     => env('DB_HOST6', 'localhost'),
+			'database' => env('DB_DATABASE6', 'forge'),
+			'username' => env('DB_USERNAME6', 'forge'),
+			'password' => env('DB_PASSWORD6', ''),
+			'prefix'   => '',
+		],
+
+		'sqlsrv7' => [
+			'driver'   => 'sqlsrv',
+			'host'     => env('DB_HOST7', 'localhost'),
+			'database' => env('DB_DATABASE7', 'forge'),
+			'username' => env('DB_USERNAME7', 'forge'),
+			'password' => env('DB_PASSWORD7', ''),
+			'prefix'   => '',
+		],
+
+		'sqlsrv8' => [
+			'driver'   => 'sqlsrv',
+			'host'     => env('DB_HOST8', 'localhost'),
+			'database' => env('DB_DATABASE8', 'forge'),
+			'username' => env('DB_USERNAME8', 'forge'),
+			'password' => env('DB_PASSWORD8', ''),
+			'prefix'   => '',
+		],
+
 
 	],
 

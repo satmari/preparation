@@ -17,8 +17,8 @@ class CreateSecondQRequestsTable extends Migration {
 			$table->increments('id');
 			$table->integer('po_id')->unsigned();
 			$table->integer('user_id')->unsigned();
-			$table->string('ponum', 5)->nullable();
-            $table->string('size', 3)->nullable();
+			$table->string('ponum', 10)->nullable(); // change to 6
+            $table->string('size', 5)->nullable();	// change to 5
             $table->integer('qty')->nullable();
             $table->string('module', 20)->nullable();
             $table->string('leader', 30)->nullable();
@@ -29,9 +29,9 @@ class CreateSecondQRequestsTable extends Migration {
             $table->string('color',12)->nullable();
             $table->string('materiale',12)->nullable();
             $table->string('tg2', 12)->nullable();
-            $table->string('desc', 32)->nullable();
+            $table->string('desc', 32)->nullable();	// change to 40
             $table->string('ccc', 12)->nullable();
-            $table->string('cd', 32)->nullable();
+            $table->string('cd', 32)->nullable();			
             $table->string('barcode', 32)->nullable();
 			$table->timestamps();
 		});
