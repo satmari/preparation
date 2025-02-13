@@ -24,6 +24,9 @@ class CreateCarelabelStocksTable extends Migration {
             $table->string('status', 12)->nullable();
             $table->string('type', 12)->nullable();
             $table->text('comment')->nullable();
+
+            $table->text('machine')->nullable(); // added 2024.01.16
+
             $table->timestamps();
 		});
 	}

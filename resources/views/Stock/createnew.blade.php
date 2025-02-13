@@ -49,7 +49,9 @@
 							</tr>
 							<tr>
 								<div class="col-md-6">
-								
+									<br>
+									<input type="radio" name="machine_c" value="REGULAR" > REGULAR <br>
+  									<input type="radio" name="machine_c" value="ON ROLL"> ON ROLL &nbsp; <br>
 								</div>
 							</tr>
 						</td>

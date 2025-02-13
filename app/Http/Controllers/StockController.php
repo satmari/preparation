@@ -32,11 +32,13 @@ class StockController extends Controller {
 		//
 		return view('Stock.index');
 	}
+
 	public function createnew()
 	{
 		//
 		return view('Stock.createnew');
 	}
+
 	public function createfrommodule()
 	{
 		//
@@ -49,16 +51,19 @@ class StockController extends Controller {
 
 		return view('Stock.createfrommodule', compact('lines'));
 	}
+
 	public function createundo()
 	{
 		//
 		return view('Stock.createundo');
 	}
+
 	public function createtransfer()
 	{
 		//
 		return view('Stock.createtransfer');
 	}
+
 	public function createthrow_away()
 	{
 		//
@@ -70,6 +75,7 @@ class StockController extends Controller {
 
 		return view('Stock.throw_away',compact('materials'));
 	}
+
 	public function createleftover()
 	{
 		//
@@ -147,6 +153,19 @@ class StockController extends Controller {
 		} else {
 			$machine = NULL;
 		}
+
+		if ($carelabel != '0') {
+
+			if (isset($forminput['machine_c'])) {
+				$machine_c = $forminput['machine_c'];
+			} else {
+				// $machine = NULL;
+				$msg = 'Carelabel type not set for carelabel labels';
+		    	return view('Stock.error',compact('msg'));
+			}
+		} else {
+			$machine_c = NULL;
+		}
 		
 
 		$msg = "";
@@ -190,8 +209,9 @@ class StockController extends Controller {
 				//$tablec->status = $status;
 				$tablec->type = $type;
 				$tablec->comment = $comment;
-				
+				$tablec->machine = $machine_c;
 				$tablec->save();
+				
 			}
 			catch (\Illuminate\Database\QueryException $e) {
 				$msg = "Problem to save carelabel in database";

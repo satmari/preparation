@@ -22,6 +22,11 @@ class ChangePoKey extends Migration {
 		Schema::table('barcode_stocks', function (Blueprint $table) {
     		
     		// $table->text('machine')->nullable(); // added 2023.05.22 
+    	});
+
+		Schema::table('carelabel_stocks', function (Blueprint $table) {
+    		
+    		// $table->text('machine')->nullable(); // added 2024.01.16
 		});
 
 	}

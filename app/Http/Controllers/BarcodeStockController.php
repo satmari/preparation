@@ -25,22 +25,12 @@ use Auth;
 
 class BarcodeStockController extends Controller {
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
 	public function index()
 	{
 		//
 		return view('BarcodeStock.index');
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
 	public function createnew()
 	{
 		//
@@ -57,11 +47,6 @@ class BarcodeStockController extends Controller {
 		return view('BarcodeStock.createundo');
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
 	public function storenew(Request $request)
 	{
 		//

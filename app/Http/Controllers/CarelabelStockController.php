@@ -24,43 +24,30 @@ use Auth;
 
 class CarelabelStockController extends Controller {
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
 	public function index()
 	{
 		//
 		return view('CarelabelStock.index');
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
 	public function createnew()
 	{
 		//
 		return view('CarelabelStock.createnew');
 	}
+
 	public function createfrommodule()
 	{
 		//
 		return view('CarelabelStock.createfrommodule');
 	}
+
 	public function createundo()
 	{
 		//
 		return view('CarelabelStock.createundo');
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
 	public function storenew(Request $request)
 	{
 		//

@@ -18,11 +18,6 @@ use DB;
 
 class importModulesController extends Controller {
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
 	public function index()	{
 
 		$rows = Module::all();
@@ -32,11 +27,6 @@ class importModulesController extends Controller {
  		return view('importmodules.index', compact('table'));
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
 	public function create(Request $request)
 	{
 		//

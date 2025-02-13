@@ -169,7 +169,7 @@
       'mysql' => 
       array (
         'driver' => 'mysql',
-        'host' => '172.27.161.221\\GPD',
+        'host' => '172.27.161.200',
         'database' => 'preparation',
         'username' => 'sa',
         'password' => 'gordon2013',
@@ -181,7 +181,7 @@
       'pgsql' => 
       array (
         'driver' => 'pgsql',
-        'host' => '172.27.161.221\\GPD',
+        'host' => '172.27.161.200',
         'database' => 'preparation',
         'username' => 'sa',
         'password' => 'gordon2013',
@@ -192,7 +192,7 @@
       'sqlsrv' => 
       array (
         'driver' => 'sqlsrv',
-        'host' => '172.27.161.221\\GPD',
+        'host' => '172.27.161.200',
         'database' => 'preparation',
         'username' => 'sa',
         'password' => 'gordon2013',
@@ -219,7 +219,7 @@
       'sqlsrv4' => 
       array (
         'driver' => 'sqlsrv',
-        'host' => '172.27.161.221\\GPD',
+        'host' => '172.27.161.200',
         'database' => 'finalaudit',
         'username' => 'sa',
         'password' => 'gordon2013',
@@ -228,7 +228,7 @@
       'sqlsrv5' => 
       array (
         'driver' => 'sqlsrv',
-        'host' => '172.27.161.222',
+        'host' => '172.27.161.200',
         'database' => 'settings',
         'username' => 'sa',
         'password' => 'gordon2013',
@@ -237,7 +237,7 @@
       'sqlsrv6' => 
       array (
         'driver' => 'sqlsrv',
-        'host' => '172.27.161.221\\GPD',
+        'host' => '172.27.161.200',
         'database' => 'posummary',
         'username' => 'sa',
         'password' => 'gordon2013',
@@ -246,7 +246,7 @@
       'sqlsrv7' => 
       array (
         'driver' => 'sqlsrv',
-        'host' => '172.27.161.221\\GPD',
+        'host' => '172.27.161.200',
         'database' => 'trebovanje',
         'username' => 'sa',
         'password' => 'gordon2013',
@@ -255,7 +255,7 @@
        'sqlsrv8' => 
       array (
         'driver' => 'sqlsrv',
-        'host' => '172.27.161.221\\GPD',
+        'host' => '172.27.161.200',
         'database' => 'bbstock',
         'username' => 'sa',
         'password' => 'gordon2013',

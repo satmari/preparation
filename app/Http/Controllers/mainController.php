@@ -18,11 +18,6 @@ use Auth;
 
 class mainController extends Controller {
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
 	public function index()
 	{
 		$pos = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM pos"));

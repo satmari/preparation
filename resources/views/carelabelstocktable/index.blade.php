@@ -49,6 +49,7 @@
                             
                             <th data-sortable="true">Type</th>
                             <th>Comment</th>
+                            <th>Print type</th>
                             <th data-sortable="true">Created</th>
                             <th data-sortable="true">Updated</th>
                             
@@ -69,6 +70,7 @@
                             
                             <td>{{ $sto->type }}</td>
                             <td>{{ $sto->comment }}</td>
+                            <td>{{ $sto->machine }}</td>
                             
                             <td>{{ substr($sto->created_at, 0, 19) }}</td>
                             <td>{{ substr($sto->updated_at, 0, 19) }}</td>
