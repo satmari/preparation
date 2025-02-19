@@ -58,10 +58,16 @@ class StockController extends Controller {
 		return view('Stock.createundo');
 	}
 
-	public function createtransfer()
+	public function createtransfer_ki()
 	{
 		//
-		return view('Stock.createtransfer');
+		return view('Stock.createtransfer_ki');
+	}
+
+	public function createtransfer_se()
+	{
+		//
+		return view('Stock.createtransfer_se');
 	}
 
 	public function createthrow_away()
@@ -93,17 +99,15 @@ class StockController extends Controller {
 	{
 		//
 		//validation
-		$this->validate($request, ['po'=>'required|min:6|max:6','size'=>'required','qty'=>'required']);
+		$this->validate($request, ['po'=>'required|min:6|max:7','qty'=>'required']);
 		$forminput = $request->all(); 
 		// dd($forminput);
 
 		$ponum = $forminput['po'];
-		$size = $forminput['size'];
+		// $size = $forminput['size'];
 		$qty = $forminput['qty'];
 		$comment = $forminput['comment'];
-		$key = $ponum.'-'.$size;
-		//dd($key);
-
+		
 		$type = "new";
 
 		// virfy userId
@@ -117,10 +121,13 @@ class StockController extends Controller {
 		
 		// verify po_id
 		try {
-		    $poid = Po::where('po_key', $key)->firstOrFail()->id;
-		    $po_closed = Po::where('po_key', $key)->firstOrFail()->closed_po;
+		    $poid = Po::where('po', $ponum)->firstOrFail()->id;
+		    $po_closed = Po::where('po', $ponum)->firstOrFail()->closed_po;
+		    $size = Po::where('po', $ponum)->firstOrFail()->size;
+		    // $key = $ponum."-".$size;
+
 		} catch (ModelNotFoundException $e) {
-		    $msg = 'Komesa and size not exist in Po table';
+		    $msg = 'Komesa doesnt exist in Po table';
 		    return view('Stock.error',compact('msg'));
 		}
 		
@@ -233,20 +240,19 @@ class StockController extends Controller {
 	{
 		//
 		//validation
-		$this->validate($request, ['po'=>'required|min:6|max:6','size'=>'required','qty'=>'required','module'=>'required']);
+		$this->validate($request, ['po'=>'required|min:6|max:7','qty'=>'required','module'=>'required']);
 		$forminput = $request->all(); 
 
 		$ponum = $forminput['po'];
-		$size = $forminput['size'];
+		// $size = $forminput['size'];
 		$qty = $forminput['qty'];
 		$module = $forminput['module'];
 		$comment = $forminput['comment'];
-		$key = $ponum.'-'.$size;
+		// $key = $ponum.'-'.$size;
 		//dd($key);
 
 		$qty = $qty * (-1);
 		
-		//$type = "back";
 		$type = "modul";
 		$status = "back";
 
@@ -261,8 +267,10 @@ class StockController extends Controller {
 		
 		// verify po_id
 		try {
-		    $poid = Po::where('po_key', $key)->firstOrFail()->id;
-		    $po_closed = Po::where('po_key', $key)->firstOrFail()->closed_po;
+		    $poid = Po::where('po', $ponum)->firstOrFail()->id;
+		    $po_closed = Po::where('po', $ponum)->firstOrFail()->closed_po;
+		    $size = Po::where('po', $ponum)->firstOrFail()->size;
+
 		} catch (ModelNotFoundException $e) {
 		    $msg = 'Po and size not exist in Po table';
 		    return view('Stock.error',compact('msg'));
@@ -351,14 +359,14 @@ class StockController extends Controller {
 	{
 		//
 		//validation
-		$this->validate($request, ['po'=>'required|min:6|max:6','size'=>'required','qty'=>'required']);
+		$this->validate($request, ['po'=>'required|min:6|max:6','qty'=>'required']);
 		$forminput = $request->all(); 
 
 		$ponum = $forminput['po'];
-		$size = $forminput['size'];
+		// $size = $forminput['size'];
 		$qty = $forminput['qty'];
 		$comment = $forminput['comment'];
-		$key = $ponum.'-'.$size;
+		// $key = $ponum.'-'.$size;
 		//dd($key);
 
 		$type = "undo";
@@ -375,8 +383,10 @@ class StockController extends Controller {
 		
 		// verify po_id
 		try {
-		    $poid = Po::where('po_key', $key)->firstOrFail()->id;
-		    $po_closed = Po::where('po_key', $key)->firstOrFail()->closed_po;
+		    $poid = Po::where('po', $ponum)->firstOrFail()->id;
+		    $po_closed = Po::where('po', $ponum)->firstOrFail()->closed_po;
+		    $size = Po::where('po', $ponum)->firstOrFail()->size;
+
 		} catch (ModelNotFoundException $e) {
 		    $msg = 'Po and size not exist in Po table';
 		    return view('Stock.error',compact('msg'));
@@ -457,18 +467,130 @@ class StockController extends Controller {
 		return view('Stock.success');
 	}
 
-	public function stockstoretransfer(Request $request) {
+	public function stockstoretransfer_ki(Request $request) {
 
 		//
 		//validation
-		$this->validate($request, ['po'=>'required|min:6|max:6','size'=>'required','qty'=>'required']);
+		$this->validate($request, ['po'=>'required|min:6|max:7','qty'=>'required']);
 		$forminput = $request->all(); 
+		dd($forminput);
 
 		$ponum = $forminput['po'];
-		$size = $forminput['size'];
+		// $size = $forminput['size'];
 		$qty = $forminput['qty'];
 		$comment = $forminput['comment'];
-		$key = $ponum.'-'.$size;
+		// $key = $ponum.'-'.$size;
+		//dd($key);
+
+		$type = "transfer";
+		$qty = $qty * (-1);
+
+		// virfy userId
+		if (Auth::check())
+		{
+		    $userId = Auth::user()->id;
+		} else {
+			$msg = 'User is not autenticated';
+			return view('Stock.error',compact('msg'));
+		}
+		
+		// verify po_id
+		try {
+		    $poid = Po::where('po_key', $key)->firstOrFail()->id;
+		    $po_closed = Po::where('po_key', $key)->firstOrFail()->closed_po;
+		} catch (ModelNotFoundException $e) {
+		    $msg = 'Po and size not exist in Po table';
+		    return view('Stock.error',compact('msg'));
+		}
+
+		// verify po is closed
+		if($po_closed == 'Closed') {
+			$msg = 'Po is Closed';
+		    return view('Stock.error',compact('msg'));
+		}
+
+		if (isset($forminput['barcode'])) {
+			$barcode = $forminput['barcode'];	
+		} else {
+			$barcode = '0';
+		}
+		if (isset($forminput['carelabel'])) {
+			$carelabel = $forminput['carelabel'];
+		} else {
+			$carelabel = '0';
+		}
+
+		$msg = "";
+
+		if ($barcode == '1') {
+
+			try {
+				$tableb = new BarcodeStock;
+
+				$tableb->po_id = $poid;
+				$tableb->user_id = $userId;
+				$tableb->ponum = $ponum;
+				$tableb->size = $size;
+				$tableb->qty = $qty;
+				//$tableb->module = $module;
+				//$tableb->status = $status;
+				$tableb->type = $type;
+				$tableb->comment = $comment;
+				
+				// $tableb->save();
+			}
+			catch (\Illuminate\Database\QueryException $e) {
+				$msg = "Problem to save barcode in database";
+				return view('Stock.error',compact('msg'));			
+			}
+			$msg = '<p style="color:green;">Barcode stock successfully saved</p>';
+		}
+
+		if ($carelabel == '1') {
+
+			try {
+				$tablec = new CarelabelStock;
+
+				$tablec->po_id = $poid;
+				$tablec->user_id = $userId;
+				$tablec->ponum = $ponum;
+				$tablec->size = $size;
+				$tablec->qty = $qty;
+				//$tablec->module = $module;
+				//$tablec->status = $status;
+				$tablec->type = $type;
+				$tablec->comment = $comment;
+				
+				// $tablec->save();
+			}
+			catch (\Illuminate\Database\QueryException $e) {
+				$msg = "Problem to save caerlabel in database";
+				return view('Stock.error',compact('msg'));			
+			}
+			$msg = '<p style="color:green;">Carelabel stock successfully saved</p>';
+		}
+
+		if ($msg == "") {
+			$msg = '<p style="color:red;"><big>BARCODE OR CARELABEL NOT SELECTED !!!</big></p>';
+			return view('Stock.error',compact('msg'));
+		}
+		
+		return view('Stock.success');
+	}
+
+	public function stockstoretransfer_se(Request $request) {
+
+		//
+		//validation
+		$this->validate($request, ['po'=>'required|min:6|max:7','qty'=>'required']);
+		$forminput = $request->all(); 
+		dd($forminput);
+
+		$ponum = $forminput['po'];
+		// $size = $forminput['size'];
+		$qty = $forminput['qty'];
+		$comment = $forminput['comment'];
+		// $key = $ponum.'-'.$size;
 		//dd($key);
 
 		$type = "transfer";

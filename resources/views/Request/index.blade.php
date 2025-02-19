@@ -31,7 +31,7 @@
 			</div>
 		</div>
 
-		<div class="text-center col-md-8 col-md-offset-2">
+		<!-- <div class="text-center col-md-8 col-md-offset-2">
 			<div class="panel panel-default">
 				<table class="table" style="font-size: large">
 					<tr>
@@ -75,7 +75,8 @@
 				</table>
 							
 			</div>
-		</div>
+		</div> -->
+		
 	</div>
 </div>
 @endsection

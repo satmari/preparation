@@ -7,15 +7,11 @@
 			<div class="panel panel-default" >
 				<div class="panel-heading">Transfer Barcode/Carelabel to Kikinda</div>
 
-				{!! Form::open(['method'=>'POST', 'url'=>'/stockstoretransfer']) !!}
+				{!! Form::open(['method'=>'POST', 'url'=>'/stockstoretransfer_ki']) !!}
 
 				<div class="panel-body">
 					<p>Po/Komesa: <span style="color:red">Obavezno 6 cifara</span></p>
 					{!! Form::text('po', null, ['id' => 'po', 'class' => 'form-control', 'autofocus' => 'autofocus']) !!}
-				</div>
-				<div class="panel-body">
-					<p>Size/Velicina: </p>
-					{!! Form::select('size', array(''=>'','XS'=>'XS','S'=>'S','M'=>'M','L'=>'L','XL'=>'XL','XXL'=>'XXL','M/L'=>'M/L','S/M'=>'S/M','XS/S'=>'XS/S','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','3-4'=>'3-4','5-6'=>'5-6','7-8'=>'7-8','9-10'=>'9-10','11-12'=>'11-12','LSHO'=>'LSHO','SSHO'=>'SSHO','MSHO'=>'MSHO','XSSHO'=>'XSSHO','XLSHO'=>'XLSHO','TU'=>'TU','1/2'=>'1/2','3/4'=>'3/4'), '', array('class' => 'form-control')) !!} 
 				</div>
 				<div class="panel-body">
 					<p>Qty/Kolicina: </p>
@@ -48,7 +44,7 @@
 				
 
 				<div class="panel-body">
-					{!! Form::submit('Confirm', ['class' => 'btn btn-success center-block disabled']) !!}
+					{!! Form::submit('Confirm', ['class' => 'btn btn-success center-block']) !!}
 				</div>
 
 				@include('errors.list')

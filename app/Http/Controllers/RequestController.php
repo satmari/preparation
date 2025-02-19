@@ -101,7 +101,7 @@ class RequestController extends Controller {
 		      ,[location]
 		      ,[location_type]
 		      ,[location_dest]
-		  FROM [bbStock].[dbo].[locations]"));
+		  FROM [locations]"));
 		// dd($lines);
 
 		return view('Request.createp', compact('lines'));
@@ -114,8 +114,8 @@ class RequestController extends Controller {
 		//$this->validate($request2, ['po'=>'required|min:6|max:6','size'=>'required|min:1|max:2','qty'=>'required'/*,'module'=>'min:4|max:10'*/]);
 		
 		$validator = Validator::make($request2->all(), [
-            'po' => 'required|min:6|max:6',
-            'size' => 'required|min:1|max:5',
+            'po' => 'required|min:6|max:7',
+            
             //'qty' => 'required',
             'leader' => 'required',
             'comment' => 'required'
@@ -130,12 +130,12 @@ class RequestController extends Controller {
 		//dd($forminput);
 
 		$ponum = $forminput['po'];
-		$size = $forminput['size'];
+		// $size = $forminput['size'];
 		//$qty = $forminput['qty'];
 		//$module = $forminput['module'];
 		$leader = $forminput['leader'];
 		$comment = $forminput['comment'];
-		$key = $ponum.'-'.$size;
+		// $key = $ponum.'-'.$size;
 
 		if (isset($forminput['barcode'])) {
 			$barcode = $forminput['barcode'];	
@@ -165,8 +165,10 @@ class RequestController extends Controller {
 		
 		// verify po_id
 		try {
-		    $poid = Po::where('po_key', $key)->firstOrFail()->id;
-		    $po_closed = Po::where('po_key', $key)->firstOrFail()->closed_po;
+		    $poid = Po::where('po', $ponum)->firstOrFail()->id;
+		    $po_closed = Po::where('po', $ponum)->firstOrFail()->closed_po;
+		    $size = Po::where('po', $ponum)->firstOrFail()->size;
+
 		} catch (ModelNotFoundException $e) {
 		    $msg = 'PO and size not exist in Po table1';
 		    return view('Request.error',compact('msg'));
@@ -202,8 +204,8 @@ class RequestController extends Controller {
 				$msg = "Problem to save in barcode request table";
 				return view('Request.error',compact('msg'));			
 			}
-		//return view('Request.success');
-		$msg = '<p style="color:green;">Barcode request successfully saved</p>';
+			//return view('Request.success');
+			$msg = '<p style="color:green;">Barcode request successfully saved</p>';
 		}
 
 		if ($carelabel == '1') {
@@ -228,9 +230,9 @@ class RequestController extends Controller {
 				$msg = "Problem to save in carelabel request table";
 				return view('Request.error',compact('msg'));			
 			}
-		//return view('Request.success');
+			//return view('Request.success');
 		
-		$msg = $msg. '<p style="color:green;">Carelabel request successfully saved</p>';
+			$msg = $msg. '<p style="color:green;">Carelabel request successfully saved</p>';
 		}
 
 		if ($msg == "") {
@@ -238,13 +240,13 @@ class RequestController extends Controller {
 			return view('Request.error',compact('msg'));
 		}
 
-		if(time() < mktime(08, 30, 0)) {
-		    $del = "Delivery at 9:00";
-		} else if (time() < mktime(11, 30, 0)) {
-			$del = "Delivery at 12:00";
-		} else 	{
-			$del = "Delivery tomorow at 07:00";
-		}
+		// if(time() < mktime(08, 30, 0)) {
+		//     $del = "Delivery at 9:00";
+		// } else if (time() < mktime(11, 30, 0)) {
+		// 	$del = "Delivery at 12:00";
+		// } else 	{
+		// 	$del = "Delivery tomorow at 07:00";
+		// }
 
 		//return view('Request.index');
 		// return view('Request.success', compact('msg','del'));
@@ -258,8 +260,8 @@ class RequestController extends Controller {
 		//$this->validate($request2, ['po'=>'required|min:6|max:6','size'=>'required|min:1|max:2','qty'=>'required'/*,'module'=>'min:4|max:10'*/]);
 		
 		$validator = Validator::make($request2->all(), [
-            'po' => 'required|min:6|max:6',
-            'size' => 'required|min:1|max:5',
+            'po' => 'required|min:6|max:7',
+            
             'qty' => 'required',
             'leader' => 'required'
         ]);
@@ -274,21 +276,19 @@ class RequestController extends Controller {
 		//dd($forminput);
 
 		$ponum = $forminput['po'];
-		$size = $forminput['size'];
+		// $size = $forminput['size'];
 		$qty = $forminput['qty'];
 		//$module = $forminput['module'];
 		$leader = $forminput['leader'];
 		$comment = $forminput['comment'];
-		$key = $ponum.'-'.$size;
-
+		// $key = $ponum.'-'.$size;
 		//dd("B: ".$barcode." C: ".$carelabel);
 
 		$type = "modul";
 		$status = "pending";
 		
 		// virfy userId
-		if (Auth::check())
-		{
+		if (Auth::check()) {
 		    $userId = Auth::user()->id;
 		    $module = Auth::user()->name;
 		} else {
@@ -298,13 +298,13 @@ class RequestController extends Controller {
 		
 		// verify po_id
 		try {
-			$po = DB::connection('sqlsrv')->select(DB::raw("SELECT id, style, color, closed_po FROM pos WHERE po_key ='".$key."'"));
-
+			$po = DB::connection('sqlsrv')->select(DB::raw("SELECT id, style, color, closed_po, size FROM pos WHERE po ='".$ponum."'"));
 			//dd($po);
 
 		    $poid = $po['0']->id;
 		    $style = $po['0']->style;
 		    $color = $po['0']->color;
+		    $size = $po['0']->size;
 		    $po_closed = $po['0']->closed_po;
 
 		    // $poid = Po::where('po_key', $key)->firstOrFail()->id;
@@ -366,13 +366,13 @@ class RequestController extends Controller {
 		//return view('Request.success');
 		$msg = '<p style="color:green;">II quality request successfully saved</p>';
 		
-		if(time() < mktime(08, 30, 0)) {
-		    $del = "Delivery at 9:00";
-		} else if (time() < mktime(11, 30, 0)) {
-			$del = "Delivery at 12:00";
-		} else 	{
-			$del = "Delivery tomorow at 07:00";
-		}
+		// if(time() < mktime(08, 30, 0)) {
+		//     $del = "Delivery at 9:00";
+		// } else if (time() < mktime(11, 30, 0)) {
+		// 	$del = "Delivery at 12:00";
+		// } else 	{
+		// 	$del = "Delivery tomorow at 07:00";
+		// }
 
 		// return view('Request.success', compact('msg','del'));
 		return Redirect::to('/');
@@ -385,8 +385,8 @@ class RequestController extends Controller {
 		//$this->validate($request2, ['po'=>'required|min:6|max:6','size'=>'required|min:1|max:2','qty'=>'required'/*,'module'=>'min:4|max:10'*/]);
 		
 		$validator = Validator::make($request2->all(), [
-            'po' => 'required|min:6|max:6',
-            'size' => 'required|min:1|max:5',
+            'po' => 'required|min:6|max:7',
+            //'size' => 'required|min:1|max:5',
             //'qty' => 'required',
             // 'module' => 'required|min:4|max:5',
             'module' => 'required',
@@ -402,10 +402,10 @@ class RequestController extends Controller {
 		//dd($forminput);
 
 		$ponum = $forminput['po'];
-		$size = $forminput['size'];
+		// $size = $forminput['size'];
 		$qty = $forminput['qty'];
 		$comment = $forminput['comment'];
-		$key = $ponum.'-'.$size;
+		// $key = $ponum.'-'.$size;
 
 		$module = ucfirst($forminput['module']);
 		$leader = $forminput['leader'];
@@ -443,18 +443,17 @@ class RequestController extends Controller {
 
 		// verify po_id
 		try {
-		    $poid = Po::where('po_key', $key)->firstOrFail()->id;
+		    $poid = Po::where('po', $ponum)->firstOrFail()->id;
+		    $po_closed = Po::where('po', $ponum)->firstOrFail()->closed_po;
+		    $size = Po::where('po', $ponum)->firstOrFail()->size;
+
 		} catch (ModelNotFoundException $e) {
 		    $msg = 'PO and size not exist in Po table3';
 		    return view('Request.errorp',compact('msg'));
 		}
 
 		// verify po is closed
-		$po_closed = Po::where('po_key', $key)->firstOrFail()->closed_po;
-		// dd($key);
-		// dd($po_closed);
-
-		if($po_closed == "Closed") {
+		if ($po_closed == "Closed") {
 			$msg = 'Komesa is Closed';
 		    return view('Request.errorp',compact('msg'));
 		}
@@ -476,8 +475,7 @@ class RequestController extends Controller {
 				$barcode->status = $status;
 				$barcode->type = $type;
 				$barcode->comment = $comment;
-
-			
+				
 				$barcode->save();
 			}
 			catch (\Illuminate\Database\QueryException $e) {
@@ -503,8 +501,7 @@ class RequestController extends Controller {
 				$carelabel->status = $status;
 				$carelabel->type = $type;
 				$carelabel->comment = $comment;
-				
-			
+
 				$carelabel->save();
 			}
 			catch (\Illuminate\Database\QueryException $e) {
@@ -521,13 +518,13 @@ class RequestController extends Controller {
 			return view('Request.errorp',compact('msg'));
 		}
 
-		if(time() < mktime(08, 30, 0)) {
-		    $del = "Delivery at 9:00";
-		} else if (time() < mktime(11, 30, 0)) {
-			$del = "Delivery at 12:00";
-		} else 	{
-			$del = "Delivery tomorow at 07:00";
-		}
+		// if(time() < mktime(08, 30, 0)) {
+		//     $del = "Delivery at 9:00";
+		// } else if (time() < mktime(11, 30, 0)) {
+		// 	$del = "Delivery at 12:00";
+		// } else 	{
+		// 	$del = "Delivery tomorow at 07:00";
+		// }
 
 		// return view('Request.success', compact('msg','del'));
 		return Redirect::to('/');

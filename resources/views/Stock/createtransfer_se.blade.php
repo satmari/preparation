@@ -4,10 +4,10 @@
 <div class="container container-table">
 	<div class="row vertical-center-row">
 		<div class="text-center col-md-4 col-md-offset-4">
-			<div class="panel panel-default">
-				<div class="panel-heading">Returned Barcode/Carelabel from module add to Stock</div>
+			<div class="panel panel-default" >
+				<div class="panel-heading">Transfer Barcode/Carelabel to Senta</div>
 
-				{!! Form::open(['method'=>'POST', 'url'=>'/stockstorefrommodule']) !!}
+				{!! Form::open(['method'=>'POST', 'url'=>'/stockstoretransfer_se']) !!}
 
 				<div class="panel-body">
 					<p>Po/Komesa: <span style="color:red">Obavezno 6 cifara</span></p>
@@ -19,19 +19,6 @@
 					<div class="alert alert-success">
   							Insert positive number and application will reduce form barcode stock.
 					</div>
-				</div>
-				
-				<div class="panel-body">
-					<p>Module/line: </p>
-					
-					<select name="module" class="select form-control select-form chosen" style="width:328px !important">
-                        <option value="" selected></option>
-                        @foreach ($lines as $m)
-                        <option value="{{ $m->location }}">
-                            {{ $m->location }}
-                        </option>
-                        @endforeach
-                    </select>
 				</div>
 				<div class="panel-body">
 					<table>
@@ -54,6 +41,7 @@
 					<p>Comment: </p>
 					{!! Form::text('comment', null, ['class' => 'form-control']) !!}
 				</div>
+				
 
 				<div class="panel-body">
 					{!! Form::submit('Confirm', ['class' => 'btn btn-success center-block']) !!}
@@ -61,10 +49,9 @@
 
 				@include('errors.list')
 				{!! Form::close() !!}
-				
+		
 			</div>
 		</div>
 	</div>
 </div>
 @endsection
-
