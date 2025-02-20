@@ -298,7 +298,7 @@ class RequestController extends Controller {
 		
 		// verify po_id
 		try {
-			$po = DB::connection('sqlsrv')->select(DB::raw("SELECT id, style, color, closed_po, size FROM pos WHERE po ='".$ponum."'"));
+			$po = DB::connection('sqlsrv')->select(DB::raw("SELECT id, style, color, size, closed_po FROM pos WHERE po ='".$ponum."'"));
 			//dd($po);
 
 		    $poid = $po['0']->id;
@@ -327,7 +327,10 @@ class RequestController extends Controller {
 
 		// dd('Style: '.$style.' Color: '.$color);
 		// check if is 1_to_1 or 1_to_many
-		$check_method = DB::connection('sqlsrv')->select(DB::raw("SELECT [Serie] FROM [Barcode Table Quality] WHERE [Item No_] = '".$style."' AND [Color] = '".$color."' "));
+		$check_method = DB::connection('sqlsrv')->select(DB::raw("SELECT [Serie] 
+			FROM [Barcode Table Quality] 
+			WHERE [Item No_] = '".$style."' 
+				AND [Color] = '".$color."' "));
 		// dd($heck_method);
 		// dd($check_method[0]->Serie);
 
@@ -444,8 +447,9 @@ class RequestController extends Controller {
 		// verify po_id
 		try {
 		    $poid = Po::where('po', $ponum)->firstOrFail()->id;
-		    $po_closed = Po::where('po', $ponum)->firstOrFail()->closed_po;
 		    $size = Po::where('po', $ponum)->firstOrFail()->size;
+		    $po_closed = Po::where('po', $ponum)->firstOrFail()->closed_po;
+		    
 
 		} catch (ModelNotFoundException $e) {
 		    $msg = 'PO and size not exist in Po table3';
