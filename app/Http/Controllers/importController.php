@@ -435,7 +435,7 @@ class importController extends Controller {
 	                	// $po = substr($order_code, 8, 6);
 	                	$po_array = explode('::', $order_code);
 	                	// dd($po_array);
-	                	$po = substr($po_array[0], -6);
+	                	$po = substr($po_array[0], -7);
 	                	// dd($po);
 
 	                	$po_new = substr($po_array[0], -7);
@@ -566,7 +566,7 @@ class importController extends Controller {
 	                	$po = substr($order_code, 8, 6);
 	                	$po_array = explode('::', $order_code);
 	                	// dd($po_array);
-	                	$po = substr($po_array[0], -6);
+	                	$po = substr($po_array[0], -7);
 	                	// dd($po);
 
 	                	$size = substr($order_code, 23, 5);

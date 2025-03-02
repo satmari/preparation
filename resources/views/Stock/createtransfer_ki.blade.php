@@ -10,8 +10,8 @@
 				{!! Form::open(['method'=>'POST', 'url'=>'/stockstoretransfer_ki']) !!}
 
 				<div class="panel-body">
-					<p>Po/Komesa: <span style="color:red">Obavezno 6 cifara</span></p>
-					{!! Form::text('po', null, ['id' => 'po', 'class' => 'form-control', 'autofocus' => 'autofocus']) !!}
+					<p>Po/Komesa: <span style="color:red">Obavezno 7 cifara</span></p>
+					{!! Form::text('po', null, ['id' => 'po_new', 'class' => 'form-control', 'autofocus' => 'autofocus']) !!}
 				</div>
 				<div class="panel-body">
 					<p>Qty/Kolicina: </p>

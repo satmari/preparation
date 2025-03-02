@@ -22,10 +22,9 @@ class HomeController extends Controller {
 	| controller as you wish. It is just here to get your app started!
 	|
 	*/
-
 	public function __construct()
 	{
-		$this->middleware('auth');
+	    $this->middleware('auth');
 	}
 
 	/**
@@ -36,6 +35,8 @@ class HomeController extends Controller {
 	public function index()
 	{
 		
+		// $this->middleware('auth'); // Only apply middleware here
+
 		// Roles
 
 		//admin 1
@@ -46,6 +47,10 @@ class HomeController extends Controller {
 
 		$msg = '';
 		$user = User::find(Auth::id());
+
+		if (!$user) {
+		    return redirect('auth/login')->with('error', 'Please log in first.');
+		}
 
 		// if ($user->is('admin')) { // you can pass an id or slug
 		//     // or alternatively $user->hasRole('admin')
@@ -68,7 +73,18 @@ class HomeController extends Controller {
 		if ($user->is('modul')) { 
 		    // if user has at least one role
 		    $msg = "Hi modul";
-		    return redirect('/request');
+		    return redirect('/lines');
+		    // return redirect('/request');
+		}
+		if ($user->is('kikinda')) { 
+		    // if user has at least one role
+		    $msg = "Hi preparation kikinda";
+		    return redirect('/kikinda');
+		}
+		if ($user->is('senta')) { 
+		    // if user has at least one role
+		    $msg = "Hi preparation senta";
+		    return redirect('/senta');
 		}
 
 		// if ($user->is('admin|moderator', true)) {

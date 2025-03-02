@@ -84,6 +84,10 @@ class RequestController extends Controller {
 	{
 		$leader = Session::get('leader');
 		//dd($leader);
+		if ($leader == '') {
+			return view('Request.index');
+		}
+
 		return view('Request.create', compact('leader'));
 	}
 
@@ -91,6 +95,9 @@ class RequestController extends Controller {
 	{
 		$leader = Session::get('leader');
 		//dd($leader);
+		if ($leader == '') {
+			return view('Request.index');
+		}
 		return view('Request.createsec', compact('leader'));
 	}
 
@@ -127,7 +134,7 @@ class RequestController extends Controller {
         }
 		
 		$forminput = $request2->all(); 
-		//dd($forminput);
+		// dd($forminput);
 
 		$ponum = $forminput['po'];
 		// $size = $forminput['size'];

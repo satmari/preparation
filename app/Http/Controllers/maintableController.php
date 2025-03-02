@@ -32,6 +32,7 @@ class maintableController extends Controller {
 		pos.skeda,
 		pos.total_order_qty,
 		pos.no_lines_by_skeda,
+		
 		(SELECT SUM(barcode_stocks.qty)  FROM barcode_stocks WHERE barcode_stocks.po_id = pos.id ) stock_b,
 		(SELECT SUM(barcode_requests.qty)  FROM barcode_requests WHERE barcode_requests.po_id = pos.id AND barcode_requests.status != 'error') request_b,
 		(SELECT SUM(carelabel_stocks.qty)  FROM carelabel_stocks WHERE carelabel_stocks.po_id = pos.id ) stock_c,

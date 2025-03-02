@@ -50,27 +50,27 @@
 				            <th data-sortable="true" class="">Order Qty</th>
 				            
 				            <th data-sortable="true" class="">Skeda</th>
-				            <th data-sortable="true" class="">No of Lines</th>
+				            <th data-sortable="true" class="">PO location</th>
+
+				            <th data-sortable="true" class="h-bt to-print">B Su-To print</th>
+				            <th data-sortable="true" class="h-bt on-stock">B Su-On stock</th>
+				            <th data-sortable="true" class="h-bt">B Kik-To receive</th>
+				            <th data-sortable="true" class="h-bt">B Kik-Stock</th>
+
+							<th data-sortable="true" class="h-ct to-print">C Su-To print</th>
+				            <th data-sortable="true" class="h-ct on-stock">C Su-On stock</th>
+				            <th data-sortable="true" class="h-ct">C Kik-To receive</th>
+				            <th data-sortable="true" class="h-ct">C Kik-Stock</th>
 				            
-				            <th data-sortable="true" class="h-bt">B. printed</th>
-				            <th data-sortable="true" class="h-bt">%</th>
-				            <th data-sortable="true" class="h-bt to-print">B. to print</th>
-				            <th data-sortable="true" class="h-bt on-stock">B. on stock</th>
-				            <th data-sortable="true" class="h-bt">B. in production</th>
-				            <th data-sortable="true" class="h-ct">C. printed</th>
-				            <th data-sortable="true" class="h-ct">%</th>
-				            <th data-sortable="true" class="h-ct to-print">C. to print</th>
-				            <th data-sortable="true" class="h-ct on-stock">C. on stock</th>
-				            <th data-sortable="true" class="h-ct">C. in production</th>
 				        </tr>
 				    </thead>
 				    <tbody class="searchable">
 				    
-				    @foreach ($postable as $po)
+				    @foreach ($data as $po)
 
 				        <tr>
 				        	{{--<td>{{ $po->id }}</td>--}}
-				        	<td>{{ $po->po_new }}</td>
+				        	<td>58{{ $po->po_new }}</td>
 				        	<td>{{ $po->size }}</td>
 				        	<td>{{ $po->style }}</td>
 				        	<td>{{ $po->color }}</td>
@@ -81,19 +81,18 @@
 				        	<td>{{ $po->total_order_qty }}</td>
 				        	
 				        	<td>{{ $po->skeda }}</td>
-				        	<td>{{ $po->no_lines_by_skeda }}</td>
+				        	<td>{{ $po->location_all }}</td>
 
-				        	<td>{{ $po->stock_b }}</td>
-				        	<td>{{ round($po->stock_b/$po->total_order_qty*100,2) }}</td>
 				        	<td>{{ $po->total_order_qty - $po->stock_b }}</td>
 				        	<td>{{ $po->stock_b - $po->request_b }}</td>
-				        	<td>{{ $po->request_b }}</td>
-				        	
-				        	<td>{{ $po->stock_c }}</td>
-				        	<td>{{ round($po->stock_c/$po->total_order_qty*100,2) }}</td>
+				        	<td>{{ $po->to_receive_ki_b }}</td>
+				        	<td>{{ $po->stock_ki_b }}</td>
+
 				        	<td>{{ $po->total_order_qty - $po->stock_c }}</td>
 				        	<td>{{ $po->stock_c - $po->request_c }}</td>
-				        	<td>{{ $po->request_c }}</td>
+				        	<td>{{ $po->to_receive_ki_c }}</td>
+				        	<td>{{ $po->stock_ki_c }}</td>
+				        	
 						</tr>
 				    
 				    @endforeach

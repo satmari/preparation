@@ -8,14 +8,14 @@
 				
 				<div class="panel-heading">Create new Request for II Quality</div>
 				<div class="panel-heading"><span>Majstorica: <b>{{$leader}}</b></span></div>
-
+				<meta name="csrf-token" content="{{ csrf_token() }}">
 				{!! Form::open(['method'=>'GET', 'url'=>'/requeststoresec']) !!}
 
 				{!! Form::hidden('leader', $leader, ['class' => 'form-control']) !!}
 
 				<div class="panel-body">
-					<p>Po/Komesa: <span style="color:red">Obavezno 6 cifara</span></p>
-					{!! Form::number('po', null, ['id' => 'po', 'class' => 'form-control', 'autofocus' => 'autofocus']) !!}
+					<p>Po/Komesa: <span style="color:red">Obavezno 7 cifara</span></p>
+					{!! Form::number('po', null, ['id' => 'po_new', 'class' => 'form-control', 'autofocus' => 'autofocus']) !!}
 				</div>
 								
 				<div class="panel-body">

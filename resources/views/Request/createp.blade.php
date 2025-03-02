@@ -8,17 +8,17 @@
 				
 				<div class="panel-heading">Create new Request - Preparation</div>
 				
-				{!! Form::open(['method'=>'GET', 'url'=>'/requeststorep']) !!}
-
+				{!! Form::open(['method'=>'GET', 'url'=>'requeststorep']) !!}
+				<meta name="csrf-token" content="{{ csrf_token() }}">
 				<div class="panel-body">
-					<p>Po/Komesa: <span style="color:red">*</span><span style="color:red">Obavezno 6 cifara</span></p>
-					{!! Form::number('po', null, ['id' => 'po', 'class' => 'form-control', 'autofocus' => 'autofocus']) !!}
+					<p>Po/Komesa: <span style="color:red">*</span><span style="color:red">Obavezno <span style="font-size:20px">7</span> cifara</span></p>
+					{!! Form::number('po', null, ['id' => 'po_new', 'class' => 'form-control', 'autofocus' => 'autofocus', 'required' => 'required']) !!}
 				</div>
 				
 				<div class="panel-body">
 					<p>Qty/Kolicina: </p>
 					<p><i>Empty => order pending | Qty => order completed</i></p>
-					{!! Form::number('qty', null, ['class' => 'form-control']) !!}
+					{!! Form::number('qty', null, ['class' => 'form-control', 'required' => 'required' ]) !!}
 				</div>
 				<div class="panel-body">
 					<p>Module/line: </p>

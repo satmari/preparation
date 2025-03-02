@@ -12,8 +12,12 @@ use Illuminate\Support\Facades\Redirect;
 //use Gbrock\Table\Facades\Table;
 
 use App\BarcodeStock;
+use App\BarcodeKiStock;
+use App\BarcodeSeStock;
 use App\BarcodeRequest;
 use App\CarelabelStock;
+use App\CarelabelKiStock;
+use App\CarelabelSeStock;
 use App\CarelabelRequest;
 use App\Po;
 use App\throw_away;
@@ -27,20 +31,17 @@ use Auth;
 
 class StockController extends Controller {
 
-	public function index()
-	{
+	public function index() {
 		//
 		return view('Stock.index');
 	}
 
-	public function createnew()
-	{
+	public function createnew() {
 		//
 		return view('Stock.createnew');
 	}
 
-	public function createfrommodule()
-	{
+	public function createfrommodule() {
 		//
 		$lines = DB::connection('sqlsrv8')->select(DB::raw("SELECT  [id]
 		      ,[location]
@@ -52,26 +53,22 @@ class StockController extends Controller {
 		return view('Stock.createfrommodule', compact('lines'));
 	}
 
-	public function createundo()
-	{
+	public function createundo() {
 		//
 		return view('Stock.createundo');
 	}
 
-	public function createtransfer_ki()
-	{
+	public function createtransfer_ki() {
 		//
 		return view('Stock.createtransfer_ki');
 	}
 
-	public function createtransfer_se()
-	{
+	public function createtransfer_se() {
 		//
 		return view('Stock.createtransfer_se');
 	}
 
-	public function createthrow_away()
-	{
+	public function createthrow_away() {
 		//
 		$materials = DB::connection('sqlsrv7')->select(DB::raw("SELECT DISTINCT [material]
 		  FROM [trebovanje].[dbo].[sap_coois_all] 
@@ -82,8 +79,7 @@ class StockController extends Controller {
 		return view('Stock.throw_away',compact('materials'));
 	}
 
-	public function createleftover()
-	{
+	public function createleftover() {
 		//
 		$materials = DB::connection('sqlsrv7')->select(DB::raw("SELECT DISTINCT [material]
 		  FROM [trebovanje].[dbo].[sap_coois_all] 
@@ -95,8 +91,7 @@ class StockController extends Controller {
 		return view('Stock.createleftover',compact('materials','skus'));
 	}
 
-	public function storenew(Request $request)
-	{
+	public function storenew(Request $request) {
 		//
 		//validation
 		$this->validate($request, ['po'=>'required|min:6|max:7','qty'=>'required']);
@@ -233,11 +228,9 @@ class StockController extends Controller {
 			return view('Stock.error',compact('msg'));
 		}
 		return view('Stock.success');
-
 	}
 
-	public function storefrommodule(Request $request)
-	{
+	public function storefrommodule(Request $request) {
 		//
 		//validation
 		$this->validate($request, ['po'=>'required|min:6|max:7','qty'=>'required','module'=>'required']);
@@ -355,11 +348,10 @@ class StockController extends Controller {
 		return view('Stock.success');
 	}
 
-	public function storeundo(Request $request)
-	{
+	public function storeundo(Request $request) {
 		//
 		//validation
-		$this->validate($request, ['po'=>'required|min:6|max:6','qty'=>'required']);
+		$this->validate($request, ['po'=>'required|min:6|max:7','qty'=>'required']);
 		$forminput = $request->all(); 
 
 		$ponum = $forminput['po'];
@@ -473,17 +465,24 @@ class StockController extends Controller {
 		//validation
 		$this->validate($request, ['po'=>'required|min:6|max:7','qty'=>'required']);
 		$forminput = $request->all(); 
-		dd($forminput);
+		// dd($forminput);
 
 		$ponum = $forminput['po'];
 		// $size = $forminput['size'];
+		$size = Po::where('po', $ponum)->firstOrFail()->size;
+
 		$qty = $forminput['qty'];
 		$comment = $forminput['comment'];
-		// $key = $ponum.'-'.$size;
+
+
+		$key = $ponum.'-'.$size;
 		//dd($key);
 
-		$type = "transfer";
+		$type = "transfer_ki";
+		$qty_k = $qty;
 		$qty = $qty * (-1);
+		$status = 'to_receive';
+		$module = 'PREP_SU';
 
 		// virfy userId
 		if (Auth::check())
@@ -538,6 +537,22 @@ class StockController extends Controller {
 				$tableb->comment = $comment;
 				
 				// $tableb->save();
+
+
+				$tableb = new BarcodeKiStock;
+
+				$tableb->po_id = $poid;
+				$tableb->user_id = $userId;
+				$tableb->ponum = $ponum;
+				$tableb->size = $size;
+				$tableb->qty = $qty_k;
+				$tableb->qty_to_receive = $qty_k;
+				$tableb->module = $module;
+				$tableb->status = $status;
+				$tableb->type = $type;
+				$tableb->comment = $comment;
+				
+				$tableb->save();
 			}
 			catch (\Illuminate\Database\QueryException $e) {
 				$msg = "Problem to save barcode in database";
@@ -556,12 +571,27 @@ class StockController extends Controller {
 				$tablec->ponum = $ponum;
 				$tablec->size = $size;
 				$tablec->qty = $qty;
-				//$tablec->module = $module;
-				//$tablec->status = $status;
+				// $tablec->module = $module;
+				// $tablec->status = $status;
 				$tablec->type = $type;
 				$tablec->comment = $comment;
 				
 				// $tablec->save();
+
+				$tablec = new CarelabelKiStock;
+
+				$tablec->po_id = $poid;
+				$tablec->user_id = $userId;
+				$tablec->ponum = $ponum;
+				$tablec->size = $size;
+				$tablec->qty = $qty_k;
+				$tablec->qty_to_receive = $qty_k;
+				$tablec->module = $module;
+				$tablec->status = $status;
+				$tablec->type = $type;
+				$tablec->comment = $comment;
+				
+				$tablec->save();
 			}
 			catch (\Illuminate\Database\QueryException $e) {
 				$msg = "Problem to save caerlabel in database";
@@ -584,17 +614,24 @@ class StockController extends Controller {
 		//validation
 		$this->validate($request, ['po'=>'required|min:6|max:7','qty'=>'required']);
 		$forminput = $request->all(); 
-		dd($forminput);
+		// dd($forminput);
 
 		$ponum = $forminput['po'];
 		// $size = $forminput['size'];
+		$size = Po::where('po', $ponum)->firstOrFail()->size;
+		
 		$qty = $forminput['qty'];
 		$comment = $forminput['comment'];
-		// $key = $ponum.'-'.$size;
+
+
+		$key = $ponum.'-'.$size;
 		//dd($key);
 
-		$type = "transfer";
+		$type = "transfer_se";
+		$qty_s = $qty;
 		$qty = $qty * (-1);
+		$status = 'to_receive';
+		$module = 'PREP_SU';
 
 		// virfy userId
 		if (Auth::check())
@@ -649,6 +686,22 @@ class StockController extends Controller {
 				$tableb->comment = $comment;
 				
 				// $tableb->save();
+
+
+				$tableb = new BarcodeSeStock;
+
+				$tableb->po_id = $poid;
+				$tableb->user_id = $userId;
+				$tableb->ponum = $ponum;
+				$tableb->size = $size;
+				$tableb->qty = $qty_s;
+				$tableb->qty_to_receive = $qty_s;
+				$tableb->module = $module;
+				$tableb->status = $status;
+				$tableb->type = $type;
+				$tableb->comment = $comment;
+				
+				$tableb->save();
 			}
 			catch (\Illuminate\Database\QueryException $e) {
 				$msg = "Problem to save barcode in database";
@@ -667,12 +720,27 @@ class StockController extends Controller {
 				$tablec->ponum = $ponum;
 				$tablec->size = $size;
 				$tablec->qty = $qty;
-				//$tablec->module = $module;
-				//$tablec->status = $status;
+				// $tablec->module = $module;
+				// $tablec->status = $status;
 				$tablec->type = $type;
 				$tablec->comment = $comment;
 				
 				// $tablec->save();
+
+				$tablec = new CarelabelSeStock;
+
+				$tablec->po_id = $poid;
+				$tablec->user_id = $userId;
+				$tablec->ponum = $ponum;
+				$tablec->size = $size;
+				$tablec->qty = $qty_s;
+				$tablec->qty_to_receive = $qty_s;
+				$tablec->module = $module;
+				$tablec->status = $status;
+				$tablec->type = $type;
+				$tablec->comment = $comment;
+				
+				$tablec->save();
 			}
 			catch (\Illuminate\Database\QueryException $e) {
 				$msg = "Problem to save caerlabel in database";
@@ -784,6 +852,7 @@ class StockController extends Controller {
 
 		return view('Stock.leftover_table',compact('leftovers'));
 	}
+
 	public function leftover_full() {
 
 		$leftovers = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM leftovers"));

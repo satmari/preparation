@@ -118,13 +118,21 @@ Route::post('/requestcheck', 'RequestController@check');
 Route::post('/requestcreate', 'RequestController@create');
 Route::post('/requeststore', 'RequestController@store');
 
+// Reque
 Route::get('/requestcreatep', 'RequestController@createp');
 Route::get('/requeststorep', 'RequestController@storep');
-Route::post('/requeststorep', 'RequestController@storep');
+// Route::post('/requeststorep', 'RequestController@storep');
 
 Route::get('/requestcreatesec', 'RequestController@createsec');
 Route::get('/requeststoresec', 'RequestController@storesec');
 Route::post('/requeststoresec', 'RequestController@storesec');
+
+// Lines
+Route::get('/lines', 'linesController@index');
+Route::post('leadercheck', 'linesController@leadercheck');
+Route::get('/lines_requestcreate/{l}', 'linesController@lines_requestcreate');
+Route::post('lines_requeststore', 'linesController@lines_requeststore');
+
 
 // Import Po
 Route::get('/import', 'importController@index');
@@ -155,6 +163,17 @@ Route::post('/search_by_marker', 'bb_by_markerController@search_by_marker');
 Route::get('/print_labels/{id}', 'bb_by_markerController@print_labels');
 Route::get('/print_labels_no/{id}', 'bb_by_markerController@print_labels_no');
 
+// kikinda user
+Route::get('/kikinda', 'kikindaController@index');
+Route::get('/kikinda_stock', 'kikindaController@kikinda_stock');
+
+Route::get('/receive_from_su_b', 'kikindaController@receive_from_su_b');
+Route::get('receive_from_su_b_post/{id}/{qty}', 'kikindaController@receive_from_su_b_post');
+Route::post('receive_from_su_b_post_confirm', 'kikindaController@receive_from_su_b_post_confirm');
+
+
+// senta user
+Route::get('/senta', 'sentaController@index');
 
 Route::any('getpodata', function() {
 	$term = Input::get('term');
@@ -162,6 +181,16 @@ Route::any('getpodata', function() {
 	$data = DB::connection('sqlsrv')->table('pos')->distinct()->select('po')->where('po','LIKE', $term.'%')->where('closed_po','=','Open')->groupBy('po')->take(10)->get();
 	foreach ($data as $v) {
 		$retun_array[] = array('value' => $v->po);
+	}
+return Response::json($retun_array);
+});
+
+Route::any('getpo_new_data', function() {
+	$term = Input::get('term');
+
+	$data = DB::connection('sqlsrv')->table('pos')->distinct()->select('po_new')->where('po_new','LIKE', '%'.$term.'%')->where('closed_po','=','Open')->groupBy('po_new')->take(20)->get();
+	foreach ($data as $v) {
+		$retun_array[] = array('value' => $v->po_new);
 	}
 return Response::json($retun_array);
 });

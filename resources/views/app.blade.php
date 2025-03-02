@@ -40,91 +40,103 @@
 				</button>
 				<a class="navbar-brand" href="http://172.27.161.171/preparation"><b>Preparation</b></a>
 				<a class="navbar-brand" href="#">|</a>
-				@if(Auth::check() && Auth::user()->level() == 2)
+				@if(Auth::check() && (Auth::user()->level() == 2 OR Auth::user()->level() == 7 OR Auth::user()->level() == 8)) 
 				
 				@else
-				<a class="navbar-brand" href="http://172.27.161.171/trebovanje"><b>Trebovanje</b></a>
-				<a class="navbar-brand" href="#">|</a>
-				<!-- <a class="navbar-brand" href="http://172.27.161.171/downtime"><b>Downtime</b></a>
-				<a class="navbar-brand" href="#">|</a> -->
-				<a class="navbar-brand" href="http://172.27.161.171/cutting"><b>Cutting</b></a>
-				<a class="navbar-brand" href="#">|</a>
+					<a class="navbar-brand" href="http://172.27.161.171/trebovanje"><b>Trebovanje</b></a>
+					<a class="navbar-brand" href="#">|</a>
+					<!-- <a class="navbar-brand" href="http://172.27.161.171/downtime"><b>Downtime</b></a>
+					<a class="navbar-brand" href="#">|</a> -->
+					<a class="navbar-brand" href="http://172.27.161.171/cutting"><b>Cutting</b></a>
+					<a class="navbar-brand" href="#">|</a>
 				@endif
 
 
 				@if(Auth::check() && Auth::user()->level() == 4)
-				<a class="navbar-brand" href="http://172.27.161.172/pdm"><span style="color:red;"><b>PDM</b></span></a></li>
-				<a class="navbar-brand" href="">|</a>
-				
-				<!-- <a class="navbar-brand" href="http://172.27.161.212"><span style="color:green;"><b>IntApp</b></span></a></li>
-				<a class="navbar-brand" href="">|</a> -->
-				
-				
+					<a class="navbar-brand" href="http://172.27.161.172/pdm"><span style="color:red;"><b>PDM</b></span></a></li>
+					<a class="navbar-brand" href="">|</a>
+					
+					<!-- <a class="navbar-brand" href="http://172.27.161.212"><span style="color:green;"><b>IntApp</b></span></a></li>
+					<a class="navbar-brand" href="">|</a> -->
+				@endif
+
+				@if(Auth::check() && Auth::user()->level() == 7)
+					
+					<a class="navbar-brand" href=""></a>
+					
+					<!-- <a class="navbar-brand" href="http://172.27.161.212"><span style="color:green;"><b>IntApp</b></span></a></li>
+					<a class="navbar-brand" href="">|</a> -->
+				@endif
+
+				@if(Auth::check() && Auth::user()->level() == 8)
+					
+					<a class="navbar-brand" href=""></a>
+					
+					<!-- <a class="navbar-brand" href="http://172.27.161.212"><span style="color:green;"><b>IntApp</b></span></a></li>
+					<a class="navbar-brand" href="">|</a> -->
 				@endif
 			</div>
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				
 				@if(Auth::check() && Auth::user()->level() <= 3)
-												
-				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/maintable') }}">Main Table</a></li>
-				</ul>
-				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/maintable_planer') }}">Main Table (planers)</a></li>
-				</ul>
-				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/main') }}">Po Table</a></li>
-				</ul>
-				{{-- 
-				<ul class="nav navbar-nav">
-					<li><a style="color:#D6E9C6" href="{{ url('/barcodestock') }}">Barcode Stock</a></li>
-				</ul>
-				<ul class="nav navbar-nav">
-					<li><a style="color:#BCE8F1" href="{{ url('/carelabelstock') }}">Carelabel Stock</a></li>
-				</ul>
-				--}}
-				<ul class="nav navbar-nav">
-					<li><a style="color:#FFF" href="{{ url('/stock') }}">Stock</a></li>
-				</ul>
-				<ul class="nav navbar-nav">
-					<li><a style="color:#D6E9C6" href="{{ url('/barcoderequesttable') }}">Barcode Requests</a></li>
-				</ul>
-				<ul class="nav navbar-nav">
-					<li><a style="color:#BCE8F1" href="{{ url('/carelabelrequesttable') }}">Carelabel Requests</a></li>
-				</ul>
-				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/requestcreatep') }}"><span style="color:red;">Manual Request</span></a></li>
-				</ul>
-				<ul class="nav navbar-nav">
-					<li><a style="color:#FFBA8E" href="{{ url('/secondqrequesttable') }}">II quality Requests</a></li>
-				</ul>
-				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/import') }}">Import</a></li>
-				</ul>
-				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/log') }}">Log tables</a></li>
-				</ul>
-				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/bb_by_marker') }}">BB by Marker</a></li>
-				</ul>
-				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/leftover') }}">Leftover</a></li>
-				</ul>
+					<ul class="nav navbar-nav">
+						<li><a href="{{ url('/maintable') }}">Main Table</a></li>
+					</ul>
+					<ul class="nav navbar-nav">
+						<li><a href="{{ url('/maintable_planer') }}">Main Table (planers)</a></li>
+					</ul>
+					<ul class="nav navbar-nav">
+						<li><a href="{{ url('/main') }}">Po Table</a></li>
+					</ul>
+					{{-- 
+					<ul class="nav navbar-nav">
+						<li><a style="color:#D6E9C6" href="{{ url('/barcodestock') }}">Barcode Stock</a></li>
+					</ul>
+					<ul class="nav navbar-nav">
+						<li><a style="color:#BCE8F1" href="{{ url('/carelabelstock') }}">Carelabel Stock</a></li>
+					</ul>
+					--}}
+					<ul class="nav navbar-nav">
+						<li><a style="color:#FFF" href="{{ url('/stock') }}">Stock</a></li>
+					</ul>
+					<ul class="nav navbar-nav">
+						<li><a style="color:#D6E9C6" href="{{ url('/barcoderequesttable') }}">Barcode Requests</a></li>
+					</ul>
+					<ul class="nav navbar-nav">
+						<li><a style="color:#BCE8F1" href="{{ url('/carelabelrequesttable') }}">Carelabel Requests</a></li>
+					</ul>
+					<ul class="nav navbar-nav">
+						<li><a href="{{ url('/requestcreatep') }}"><span style="color:red;">Manual Request</span></a></li>
+					</ul>
+					<ul class="nav navbar-nav">
+						<li><a style="color:#FFBA8E" href="{{ url('/secondqrequesttable') }}">II quality Requests</a></li>
+					</ul>
+					<ul class="nav navbar-nav">
+						<li><a href="{{ url('/import') }}">Import</a></li>
+					</ul>
+					<ul class="nav navbar-nav">
+						<li><a href="{{ url('/log') }}">Log tables</a></li>
+					</ul>
+					<ul class="nav navbar-nav">
+						<li><a href="{{ url('/bb_by_marker') }}">BB by Marker</a></li>
+					</ul>
+					<ul class="nav navbar-nav">
+						<li><a href="{{ url('/leftover') }}">Leftover</a></li>
+					</ul>
 
-				
-				@if(Auth::check() && Auth::user()->level() <= 1)
-
-				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/request') }}">Request from Modul</a></li>
-				</ul>
-				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/import') }}">Import</a></li>
-				</ul>
-				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/importmodules') }}">Import module</a></li>
-				</ul>
-				@endif
+					
+					@if(Auth::check() && Auth::user()->level() <= 1)
+						<ul class="nav navbar-nav">
+							<li><a href="{{ url('/request') }}">Request from Modul</a></li>
+						</ul>
+						<ul class="nav navbar-nav">
+							<li><a href="{{ url('/import') }}">Import</a></li>
+						</ul>
+						<ul class="nav navbar-nav">
+							<li><a href="{{ url('/importmodules') }}">Import module</a></li>
+						</ul>
+					@endif
 
 				@endif
 
@@ -183,6 +195,11 @@ $(function() {
 		minLength: 3,
 		autoFocus: true,
 		source: '{{ URL('getpodata')}}'
+	});
+	$('#po_new').autocomplete({
+		minLength: 3,
+		autoFocus: true,
+		source: '{{ URL('getpo_new_data')}}'
 	});
 	$('#module').autocomplete({
 		minLength: 1,
