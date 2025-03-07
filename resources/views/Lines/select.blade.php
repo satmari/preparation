@@ -9,7 +9,7 @@
 				<div class="panel-heading"><span>Majstorica: <b>{{$leader}}</b></span></div>		
 				<div class="panel-body">
 					<div class="">
-						<a href="{{url('lines_requestcreate/'.$leader) }}" class="btn btn-bc center-block">Barcode and Carelabel</a>
+						<a href="{{url('lines_requestcreate/'.$leader.'/'.$module) }}" class="btn btn-bc center-block">Barcode and Carelabel</a>
 					</div>
 				</div>
 				<!-- /'.$req->id.'/'.$req->qty -->

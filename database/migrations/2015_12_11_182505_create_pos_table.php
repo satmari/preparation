@@ -40,6 +40,10 @@ class CreatePosTable extends Migration {
             $table->string('no_lines_by_skeda')->nullable(); 	// new
 
             $table->string('po_new')->nullable(); 	// new
+
+            $table->string('loc_id_su')->nullable(); 	// new
+            $table->string('loc_id_ki')->nullable(); 	// new
+            $table->string('loc_id_se')->nullable(); 	// new
             
             $table->timestamps();
 		});

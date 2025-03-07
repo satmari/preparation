@@ -19,6 +19,8 @@
 	
 				<br>				
 				{!! Form::open(['method'=>'POST', 'url'=>'leadercheck']) !!}
+				<meta name="csrf-token" content="{{ csrf_token() }}">
+				{!! Form::hidden('module', $module, ['class' => 'form-control']) !!}
 
 				<div class="panel-body">
 					<p>LineLeader PIN code (Inteos)</p>

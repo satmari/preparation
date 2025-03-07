@@ -16,6 +16,7 @@
 				{!! Form::open(['method'=>'POST', 'url'=>'lines_requeststore']) !!}
 				<meta name="csrf-token" content="{{ csrf_token() }}">
 				{!! Form::hidden('leader', $leader, ['class' => 'form-control']) !!}
+				{!! Form::hidden('module', $module, ['class' => 'form-control']) !!}
 
 				<div class="panel-body">
 					<p>Po/Komesa: <span style="color:red">Obavezno <span style="font-size:20px;">7</span> cifara</span></p>

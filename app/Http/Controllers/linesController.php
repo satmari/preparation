@@ -32,22 +32,32 @@ class linesController extends Controller {
 		//
 		// dd('lines');
 
+		// virfy userId
+		if (Auth::check())
+		{
+		    $userId = Auth::user()->id;
+		    $module = Auth::user()->name;
+		} else {
+			$msg = 'Modul or User is not autenticated';
+			return view('Lines.error',compact('msg'));
+		}
+
 		$msgs = session('msgs');
     	
     	// Delete the session variable
     	session()->forget('msgs');
 
-		return view('Lines.index', compact('msgs'));
+		return view('Lines.index', compact('msgs','module'));
 	}
 
-	public function leadercheck(Request $request)
-	{
+	public function leadercheck(Request $request) {
 		//
 		$this->validate($request, ['pin'=>'required|min:4|max:5']);
 		$forminput = $request->all(); 
 		// dd($forminput);
 
 		$pin = $forminput['pin'];
+		$module = $forminput['module'];
 
 		$inteosleaders = DB::connection('sqlsrv2')->select(DB::raw("SELECT Name FROM [WEA_PersData] 
 			WHERE (Func = 23) and (FlgAct = 1) and (PinCode = ".$pin.") "));
@@ -63,16 +73,19 @@ class linesController extends Controller {
 			$leader = $inteosleaders[0]->Name;
     		Session::set('leader', $leader);	
     		
-    		return view('Lines.select', compact('leader'));
+    		return view('Lines.select', compact('leader','module'));
     	} 
     }
 
-    public function lines_requestcreate($leader) {
+    public function lines_requestcreate($leader, $module) {
     	// dd($l);
     	if ($leader == '') {
     		return view('Lines.index');
     	}
-    	return view('Lines.create', compact('leader'));
+    	if ($module == '') {
+    		return view('Lines.index');
+    	}
+    	return view('Lines.create', compact('leader','module'));
     }
 
     public function lines_requeststore(Request $request) {
@@ -82,6 +95,7 @@ class linesController extends Controller {
 
 		$ponum = $forminput['po'];
 		$leader = $forminput['leader'];
+		$module = $forminput['module'];
 		$comment = $forminput['comment'];
 
 		//$size = $forminput['size'];
@@ -106,14 +120,20 @@ class linesController extends Controller {
 		$status = "pending";
 		
 		// virfy userId
-		if (Auth::check())
-		{
-		    $userId = Auth::user()->id;
+		if ($module == '') {
+			// dd($module);
 		    $module = Auth::user()->name;
-		} else {
-			$msg = 'Modul or User is not autenticated';
-			return view('Lines.error',compact('msg'));
-		}
+
+		    if ($module == '') {
+
+		    	$msg = 'Modul is not autenticated, please login';
+				return view('Lines.error',compact('msg'));
+		    }
+		} 
+
+		$userid_find = DB::connection('sqlsrv')->select(DB::raw("SELECT id FROM users
+			WHERE  name = '".$module."' "));
+		$userId = $userid_find[0]->id;
 		
 		// verify po_id
 		try {

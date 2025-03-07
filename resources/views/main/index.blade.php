@@ -5,7 +5,7 @@
     <div class="row vertical-center-row">
         <div class="text-center">
             <div class="panel panel-default">
-                <div class="panel-heading h-n">Po Table</div>
+                <div class="panel-heading h-n">Po Table (last year)</div>
                 
                 <div class="input-group"> <span class="input-group-addon">Filter</span>
                     <input id="filter" type="text" class="form-control" placeholder="Type here...">
@@ -48,6 +48,7 @@
                             <th data-sortable="true">Flash</th>
                             <th data-sortable="true">Skeda</th>
                             <th data-sortable="true">Closed po</th>
+                            <th data-sortable="true">Location</th>
                             <th data-sortable="true">Brand</th>
                             <th data-sortable="true">Delivery</th>
                             <th data-sortable="true">Hangtag</th>
@@ -74,6 +75,7 @@
                             <td>{{ $po->flash }}</td>
                             <td>{{ $po->skeda }}</td>
                             <td>{{ $po->closed_po }}</td>
+                            <td>{{ $po->location }}</td>
                             <td>{{ $po->brand }}</td>
                             <td>{{ $po->delivery_date }}</td>
                             <td>{{ $po->hangtag }}</td>

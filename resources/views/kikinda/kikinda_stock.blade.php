@@ -43,24 +43,29 @@
 				            <th class="size">Size</th>
 				            <th data-sortable="true" class="style">Style</th>
 				            <th class="color">Color</th>
-				            <th class="colordesc">Color desc</th>
+				            <!-- <th class="colordesc">Color desc</th> -->
 				            
 				            <th data-sortable="true" calss="flash">Flash</th>
 				            <th data-sortable="true" class="brand">Brand</th>
 				            <th data-sortable="true" class="">Order Qty</th>
 				            
 				            <th data-sortable="true" class="">Skeda</th>
+				            <th data-sortable="true" class="">Stock Location</th>
 				            <th data-sortable="true" class="">PO location</th>
+				            
 
 				            <th data-sortable="true" class="h-bt to-print">B Su-To print</th>
 				            <th data-sortable="true" class="h-bt on-stock">B Su-On stock</th>
 				            <th data-sortable="true" class="h-bt">B Kik-To receive</th>
 				            <th data-sortable="true" class="h-bt">B Kik-Stock</th>
+				            <th data-sortable="true" class="h-bt">B Kik-Given</th>
+
 
 							<th data-sortable="true" class="h-ct to-print">C Su-To print</th>
 				            <th data-sortable="true" class="h-ct on-stock">C Su-On stock</th>
 				            <th data-sortable="true" class="h-ct">C Kik-To receive</th>
 				            <th data-sortable="true" class="h-ct">C Kik-Stock</th>
+				            <th data-sortable="true" class="h-bt">B Kik-Given</th>
 				            
 				        </tr>
 				    </thead>
@@ -74,24 +79,27 @@
 				        	<td>{{ $po->size }}</td>
 				        	<td>{{ $po->style }}</td>
 				        	<td>{{ $po->color }}</td>
-				        	<td>{{ $po->color_desc }}</td>
+				        	<!-- <td>{{ $po->color_desc }}</td> -->
 				        	
 				        	<td>{{ $po->flash }}</td>
 				        	<td>{{ $po->brand }}</td>
 				        	<td>{{ $po->total_order_qty }}</td>
 				        	
 				        	<td>{{ $po->skeda }}</td>
+				        	<td>{{ $po->location }}</td>
 				        	<td>{{ $po->location_all }}</td>
 
 				        	<td>{{ $po->total_order_qty - $po->stock_b }}</td>
 				        	<td>{{ $po->stock_b - $po->request_b }}</td>
 				        	<td>{{ $po->to_receive_ki_b }}</td>
 				        	<td>{{ $po->stock_ki_b }}</td>
+				        	<td></td>
 
 				        	<td>{{ $po->total_order_qty - $po->stock_c }}</td>
 				        	<td>{{ $po->stock_c - $po->request_c }}</td>
 				        	<td>{{ $po->to_receive_ki_c }}</td>
 				        	<td>{{ $po->stock_ki_c }}</td>
+				        	<td></td>
 				        	
 						</tr>
 				    

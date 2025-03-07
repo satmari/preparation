@@ -45,6 +45,7 @@
 					{!! Form::input('number', 'total_order_qty', null, ['class' => 'form-control']) !!}
 				</div>
 				@endif
+				
 				<div class="panel-body">
 					<span>Flash:</span>
 					{!! Form::input('boolean', 'flash', null, ['class' => 'form-control']) !!}

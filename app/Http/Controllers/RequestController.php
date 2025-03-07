@@ -28,8 +28,7 @@ use Validator;
 
 class RequestController extends Controller {
 
-	public function index()
-	{
+	public function index() {
 		//
 		return view('Request.index');
 	}

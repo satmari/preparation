@@ -20,7 +20,13 @@ class mainController extends Controller {
 
 	public function index()
 	{
-		$pos = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM pos"));
+		$pos = DB::connection('sqlsrv')->select(DB::raw("SELECT *,
+			(SELECT location FROM prep_locations WHERE id = loc_id_su) as location
+		    FROM pos
+			WHERE created_at >= DATEADD(YEAR, -1, GETDATE()) 
+			OR (created_at < DATEADD(YEAR, -1, GETDATE()) AND status = 'Open')
+			ORDER BY created_at desc
+		"));
 
 		//dd($postable);
 
@@ -47,15 +53,6 @@ class mainController extends Controller {
 		return Redirect::to('/main');
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
-	}
+	
 
 }

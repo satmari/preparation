@@ -130,7 +130,7 @@ Route::post('/requeststoresec', 'RequestController@storesec');
 // Lines
 Route::get('/lines', 'linesController@index');
 Route::post('leadercheck', 'linesController@leadercheck');
-Route::get('/lines_requestcreate/{l}', 'linesController@lines_requestcreate');
+Route::get('/lines_requestcreate/{l}/{m}', 'linesController@lines_requestcreate');
 Route::post('lines_requeststore', 'linesController@lines_requeststore');
 
 
@@ -174,6 +174,17 @@ Route::post('receive_from_su_b_post_confirm', 'kikindaController@receive_from_su
 
 // senta user
 Route::get('/senta', 'sentaController@index');
+
+// Prep locations
+Route::get('prep_locations', 'PrepLocationsController@index');
+Route::get('location_create', 'PrepLocationsController@location_create');
+Route::post('location_create_post', 'PrepLocationsController@location_create_post');
+Route::get('/location_edit/{id}', 'PrepLocationsController@location_edit');
+Route::post('location_edit_post', 'PrepLocationsController@location_edit_post');
+
+Route::get('location_assign', 'PrepLocationsController@location_assign');
+Route::post('location_assign_post', 'PrepLocationsController@location_assign_post');
+
 
 Route::any('getpodata', function() {
 	$term = Input::get('term');
