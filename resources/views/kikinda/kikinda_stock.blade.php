@@ -65,7 +65,7 @@
 				            <th data-sortable="true" class="h-ct on-stock">C Su-On stock</th>
 				            <th data-sortable="true" class="h-ct">C Kik-To receive</th>
 				            <th data-sortable="true" class="h-ct">C Kik-Stock</th>
-				            <th data-sortable="true" class="h-bt">B Kik-Given</th>
+				            <th data-sortable="true" class="h-ct">B Kik-Given</th>
 				            
 				        </tr>
 				    </thead>

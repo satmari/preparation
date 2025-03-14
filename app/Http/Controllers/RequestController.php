@@ -1,5 +1,4 @@
-<?php 
-namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -11,6 +10,14 @@ use Illuminate\Http\Request;
 //use Gbrock\Table\Facades\Table;
 use Illuminate\Support\Facades\Redirect;
 
+use Session;
+use Validator;
+
+use App\User;
+use Bican\Roles\Models\Role;
+use Bican\Roles\Models\Permission;
+use Auth;
+
 use App\BarcodeRequest;
 use App\CarelabelRequest;
 use App\SecondQRequest;
@@ -18,13 +25,6 @@ use App\Po;
 use App\Module;
 use DB;
 
-use App\User;
-use Bican\Roles\Models\Role;
-use Bican\Roles\Models\Permission;
-use Auth;
-
-use Session;
-use Validator;
 
 class RequestController extends Controller {
 

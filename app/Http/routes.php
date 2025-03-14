@@ -11,18 +11,19 @@
 |
 */
 
-Route::get('/addadmin', 'addRollController@addadmin');
-Route::get('/addpreparation', 'addRollController@addpreparation');
-Route::get('/addmodule', 'addRollController@addmodule');
+Route::controllers([
+	'auth' => 'Auth\AuthController',
+	'password' => 'Auth\PasswordController',
+]);
+
 
 Route::get('/', 'HomeController@index');
 Route::get('home', 'HomeController@index');
 Route::get('log', 'HomeController@log');
 
-Route::controllers([
-	'auth' => 'Auth\AuthController',
-	'password' => 'Auth\PasswordController',
-]);
+Route::get('/addadmin', 'addRollController@addadmin');
+Route::get('/addpreparation', 'addRollController@addpreparation');
+Route::get('/addmodule', 'addRollController@addmodule');
 
 Route::get('/maintable', 'maintableController@index');
 Route::get('/maintable_planer', 'maintableController@index_planer');
@@ -168,9 +169,15 @@ Route::get('/kikinda', 'kikindaController@index');
 Route::get('/kikinda_stock', 'kikindaController@kikinda_stock');
 
 Route::get('/receive_from_su_b', 'kikindaController@receive_from_su_b');
-Route::get('receive_from_su_b_post/{id}/{qty}', 'kikindaController@receive_from_su_b_post');
+Route::get('receive_from_su_b_post/{id}', 'kikindaController@receive_from_su_b_post');
 Route::post('receive_from_su_b_post_confirm', 'kikindaController@receive_from_su_b_post_confirm');
 
+Route::get('/receive_from_su_c', 'kikindaController@receive_from_su_c');
+Route::get('receive_from_su_c_post/{id}', 'kikindaController@receive_from_su_c_post');
+Route::post('receive_from_su_c_post_confirm', 'kikindaController@receive_from_su_c_post_confirm');
+
+Route::get('give_to_the_line', 'kikindaController@give_to_the_line');
+Route::post('give_to_the_line_post', 'kikindaController@give_to_the_line_post');
 
 // senta user
 Route::get('/senta', 'sentaController@index');

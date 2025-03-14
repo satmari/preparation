@@ -7,9 +7,16 @@ use Illuminate\Database\QueryException as QueryException;
 use App\Exceptions\Handler;
 
 use Illuminate\Http\Request;
+//use Gbrock\Table\Facades\Table;
 use Illuminate\Support\Facades\Redirect;
 
-//use Gbrock\Table\Facades\Table;
+use Session;
+use Validator;
+
+use App\User;
+use Bican\Roles\Models\Role;
+use Bican\Roles\Models\Permission;
+use Auth;
 
 use App\BarcodeStock;
 use App\BarcodeKiStock;
@@ -24,10 +31,6 @@ use App\throw_away;
 use App\leftover;
 use DB;
 
-use App\User;
-use Bican\Roles\Models\Role;
-use Bican\Roles\Models\Permission;
-use Auth;
 
 class StockController extends Controller {
 

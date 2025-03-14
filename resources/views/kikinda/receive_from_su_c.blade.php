@@ -6,7 +6,7 @@
         <div class="text-center col-md-8 col-md-offset-2">
 			<div class="panel panel-default">
 				
-				<div class="panel-heading h-b">Barcode to receive</div>
+				<div class="panel-heading h-c">Cartigio to receive</div>
 				<div class="input-group"> <span class="input-group-addon">Filter</span>
 				    <input id="filter" type="text" class="form-control" placeholder="Type here...">
 				</div>
@@ -66,7 +66,7 @@
 					        <td>{{ $req->qty }}</td>
 					        <td>{{ $req->location }}</td>
 					        <td>
-					        	<a href="{{ url('/receive_from_su_b_post/'.$req->id ) }}" class="btn btn-success btn-xs center-block">Receive</a>
+					        	<a href="{{ url('/receive_from_su_c_post/'.$req->id ) }}" class="btn btn-success btn-xs center-block">Receive</a>
 					        </td>
 					        
 					    </tr>

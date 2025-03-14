@@ -11,7 +11,7 @@
 				    <p class="text-danger">{{ $msge }}</p>
 				@endif
 
-				{!! Form::open(['method'=>'POST', 'url'=>'receive_from_su_b_post_confirm']) !!}
+				{!! Form::open(['method'=>'POST', 'url'=>'receive_from_su_c_post_confirm']) !!}
 				{!! Form::hidden('id', $id, ['class' => 'form-control']) !!}
 
 					<div class="panel-body">

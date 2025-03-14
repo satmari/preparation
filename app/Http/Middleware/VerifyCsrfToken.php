@@ -5,9 +5,9 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as BaseVerifier;
 
 class VerifyCsrfToken extends BaseVerifier {
 
-	protected $except = [
-        '*' // Isključuje CSRF proveru za sve rute
-    ];
+ //	protected $except = [
+ //        'api/*' // Isključuje CSRF proveru za sve rute
+ //    ];
     
 	/**
 	 * Handle an incoming request.
@@ -20,8 +20,8 @@ class VerifyCsrfToken extends BaseVerifier {
 
 	public function handle($request, Closure $next)
 	{
-		// return parent::handle($request, $next); // Comment this line
-    	return $next($request); // Bypass CSRF check
+		return parent::handle($request, $next); // Comment this line
+    	// return $next($request); // Bypass CSRF check
 	}
 
 }

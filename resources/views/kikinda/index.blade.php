@@ -28,13 +28,13 @@
 
 				<div class="panel-body">
 					<div class="">
-						<a href="{{url('/#')}}" class="btn btn-warning center-block">Give to the line</a>
+						<a href="{{url('/give_to_the_line')}}" class="btn btn-warning center-block">Give to the line</a>
 					</div>
 				</div>
 
 				<div class="panel-body">
 					<div class="">
-						<a href="{{url('/#')}}" class="btn btn-danger center-block">Throw away</a>
+						<a href="{{url('/')}}" class="btn btn-danger center-block">Throw away</a>
 					</div>
 				</div>
 				

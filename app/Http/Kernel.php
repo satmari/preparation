@@ -15,7 +15,7 @@ class Kernel extends HttpKernel {
 		'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
 		'Illuminate\Session\Middleware\StartSession',
 		'Illuminate\View\Middleware\ShareErrorsFromSession',
-		'App\Http\Middleware\VerifyCsrfToken',
+		// 'App\Http\Middleware\VerifyCsrfToken',
 	];
 
 	/**
@@ -27,9 +27,9 @@ class Kernel extends HttpKernel {
 		'auth' => 'App\Http\Middleware\Authenticate',
 		'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
 		'guest' => 'App\Http\Middleware\RedirectIfAuthenticated',
-		'role' => 'Bican\Roles\Middleware\VerifyRole',
-    	'permission' => 'Bican\Roles\Middleware\VerifyPermission',
-    	'level' => 'Bican\Roles\Middleware\VerifyLevel',
+		// 'role' => 'Bican\Roles\Middleware\VerifyRole',
+  		// 'permission' => 'Bican\Roles\Middleware\VerifyPermission',
+  		// 'level' => 'Bican\Roles\Middleware\VerifyLevel',
 	];
 
 	/**
@@ -37,13 +37,5 @@ class Kernel extends HttpKernel {
 	 *
 	 * @var array
 	 */
-	// protected $routeMiddleware = [
-	//     'auth' => \App\Http\Middleware\Authenticate::class,
-	//     'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-	//     'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-	//     'role' => \Bican\Roles\Middleware\VerifyRole::class,
-	//     'permission' => \Bican\Roles\Middleware\VerifyPermission::class,
-	//     'level' => \Bican\Roles\Middleware\VerifyLevel::class,
-	// ];
 
 }

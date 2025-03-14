@@ -67,6 +67,23 @@
 					<ul class="nav navbar-nav navbar-nav">
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+								Functions<span class="caret"></span></a>
+							<ul class="dropdown-menu" role="menu">
+								<li><a href="{{ url('kikinda_stock') }}">Stock table</a></li>
+								<li><a href="{{ url('receive_from_su_b') }}">Receive Barcodes from Subotica</a></li>
+								<li><a href="{{ url('receive_from_su_c') }}">Receive Carelabels from Subotica</a></li>
+								<li><a href="{{ url('give_to_the_line') }}">Give to the line</a></li>
+								<li><a href="{{ url('#') }}">Return to Subotica</a></li>
+								<li><a href="{{ url('#') }}">Trow away</a></li>
+								
+								
+							</ul>
+						</li>
+					</ul>
+					<!-- <a class="navbar-brand" href="">|</a> -->
+					<ul class="nav navbar-nav navbar-nav">
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
 								Locations<span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
 								<li><a href="{{ url('prep_locations') }}">Location list</a></li>
@@ -75,7 +92,7 @@
 						</li>
 					</ul>
 					<!-- <a class="navbar-brand" href="http://172.27.161.212"><span style="color:green;"><b>IntApp</b></span></a></li> -->
-					<!-- <a class="navbar-brand" href="">|</a> -->
+					
 				@endif
 
 				@if(Auth::check() && Auth::user()->level() == 8)
