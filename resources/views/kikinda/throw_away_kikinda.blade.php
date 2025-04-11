@@ -5,7 +5,7 @@
 	<div class="row vertical-center-row">
 		<div class="text-center col-md-4 col-md-offset-4">
 			<div class="panel panel-default">
-				<div class="panel-heading">Give to the line</div>
+				<div class="panel-heading">Throw away from stock Kikinda</div>
 				
 				@if (isset($msge))
 					@if ($msge != '')
@@ -22,7 +22,7 @@
 				    @endif
 				@endif
 				
-				{!! Form::open(['method'=>'POST', 'url'=>'give_to_the_line_post']) !!}
+				{!! Form::open(['method'=>'POST', 'url'=>'throw_away_kikinda_post']) !!}
 				<meta name="csrf-token" content="{{ csrf_token() }}">
 				
 				<div class="panel-body">
@@ -34,11 +34,6 @@
 					<p>Qty/Kolicina: </p>
 					{!! Form::number('qty', null, ['class' => 'form-control', 'required' => 'required' ]) !!}
 				</div>
-
-				<div class="panel-body">
-                    <p>Line/Module:</p>
-                    {!! Form::select('line', $locationsArray, null, ['name'=>'location','class' => 'form-cont rol','class'=>'chosen','required'=>'requ ired']) !!}
-                </div>
 
 				<div class="panel-body">
 					<div class="col-md-6">

@@ -18,7 +18,7 @@ Route::controllers([
 
 
 Route::get('/', 'HomeController@index');
-Route::get('home', 'HomeController@index');
+// Route::get('home', 'HomeController@index');
 Route::get('log', 'HomeController@log');
 
 Route::get('/addadmin', 'addRollController@addadmin');
@@ -178,6 +178,12 @@ Route::post('receive_from_su_c_post_confirm', 'kikindaController@receive_from_su
 
 Route::get('give_to_the_line', 'kikindaController@give_to_the_line');
 Route::post('give_to_the_line_post', 'kikindaController@give_to_the_line_post');
+
+Route::get('return_su_from_kikinda', 'kikindaController@return_su_from_kikinda');
+Route::post('return_su_from_kikinda_post', 'kikindaController@return_su_from_kikinda_post');
+
+Route::get('throw_away_kikinda', 'kikindaController@throw_away_kikinda');
+Route::post('throw_away_kikinda_post', 'kikindaController@throw_away_kikinda_post');
 
 // senta user
 Route::get('/senta', 'sentaController@index');

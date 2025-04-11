@@ -34,7 +34,13 @@
 
 				<div class="panel-body">
 					<div class="">
-						<a href="{{url('/')}}" class="btn btn-danger center-block">Throw away</a>
+						<a href="{{url('return_su_from_kikinda')}}" class="btn btn-danger center-block">Return to Subotica</a>
+					</div>
+				</div>
+
+				<div class="panel-body">
+					<div class="">
+						<a href="{{url('throw_away_kikinda')}}" class="btn btn-danger center-block">Throw away</a>
 					</div>
 				</div>
 				

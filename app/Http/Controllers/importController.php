@@ -398,7 +398,7 @@ class importController extends Controller {
 
 	    // dd("test");
 	    $posummary = DB::connection('sqlsrv6')->select(DB::raw("SELECT * FROM [posummary].[dbo].[pro]
-	     WHERE status_int != 'Closed'  AND created_fr > '2020-06-30' AND deleted != 'DELETED' "));
+	     WHERE status_int != 'Closed'  AND created_fr > '2023-12-31' AND deleted != 'DELETED' "));
 	    // dd($posummary);
 
 	    $x = 0;
@@ -619,7 +619,7 @@ class importController extends Controller {
 	/*
 	//CLOSED PRO
 	    $posummary_closed = DB::connection('sqlsrv6')->select(DB::raw("SELECT * FROM [posummary].[dbo].[pro]
-	    WHERE status_int = 'Closed'  AND created_fr > '2020-06-30' AND deleted = 'DELETED' "));
+	    WHERE status_int = 'Closed'  AND created_fr > '2023-12-31' AND deleted = 'DELETED' "));
 
 	    $z = 0;
 
@@ -664,7 +664,7 @@ class importController extends Controller {
 
 	//CLOSED PRO
 	    $posummary_closed = DB::connection('sqlsrv6')->select(DB::raw("SELECT * FROM [posummary].[dbo].[pro]
-	    WHERE (status_int = 'Closed' OR deleted = 'DELETED') AND created_fr > '2020-06-30' "));
+	    WHERE (status_int = 'Closed' OR deleted = 'DELETED') AND created_fr > '2023-12-31' "));
 
 	    $z = 0;
 

@@ -93,13 +93,13 @@
 				        	<td>{{ $po->stock_b - $po->request_b }}</td>
 				        	<td>{{ $po->to_receive_ki_b }}</td>
 				        	<td>{{ $po->stock_ki_b }}</td>
-				        	<td></td>
+				        	<td>{{ $po->given_ki_b }}</td>
 
 				        	<td>{{ $po->total_order_qty - $po->stock_c }}</td>
 				        	<td>{{ $po->stock_c - $po->request_c }}</td>
 				        	<td>{{ $po->to_receive_ki_c }}</td>
 				        	<td>{{ $po->stock_ki_c }}</td>
-				        	<td></td>
+				        	<td>{{ $po->given_ki_c }}</td>
 				        	
 						</tr>
 				    
