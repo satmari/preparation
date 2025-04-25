@@ -1,0 +1,96 @@
+{% extends "core/base.html" %}
+
+{% load static %}
+{% block content %}
+
+{% if data %}
+    <div class="container-fluid">
+        <div style="display: flex; align-items: center; justify-content: center;">
+            <h2 style="margin-right: 10px;">{{ title }}</h2>
+
+        </div>
+        <br>
+
+        <!-- Table with sortable columns -->
+        <table class="table table-striped table-bordered custom-table" id="pos-table" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th><b>PO</b></th>
+                    <th>Size</th>
+                    <th>Qty</th>
+                    <th>Module</th>
+                    <th>Status</th>
+                    <th>Type</th>
+                    <th>Comment</th>
+                    {% if type == 's' %}
+                        <th>Machine</th>
+                    {% else %}
+                        <th>Leader</th>
+                    {% endif %}
+                    <th>Created at</th>
+                    <th>Updated at</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pos in data %}
+                <tr>
+                    <td><b>{{ pos.ponum }}</b></td>
+                    <td>{{ pos.size }}</td>
+                    <td>{{ pos.qty }}</td>
+                    <td>{{ pos.module }}</td>
+                    <td>{{ pos.status }}</td>
+                    <td>{{ pos.type }}</td>
+                    <td>{{ pos.comment }}</td>
+
+                    {% if type == 's' %}
+                        <th>{{ pos.machine }}</th>
+                    {% else %}
+                        <th>{{ pos.leader }}</th>
+                    {% endif %}
+                    <td>{{ pos.created_at|date:"Y-m-d H:i" }}</td>
+                    <td>{{ pos.updated_at|date:"Y-m-d H:i" }}</td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% else %}
+    <div class="container mt-4 text-center">
+        <h2 class="mb-4">Log tables</h2>
+
+        <div class="d-grid gap-3">
+            <a href="{% url 'preparation:log_tables_action' 'stock_b' %}" class="btn btn-light border w-25 mx-auto">Barcode stock</a>
+            <a href="{% url 'preparation:log_tables_action' 'request_b' %}" class="btn btn-light border w-25 mx-auto">Barcode requests</a>
+            <br>
+            <a href="{% url 'preparation:log_tables_action' 'stock_c' %}" class="btn btn-light border w-25 mx-auto">Carelabel stock</a>
+            <a href="{% url 'preparation:log_tables_action' 'request_c' %}" class="btn btn-light border w-25 mx-auto">Carelabel requests</a>
+            <br>
+            <a href="{% url 'preparation:log_tables_action' 'request_s' %}" class="btn btn-light border w-25 mx-auto">SecondQ requests</a>
+      </div>
+    </div>
+{% endif %}
+
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        // Initialize DataTable
+        var table = $('#pos-table').DataTable({
+            paging: true,
+            ordering: true,
+            searching: true,
+            pageLength: 20,
+            lengthMenu: [10, 20, 50, 100, 500, 1000],
+            responsive: true,
+            scrollCollapse: true,
+        });
+
+        // Initialize FixedHeader
+        new $.fn.dataTable.FixedHeader(table);
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "core/base.html" %}
+
+{% load static %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong>Create throw away (Skart)</strong></div>
+                <br>
+
+                <!-- Errors -->
+                {% if errors %}
+                    <div class="alert alert-danger " role="alert">
+                        <ul>
+                            {% for error in errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+                <!-- Success -->
+                {% if success_msg %}
+                    <div class="alert alert-success " role="alert">
+                         {{ success_msg|safe }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+
+                <form method="POST" action="{% url 'preparation:throw_away' %}">
+                    {% csrf_token %}
+
+                    <label id="material_id">Material/Artical: </label>
+                    <select id="materials" name="material" class="form-control select2" required>
+                        <option value="">-- Izaberi Material/Artical --</option>
+                        {% for item in materials %}
+                            <option value="{{ item }}">{{ item }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <br>
+
+                    <label id="type_id">Type: </label>
+                    <select id="types" name="type" class="form-control" required>
+                        <option value="">-- Izaberi Type --</option>
+                        <option value="Printing issue">Printing issue - problem sa stampanjem</option>
+                        <option value="Return from line">Return from line - vraceno sa linije</option>
+                    </select>
+                    <br>
+
+                    <div class="panel-body mt-3">
+                        <label id="qty">Qty/Količina:</label>
+                        <input type="number" name="qty" class="form-control" min="1" required>
+                    </div>
+                    <br>
+
+                    <div class="panel-body mt-4">
+                        <input type="submit" value="Save" class="btn btn-success">
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Initialize Select2 for the materijal
+        $('#materials').select2({
+            width: '100%',
+            placeholder: "Izaberite materijal iz liste",
+            allowClear: true,  // Allows clearing the selection
+            minimumInputLength: 1,  // Start searching after typing 1 character
+            language: {
+                noResults: function() {
+                    return "Materijal nije ponadjen.";  // Replace with your custom message
+                },
+                inputTooShort: function () {
+                    return "Unesite pocetno slovo materijala i pojavice se lista materijala";  // Custom input too short message
+                }
+            }
+        });
+    });
+</script>
+
+{% endblock %}

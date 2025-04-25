@@ -1,0 +1,63 @@
+{% extends "core/base.html" %}
+
+{% load static %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="row g-4">
+
+        <!-- Panel A -->
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3">
+                <h4 class="mb-3">📦 Import Leftovers - ON STOCK </h4>
+                    <span style="text-font:10px">(material,price,sku,qty,location,place)</span>
+                    <small>set positive qty in Excel and app will import with status ON STOCK</small>
+                <br>
+                <form method="POST"  enctype="multipart/form-data" action="{% url 'preparation:import_file' %} ">
+                    {% csrf_token %}
+                    <input type="hidden" name="import_source" value="import_leftover">
+                    <div class="mb-3">
+                        <label class="form-label">Upload Excel File:</label>
+                        <input type="file" name="file" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Import</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Panel B -->
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3">
+                <h4 class="mb-3">📋 Import Leftovers - USED</h4>
+                    <span style="text-font:10px">(material,price,sku,qty,location,place)</span>
+                    <small>set positive qty in Excel and app will import as a negative stock with status USED</small>
+                <br>
+                <form method="POST" enctype="multipart/form-data" action="{% url 'preparation:import_file' %} ">
+                    {% csrf_token %}
+                    <input type="hidden" name="import_source" value="import_leftover_neg">
+                    <div class="mb-3">
+                        <label class="form-label">Upload Excel File:</label>
+                        <input type="file" name="file" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Import</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    {% if messages %}
+    <div class="mt-4">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends "core/base.html" %}
+
+{% load static %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong>Zahtev za second quality etikete</strong></div>
+                <br>
+
+                <!-- Errors -->
+                {% if error_msg %}
+                    <div class="alert alert-danger " role="alert">
+                        {{ error_msg|safe }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+                {% if error_msg_b %}
+                    <div class="alert alert-danger " role="alert">
+                        {{ error_msg_b|safe }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+                {% if error_msg_c %}
+                    <div class="alert alert-danger " role="alert">
+                        {{ error_msg_c|safe }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+                 <!-- Success -->
+                {% if success_msg %}
+                    <div class="alert alert-success" role="alert">
+                         {{ success_msg|safe }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+
+                <form method="POST" action="{% url 'line:request_for_sq' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="leader" value="{{ leader }}">
+
+                    <div class="panel-body mt-3">
+                        <label id="po_new">Komesa: </label>
+                        <select id="pos" name="po" class="form-control select2" required>
+                            <option value="">-- Izaberi komesu --</option>
+                            {% for item in pos %}
+                                {% if item.po %}
+                                    <option value="{{ item.po }}">{{ item.po }}</option>
+                                {% endif %}
+                            {% empty %}
+                                <option value="">No POs available</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <br>
+
+<!--                    <div class="panel-body mt-3">-->
+<!--                        <label id="qty">Količina:</label>-->
+<!--                        <input type="number" name="qty" class="form-control" min="1" required>-->
+<!--                    </div>-->
+<!--                    <br>-->
+
+                    <div class="panel-body mt-3">
+                        <label id="comment">Komentar:</label>
+                        <p><span style="color:red;">** Obavezno u komentar unesite količinu **</span></p>
+                        <input type="text" name="comment" class="form-control">
+                    </div>
+                    <br>
+
+                    <div class="panel-body mt-4">
+                        <input type="submit" value="Sačuvaj" class="btn btn-success">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Initialize Select2 for the Pos dropdown
+        $('#pos').select2({
+            width: '100%',
+            placeholder: "Izaberite komesu iz liste",
+            allowClear: true,  // Allows clearing the selection
+            minimumInputLength: 2,  // Start searching after typing 1 character
+            language: {
+                noResults: function() {
+                    return "Komesa nije ponadjena.";  // Replace with your custom message
+                },
+                inputTooShort: function () {
+                    return "Unesite početni broj komese od 7 cifara i pojavice se lista komesa, obavezno odaberite komesu iz liste! ";  // Custom input too short message
+                }
+            }
+        });
+
+    });
+</script>
+
+{% endblock %}

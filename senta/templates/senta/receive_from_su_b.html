@@ -1,0 +1,105 @@
+{% extends "core/base.html" %}
+
+{% load static %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong>Receive Barcodes from Subotica</strong></div>
+                <br>
+
+                <!-- Errors -->
+                {% if errors %}
+                    <div class="alert alert-danger " role="alert">
+                        <ul>
+                            {% for error in errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+                <!-- Success -->
+                {% if success_msg %}
+                    <div class="alert alert-success " role="alert">
+                         {{ success_msg|safe }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+
+                {%if data %}
+                    <table class="table table-striped table-bordered" id="sort">
+                        <thead>
+                            <tr>
+                                <!-- <th>Id</th> -->
+                                <th class="po">Po</th>
+                                <th class="size">Size</th>
+                                <th  class="style">Style</th>
+                                <th class="color">Color</th>
+                                <th class="">Qty to receive</th>
+                                <th class="">Location</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody class="searchable">
+                            {% for req in data %}
+                                <tr>
+                                    <td>{{ req.po_new }}</td>
+                                    <td>{{ req.size }}</td>
+                                    <td>{{ req.style }}</td>
+                                    <td>{{ req.color }}</td>
+                                    <td>{{ req.qty }}</td>
+                                    <td>{{ req.location }}</td>
+                                    <td>
+                                        <a href="{% url 'senta:receive_from_su_b' req.id %}" class="btn btn-success btn-sm center-block">Receive</a>
+                                    </td>
+                                </tr>
+                              {% endfor %}
+                        </tbody>
+                  </table>
+              {% endif %}
+
+
+              {% if id %}
+                <form method="post" action="{% url 'senta:receive_from_su_b' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="{{ id }}" class="form-control">
+
+                    <div class="panel-body">
+                        <p>Received Qty:</p>
+                        <input type="number" name="qty" value="{{ qty }}" class="form-control" min="1" max="{{ qty }}" required>
+                    </div>
+                    <br>
+
+                    <div class="panel-body">
+                        <p>Location: </p>
+                        {% if location_id == 'None' %}
+                            <p><i>lokacija za ovaj pro nije unesena, izaberite lokaciju</i></p>
+                        {% else %}
+                            <p><i>lokacija za ovaj PRO je {{ location }}, ali ako zelite da promenite izaberite drugu lokaciju</i></p>
+                        {% endif %}
+                        <select name="location_id" class="form-control" required>
+                            {% for key, value in locationsArray.items %}
+                                <option value="{{ key }}" {% if key|stringformat:"s" == location_id|stringformat:"s" %}selected{% endif %}>
+                                    {{ value }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <br>
+                    <div class="panel-body">
+                        <input type="submit" value="Confirm" class="btn btn-success center-block">
+                    </div>
+                </form>
+              {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

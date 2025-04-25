@@ -1,0 +1,70 @@
+{% extends "core/base.html" %}
+
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+    <div style="display: flex; align-items: center; justify-content: center;">
+        <h2 style="margin-right: 10px;">Leftover table all</h2>
+
+    <br>
+    </div>
+    <hr>
+
+
+    <!-- Table with sortable columns -->
+    <table class="table table-striped table-bordered custom-table" id="pos-table" style="width: 100%;">
+        <thead>
+            <tr>
+                <th>Material</th>
+                <th>SKU</th>
+                <th>Price</th>
+                <th>Location</th>
+                <th>Place</th>
+                <th>Qty</th>
+                <th>Status</th>
+                <th>Updated</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for pos in data %}
+            <tr>
+                <td>{{ pos.material }}</td>
+                <td>{{ pos.sku }}</td>
+                <td>{{ pos.price|floatformat:2 }}</td>
+                <td>{{ pos.location }}</td>
+                <td>{{ pos.place }}</td>
+                <td>{{ pos.qty }}</td>
+                <td>{{ pos.status }}</td>
+                <td>{{ pos.updated_at|date:"Y-m-d H:i" }}</td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        // Initialize DataTable
+        var table = $('#pos-table').DataTable({
+            paging: true,
+            ordering: true,
+            searching: true,
+            pageLength: 10,
+            lengthMenu: [10, 20, 50, 100, 500, 1000],
+            responsive: true,
+            scrollCollapse: true,
+        });
+
+        // Initialize FixedHeader
+        new $.fn.dataTable.FixedHeader(table);
+    });
+</script>
+{% endblock %}
+
+

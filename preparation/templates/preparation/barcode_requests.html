@@ -1,0 +1,154 @@
+{% extends "core/base.html" %}
+
+{% load static %}
+{% block content %}
+
+
+{% if data %}
+<div class="container-fluid">
+    <div style="display: flex; align-items: center; justify-content: center;">
+        <h2 style="margin-right: 10px;">Barcode request table</h2>
+
+    </div>
+        {% if success_msg %}
+            <div class="alert alert-success " role="alert">
+                {{ success_msg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+
+        {% if errors %}
+            <div class="alert alert-danger " role="alert">
+                {% for error in errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+    <br>
+
+    <table class="table table-striped table-bordered custom-table" id="pos-table" style="width: 100%;">
+        <thead>
+            <tr>
+                <th></th>
+                <th>PO</th>
+                <th>Size</th>
+                <th>Style</th>
+                <th>Color</th>
+                <th>Status</th>
+                <th>Qty</th>
+                <th>Comment</th>
+                <th style="background-color: darkseagreen">B to print</th>
+                <th style="background-color: darkseagreen">B on stock</th>
+
+                <th>Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for req in data %}
+            <tr>
+                <td><a href="{% url 'preparation:barcode_request_action' 'edit' req.id %}" class="btn btn-primary w-100 btn-sm">Edit</a></td>
+                <td>{{ req.po_new }}</td>
+                <td>{{ req.size }}</td>
+                <td>{{ req.style }}</td>
+                <td>{{ req.color }}</td>
+                <td style="background-color: {% if req.status|lower == 'pending' %}#f8d7da{% elif req.status|lower == 'confirmed' %}#d4edda{% endif %}; color: #000;">
+                    {{ req.status }}
+                </td>
+                <td>{{ req.qty }}</td>
+                <td>{{ req.comment }}</td>
+                <td>{{ req.to_print_b }}</td>
+                <td>{{ req.on_stock_b }}</td>
+
+                <td>{{ req.created_at|date:"Y-m-d H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% if request_data %}
+    <div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong>Edit request</strong></div>
+                <br>
+
+                    {% if success_msg %}
+                        <div class="alert alert-success " role="alert">
+                            {{ success_msg }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+
+                    {% if errors %}
+                        <div class="alert alert-danger " role="alert">
+                            {% for error in errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+
+                <br>
+                    <a href="{% url 'preparation:barcode_request_action' 'error' request_data.id %}" class="btn btn-danger btn-sm">Set request as error</a>
+                &nbsp;&nbsp;
+                    <a href="{% url 'preparation:barcode_request_action' 'rfid' request_data.id %}" class="btn btn-info btn-sm">Confirm request for RFID labels</a>
+                &nbsp;&nbsp;
+                    <a href="{% url 'preparation:barcode_request_action' 'print' request_data.id %}" class="btn btn-primary btn-sm">Print request</a>
+                <br>
+                <hr>
+
+                <form method="POST" action="{% url 'preparation:barcode_requests' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="{{ request_data.id }}" class="form-control">
+
+                    <div class="panel-body mt-3">
+                        <label id="qty">Qty/Količina:</label>
+                        <input type="number" name="qty" class="form-control" value="{{ request_data.qty }}" min="1" required>
+                    </div>
+                    <br>
+
+                    <div class="panel-body mt-3">
+                        <label id="comment">Comment:</label>
+                        <input type="text" name="comment" class="form-control" value="{{ request_data.comment }}">
+                    </div>
+                    <br>
+
+                    <div class="panel-body mt-4">
+                        <input type="submit" value="Confirm" class="btn btn-success">
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        // Initialize DataTable
+        var table = $('#pos-table').DataTable({
+            paging: true,
+            ordering: true,
+            searching: true,
+            pageLength: 20,
+            lengthMenu: [10, 20, 50, 100, 500, 1000],
+            responsive: true,
+            scrollCollapse: true,  // Allow table to shrink
+        });
+
+        // Initialize FixedHeader
+        new $.fn.dataTable.FixedHeader(table);
+
+    });
+</script>
+
+{% endblock %}

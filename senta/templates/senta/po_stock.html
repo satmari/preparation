@@ -1,0 +1,126 @@
+{% extends "core/base.html" %}
+
+{% load static %}
+{% block content %}
+
+<div class="container-fluid">
+    <div style="display: flex; align-items: center;">
+        <h2 style="margin-right: 10px;">Stock table</h2>
+
+    </div>
+    <br>
+
+    <!-- Table with sortable columns -->
+    <table class="table table-striped table-bordered custom-table" id="pos-table" style="width: 100%;">
+        <thead>
+    <!--        <tr>-->
+    <!--            <th><input type="text" id="search-po_key" placeholder="PO Key"></th>-->
+    <!--            <th><input type="text" id="search-order_code" placeholder="Order Code"></th>-->
+    <!--            <th><input type="text" id="search-po" placeholder="PO"></th>-->
+    <!--            <th><input type="text" id="search-po_new" placeholder="PO New"></th>-->
+    <!--            <th><input type="text" id="search-size" placeholder="Size"></th>-->
+    <!--            <th><input type="text" id="search-style" placeholder="Style"></th>-->
+    <!--            <th><input type="text" id="search-color" placeholder="Color"></th>-->
+    <!--            <th><input type="text" id="search-color_desc" placeholder="Color Desc"></th>-->
+    <!--            <th><input type="text" id="search-season" placeholder="Season"></th>-->
+    <!--            <th><input type="text" id="search-total_order_qty" placeholder="Qty"></th>-->
+    <!--            <th><input type="text" id="search-flash" placeholder="Flash"></th>-->
+    <!--            <th><input type="text" id="search-closed_po" placeholder="Closed PO"></th>-->
+    <!--            <th><input type="text" id="search-brand" placeholder="Brand"></th>-->
+    <!--            <th><input type="text" id="search-status" placeholder="Status"></th>-->
+    <!--            <th><input type="text" id="search-type" placeholder="Type"></th>-->
+    <!--            <th><input type="text" id="search-comment" placeholder="Comment"></th>-->
+    <!--            <th><input type="text" id="search-delivery_date" placeholder="Del Date"></th>-->
+    <!--            <th><input type="text" id="search-hangtag" placeholder="Hangtag"></th>-->
+    <!--            <th><input type="text" id="search-sap_material" placeholder="SAP Material"></th>-->
+    <!--            <th><input type="text" id="search-skeda" placeholder="Skeda"></th>-->
+    <!--            <th><input type="text" id="search-no_lines_by_skeda" placeholder=""></th>-->
+    <!--            <th><input type="text" id="search-loc_id_su" placeholder=""></th>-->
+    <!--            <th><input type="text" id="search-loc_id_ki" placeholder=""></th>-->
+    <!--            <th><input type="text" id="search-loc_id_se" placeholder=""></th>-->
+    <!--            <th><input type="text" id="search-updated_at" placeholder=""></th>-->
+    <!--        </tr>-->
+            <tr>
+                <th><b>PO</b></th>
+                <th>Location</th>
+                <th>Size</th>
+                <th>Style</th>
+                <th>Color</th>
+                <th>Color Des</th>
+                <th>Flash</th>
+                <th>Brand</th>
+                <th>Skeda</th>
+                <th>Order Qty</th>
+                <th>Num lines</th>
+                <th>Po loc</th>
+                <th style="background-color: darkseagreen">B Su to print</th>
+                <th style="background-color: darkseagreen">B Su on stock</th>
+                <th style="background-color: darkseagreen">B Se to receive</th>
+                <th style="background-color: darkseagreen">B Se on stock</th>
+                <th style="background-color: darkseagreen">B Se in prod</th>
+
+                <th style="background-color: deepskyblue">C Su to print</th>
+                <th style="background-color: deepskyblue">C Su on stock</th>
+                <th style="background-color: deepskyblue">C Se to receive</th>
+                <th style="background-color: deepskyblue">C Se on stock</th>
+                <th style="background-color: deepskyblue">C Se in prod</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for pos in data %}
+            <tr>
+                <td><b>{{ pos.po }}</b></td>
+                <td>{{ pos.location_all }}</td>
+                <td>{{ pos.size }}</td>
+                <td>{{ pos.style }}</td>
+                <td>{{ pos.color }}</td>
+                <td>{{ pos.color_desc }}</td>
+                <td>{{ pos.flash }}</td>
+                <td>{{ pos.brand }}</td>
+                <td>{{ pos.skeda }}</td>
+                <td>{{ pos.total_order_qty }}</td>
+                <td>{{ pos.no_lines_by_skeda }}</td>
+                <td>{{ pos.location}}</td>
+
+                <td>{{ pos.b_s_to_print }}</td>
+                <td>{{ pos.b_s_on_stock }}</td>
+                <td>{{ pos.to_receive_b }}</td>
+                <td>{{ pos.stockl_b }}</td>
+                <td>{{ pos.in_prod_b }}</td>
+
+                <td>{{ pos.c_s_to_print }}</td>
+                <td>{{ pos.c_s_on_stock }}</td>
+                <td>{{ pos.to_receive_c }}</td>
+                <td>{{ pos.stockl_c }}</td>
+                <td>{{ pos.in_prod_c }}</td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        // Initialize DataTable
+        var table = $('#pos-table').DataTable({
+            paging: true,
+            ordering: true,
+            searching: true,
+            pageLength: 10,
+            lengthMenu: [10, 20, 50, 100, 500, 1000],
+            responsive: true,
+            scrollCollapse: true,
+        });
+
+        // Initialize FixedHeader
+        new $.fn.dataTable.FixedHeader(table);
+    });
+</script>
+{% endblock %}
+
+

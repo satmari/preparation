@@ -1,0 +1,22 @@
+{% extends "core/base.html" %}
+
+{% load static %}
+{% block content %}
+<div class="container mt-4 text-center">
+    <h2 class="mb-4">Funtions</h2>
+
+    <div class="d-grid gap-3">
+      <a href="{% url 'senta:receive_from_su_b' %}" class="btn btn-light border w-25 mx-auto">Receive Barcodes from Subotica</a>
+      <a href="{% url 'senta:receive_from_su_c' %}" class="btn btn-light border w-25 mx-auto">Receive Carelabels from Subotica</a>
+      <a href="{% url 'senta:give_to_the_line' %}" class="btn btn-light border w-25 mx-auto">Give to the Senta Lines</a>
+      <a href="{% url 'senta:return_to_main' %}" class="btn btn-light border w-25 mx-auto">Return to Subotica</a>
+      <a href="{% url 'senta:reduce_from_stock' %}" class="btn btn-light border w-25 mx-auto">Reduce from stock</a>
+
+  </div>
+
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+{% endblock %}

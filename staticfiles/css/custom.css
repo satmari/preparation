@@ -1,0 +1,54 @@
+/* Center the whole search box container */
+.dataTables_filter {
+    text-align: center !important;
+}
+
+/* Optional: Center the input itself and tweak style */
+.dataTables_filter input {
+    display: inline-block;
+    width: 250px;
+    text-align: left;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+div.panel.panel-default {
+    border: 1px solid #aaa !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+    padding: 16px !important;
+}
+
+.larger-checkbox {
+    transform: scale(3); /* Adjust the scale factor as needed */
+    margin-top: 25px; /* Add space around the checkbox if necessary */
+    #margin-right: 15px; /* Adjust space between checkbox and label */
+    #margin-left: 35px; /* Adjust space between checkbox and label */
+}
+
+.larger-radio {
+    transform: scale(1.5); /* Adjust the scale factor as needed */
+}
+
+.custom-table {
+        font-size: 12px;  /* Adjust this value to reduce font size */
+}
+
+/* Style for the alert */
+.alert {
+  transition: opacity 1s ease-out;
+  opacity: 1;
+}
+
+/* Class to trigger fade-out */
+.alert.fade {
+  opacity: 0;
+  pointer-events: none; /* Optional: Prevent interaction when the alert fades out */
+}
+
+/* Optional: To control visibility when 'fade' class is added */
+.alert.fade-out {
+  display: none;
+}

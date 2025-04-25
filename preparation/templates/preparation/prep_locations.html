@@ -1,0 +1,77 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong>Preparation stock locations</strong></div>
+                <br>
+
+                {% if locations %}
+                    <div class="mb-3 text-begin">
+                        <a href="{% url 'preparation:assign_location_to_po' %}" class="btn btn-secondary">Assign Location to PO</a>
+                    &nbsp;&nbsp;
+                        <a href="{% url 'preparation:prep_locations_edit' 0 %}" class="btn btn-primary">New Location</a>
+                    </div>
+
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Location</th>
+                                <th>Description</th>
+                                <th>Plant</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for line in locations %}
+                            <tr>
+                                <td><b>{{ line.location }}</b></td>
+                                <td>{{ line.location_desc }}</td>
+                                <td>{{ line.location_plant }}</td>
+                                <td><a href="{% url 'preparation:prep_locations_edit' line.id %}" class="btn btn-warning btn-sm w-100">Edit</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                {% else %}
+
+                    <div class="panel panel-default">
+
+                        <form method="post" action="{% url 'preparation:prep_locations' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="{{ location.id|default:'' }}" />
+
+                            <div class="panel-body">
+                                <p>Location:</p>
+                                <input type="text" name="location" value="{{ location.location|default:'' }}" class="form-control" required/>
+                            </div>
+                            <div class="panel-body">
+                                <p>Description:</p>
+                                <input type="text" name="location_desc" value="{{ location.location_desc|default:'' }}" class="form-control" />
+                            </div>
+                            <div class="panel-body">
+                                <p>Plant:</p>
+                                <select name="location_plant" class="form-control" required>
+                                    <option value="" {% if not location.location_plant %}selected{% endif %}></option>
+                                    <option value="Subotica" {% if location.location_plant == "Subotica" %}selected{% endif %}>Subotica</option>
+                                    <option value="Kikinda" {% if location.location_plant == "Kikinda" %}selected{% endif %}>Kikinda</option>
+                                    <option value="Senta" {% if location.location_plant == "Senta" %}selected{% endif %}>Senta</option>
+                                </select>
+                            </div>
+                            <br>
+                            <div class="panel-body">
+                                <button type="submit" class="btn btn-success w-10">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

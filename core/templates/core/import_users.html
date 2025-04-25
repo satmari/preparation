@@ -1,0 +1,12 @@
+{% extends 'admin/base_site.html' %}
+
+{% load static %}
+{% block content %}
+  <h1>Import Users</h1>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="file">Upload Excel File:</label>
+    <input type="file" name="file" id="file" required>
+    <button type="submit">Import</button>
+  </form>
+{% endblock %}

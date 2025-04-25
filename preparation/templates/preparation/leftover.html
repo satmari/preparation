@@ -1,0 +1,143 @@
+{% extends "core/base.html" %}
+
+{% load static %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong>Create Leftover</strong></div>
+                <br>
+
+                <!-- Errors -->
+                {% if errors %}
+                    <div class="alert alert-danger " role="alert">
+                        <ul>
+                            {% for error in errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+                <!-- Success -->
+                {% if success_msg %}
+                    <div class="alert alert-success " role="alert">
+                         {{ success_msg|safe }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+
+                <form method="POST" action="{% url 'preparation:leftover' %}">
+                    {% csrf_token %}
+
+                    <label id="material_id">Material/Artical: </label>
+                    <select id="materials" name="material" class="form-control select2" required>
+                        <option value="">-- Izaberi Material/Artical --</option>
+                        {% for item in materials %}
+                            <option value="{{ item }}">{{ item }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <br>
+
+                    <label id="sku_id">SKU: </label>
+                    <select id="skus" name="sku" class="form-control select2" required>
+                        <option value="">-- Izaberi SKU --</option>
+                        {% for item in skus %}
+                            <option value="{{ item }}">{{ item }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <br>
+
+                    <label id="price">Price:</label>
+                    <input type="number" name="price" class="form-control" step="0.01" min="0"  required>
+                    <br>
+
+                    <label id="location_id">Location: </label>
+                    <select id="location" name="location" class="form-control" required>
+                        <option value="">-- Izaberi location --</option>
+                        <option value="Subotica">Subotica</option>
+                        <option value="Kikinda">Kikinda</option>
+                    </select>
+                    <br>
+
+                    <label id="place_id">Place (Kikinda locations only):</label>
+                    <select id="place" name="place" class="form-control">
+                        <option value="">-- Izaberi mesto --</option>
+                        <option value="PREP 1-1">PREP 1-1</option>
+                        <option value="PREP 1-2">PREP 1-2</option>
+                        <option value="PREP 1-3">PREP 1-3</option>
+                        <option value="PREP 1-4">PREP 1-4</option>
+                        <option value="PREP 2-1">PREP 2-1</option>
+                        <option value="PREP 2-2">PREP 2-2</option>
+                        <option value="PREP 2-3">PREP 2-3</option>
+                        <option value="PREP 2-4">PREP 2-4</option>
+                        <option value="PREP 3-1">PREP 3-1</option>
+                        <option value="PREP 3-2">PREP 3-2</option>
+                        <option value="PREP 3-3">PREP 3-3</option>
+                        <option value="PREP 3-4">PREP 3-4</option>
+                    </select>
+                    <br>
+
+                    <label id="qty">Qty/Količina:</label>
+                    <input type="number" name="qty" class="form-control" required>
+                    <br>
+
+                    <label id="status_id">Status: </label>
+                    <select id="status" name="status" class="form-control" required>
+                        <option value="">-- Izaberi Status --</option>
+                        <option value="ON STOCK">ON STOCK</option>
+                        <option value="USED">USED</option>
+                    </select>
+                    <br>
+
+                    <div class="panel-body mt-4">
+                        <input type="submit" value="Save" class="btn btn-success">
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Initialize Select2 for the materijal
+        $('#materials').select2({
+            width: '100%',
+            placeholder: "Izaberite materijal iz liste",
+            allowClear: true,  // Allows clearing the selection
+            minimumInputLength: 1,  // Start searching after typing 1 character
+            language: {
+                noResults: function() {
+                    return "Materijal nije ponadjen.";  // Replace with your custom message
+                },
+                inputTooShort: function () {
+                    return "Unesite pocetno slovo materijala i pojavice se lista materijala";  // Custom input too short message
+                }
+            }
+        });
+        $('#skus').select2({
+            width: '100%',
+            placeholder: "Izaberite sku iz liste",
+            allowClear: true,  // Allows clearing the selection
+            minimumInputLength: 1,  // Start searching after typing 1 character
+            language: {
+                noResults: function() {
+                    return "SKU nije ponadjen.";  // Replace with your custom message
+                },
+                inputTooShort: function () {
+                    return "Unesite pocetno slovo sku-a i pojavice se lista sku-a";  // Custom input too short message
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

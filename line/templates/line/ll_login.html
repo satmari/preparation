@@ -1,0 +1,75 @@
+{% extends "core/base.html" %}
+
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="panel panel-default">
+
+                <!-- Errors -->
+                {% if error_msg %}
+                    <div class="alert alert-danger " role="alert">
+                        {{ error_msg|safe }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+                 {% if error_msg_b %}
+                    <div class="alert alert-danger " role="alert">
+                        {{ error_msg_b|safe }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+                 {% if error_msg_c %}
+                    <div class="alert alert-danger " role="alert">
+                        {{ error_msg_c|safe }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+                <!-- Success -->
+                {% if success_msg %}
+                    <div class="alert alert-success " role="alert">
+                         {{ success_msg|safe }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+
+            {% if leader %}
+                <div class="panel-heading"><strong>Izaberite zahtev za preparaciju</strong><br>
+                        Majstorica: <span style="font-size: 13px; color:blue">{{ leader }}</span>
+                </div>
+                <br>
+                <div class="panel-body">
+                    <br>
+                    <a href="{% url 'line:request_for_b_c' leader %}" class="btn btn-info btn-lg center-block">Barkod ili stranične etikete</a>
+                    {% if leader == 'Sanela Mihaljević J.' %}
+                    <br>
+                    <br>
+                        <a href="{% url 'line:request_for_sq' leader %}" class="btn btn-danger btn-lg center-block">Second quality etikete</a>
+                    {% endif %}
+                </div>
+
+            {% else %}
+                <div class="panel-heading"><strong>Prijava majstorice</strong></div>
+                <br>
+                <div class="panel-body">
+                    <form method="post" action="{% url 'line:ll_login' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_password" class="form-label">Unesite PIN kod majstorice iz Inteosa</label>
+                            <input type="text" class="form-control" name="password" id="id_password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-25">Prijava</button>
+                    </form>
+                </div>
+            {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
