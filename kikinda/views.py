@@ -28,55 +28,102 @@ def po_stock(request):
     # return HttpResponse("po_stock view is working!")
     with connections['default'].cursor() as cursor:
         cursor.execute("""
-        SELECT  pos.id,
-		pos.po,
-		pos.po_new,
-		posum.location_all,
-		pos.size,
-		pos.style,
-		pos.color,
-		pos.color_desc,
-		pos.flash,
-		pos.brand,
-		pos.skeda,
-		pos.total_order_qty,
-		pos.no_lines_by_skeda,
-		(SELECT p.location FROM prep_locations as p WHERE p.id = pos.loc_id_ki) as location,
+        SELECT 
+    pos.id,
+    pos.po,
+    pos.po_new,
+    posum.location_all,
+    pos.size,
+    pos.style,
+    pos.color,
+    pos.color_desc,
+    pos.flash,
+    pos.brand,
+    pos.skeda,
+    pos.total_order_qty,
+    pos.no_lines_by_skeda,
+    p.location,
 
-		(SELECT SUM(barcode_stocks.qty)  FROM barcode_stocks WHERE barcode_stocks.po_id = pos.id ) stock_b,
-		(SELECT SUM(barcode_requests.qty)  FROM barcode_requests WHERE barcode_requests.po_id = pos.id AND barcode_requests.status != 'error') request_b,
-		(SELECT SUM([barcode_ki_stocks].qty)  FROM [barcode_ki_stocks] WHERE [barcode_ki_stocks].po_id = pos.id AND [barcode_ki_stocks].status = 'to_receive') as to_receive_b,
-		(SELECT SUM([barcode_ki_stocks].qty)  FROM [barcode_ki_stocks] WHERE [barcode_ki_stocks].po_id = pos.id AND [barcode_ki_stocks].status != 'to_receive') as stockl_b,
-		(SELECT SUM([barcode_ki_stocks].qty)*(-1)  FROM [barcode_ki_stocks] WHERE [barcode_ki_stocks].po_id = pos.id AND [barcode_ki_stocks].type = 'in_line') as in_prod_b,
-        
-        (SELECT SUM(carelabel_stocks.qty)  FROM carelabel_stocks WHERE carelabel_stocks.po_id = pos.id ) stock_c,
-        (SELECT SUM(carelabel_requests.qty)  FROM carelabel_requests WHERE carelabel_requests.po_id = pos.id AND carelabel_requests.status != 'error') request_c,
-		(SELECT SUM([carelabel_ki_stocks].qty)  FROM [carelabel_ki_stocks] WHERE [carelabel_ki_stocks].po_id = pos.id AND [carelabel_ki_stocks].status = 'to_receive') as to_receive_c,
-		(SELECT SUM([carelabel_ki_stocks].qty)  FROM [carelabel_ki_stocks] WHERE [carelabel_ki_stocks].po_id = pos.id AND [carelabel_ki_stocks].status != 'to_receive') as stockl_c,
-		(SELECT SUM([carelabel_ki_stocks].qty)*(-1)  FROM [carelabel_ki_stocks] WHERE [carelabel_ki_stocks].po_id = pos.id AND [carelabel_ki_stocks].type = 'in_line') as in_prod_c
-		
-		FROM pos
-		LEFT JOIN [172.27.161.200].[posummary].dbo.pro as posum ON posum.po_new = pos.po_new
+    ISNULL(bs.stock_b, 0) AS stock_b,
+    ISNULL(br.request_b, 0) AS request_b,
+    ISNULL(bks.to_receive_b, 0) AS to_receive_b,
+    ISNULL(bks.stockl_b, 0) AS stockl_b,
+    ISNULL(bks.in_prod_b, 0) AS in_prod_b,
 
-		WHERE pos.closed_po = 'Open' AND posum.location_all = 'Kikinda'
-		GROUP BY	pos.id,
-					pos.po,
-					pos.po_new,
-					posum.location_all,
-					pos.size,
-					pos.style,
-					pos.color,
-					pos.color_desc,
-					--pos.season,
-					pos.flash,
-					pos.brand,
-					pos.skeda,
-					pos.total_order_qty,
-					pos.no_lines_by_skeda,
-					pos.loc_id_ki
+    ISNULL(cs.stock_c, 0) AS stock_c,
+    ISNULL(cr.request_c, 0) AS request_c,
+    ISNULL(cks.to_receive_c, 0) AS to_receive_c,
+    ISNULL(cks.stockl_c, 0) AS stockl_c,
+    ISNULL(cks.in_prod_c, 0) AS in_prod_c
 
-		ORDER BY pos.po asc,
-			     pos.size desc""")
+FROM pos
+LEFT JOIN prep_locations AS p ON p.id = pos.loc_id_ki
+LEFT JOIN [172.27.161.200].[posummary].dbo.pro AS posum ON posum.po_new = pos.po_new
+
+-- Barcode Stocks aggregation
+LEFT JOIN (
+    SELECT 
+        po_id,
+        SUM(qty) AS stock_b
+    FROM barcode_stocks
+    GROUP BY po_id
+) AS bs ON bs.po_id = pos.id
+
+LEFT JOIN (
+    SELECT 
+        po_id,
+        SUM(qty) AS request_b
+    FROM barcode_requests
+    WHERE status != 'error'
+    GROUP BY po_id
+) AS br ON br.po_id = pos.id
+
+LEFT JOIN (
+    SELECT 
+        po_id,
+        SUM(CASE WHEN status = 'to_receive' THEN qty ELSE 0 END) AS to_receive_b,
+        SUM(CASE WHEN status != 'to_receive' THEN qty ELSE 0 END) AS stockl_b,
+        SUM(CASE WHEN type = 'in_line' THEN qty * -1 ELSE 0 END) AS in_prod_b
+    FROM barcode_ki_stocks
+    GROUP BY po_id
+) AS bks ON bks.po_id = pos.id
+
+-- Carelabel Stocks aggregation
+LEFT JOIN (
+    SELECT 
+        po_id,
+        SUM(qty) AS stock_c
+    FROM carelabel_stocks
+    GROUP BY po_id
+) AS cs ON cs.po_id = pos.id
+
+LEFT JOIN (
+    SELECT 
+        po_id,
+        SUM(qty) AS request_c
+    FROM carelabel_requests
+    WHERE status != 'error'
+    GROUP BY po_id
+) AS cr ON cr.po_id = pos.id
+
+LEFT JOIN (
+    SELECT 
+        po_id,
+        SUM(CASE WHEN status = 'to_receive' THEN qty ELSE 0 END) AS to_receive_c,
+        SUM(CASE WHEN status != 'to_receive' THEN qty ELSE 0 END) AS stockl_c,
+        SUM(CASE WHEN type = 'in_line' THEN qty * -1 ELSE 0 END) AS in_prod_c
+    FROM carelabel_ki_stocks
+    GROUP BY po_id
+) AS cks ON cks.po_id = pos.id
+
+WHERE 
+    pos.closed_po = 'Open'
+    AND posum.location_all = 'Kikinda'
+
+ORDER BY 
+    pos.po ASC,
+    pos.size DESC;
+""")
         lines = cursor.fetchall()
         columns = [col[0] for col in cursor.description]
         data = [dict(zip(columns, row)) for row in lines]

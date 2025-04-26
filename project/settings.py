@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # 'debug_toolbar',
+
     'core',
     'preparation',
     'line',
@@ -60,6 +62,9 @@ MIDDLEWARE = [
 
     # 'django.middleware.cache.UpdateCacheMiddleware',
     # 'django.middleware.cache.FetchFromCacheMiddleware',
+
+    # 'django.middleware.common.CommonMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 
 ]
 
@@ -209,6 +214,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/preparation/'
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Path to the project directory
@@ -224,3 +230,8 @@ STATICFILES_DIRS = [
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# INTERNAL_IPS = [
+#     '127.0.0.1',
+# ]

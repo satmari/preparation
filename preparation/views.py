@@ -26,52 +26,62 @@ def preparation_dashboard(request):
 def po_stock(request):
     # return HttpResponse("po_stock view is working!")
     with connections['default'].cursor() as cursor:
-        cursor.execute("""
-        SELECT  pos.id,
-		pos.po,
-		posum.location_all,
-		pos.size,
-		pos.style,
-		pos.color,
-		pos.color_desc,
-		pos.flash,
-		pos.brand,
-		pos.skeda,
-		pos.total_order_qty,
-		pos.no_lines_by_skeda,
-		pos.hangtag,
-		(SELECT p.location FROM prep_locations as p WHERE p.id = pos.loc_id_su) as location,
-		
-		(SELECT SUM(barcode_stocks.qty)  FROM barcode_stocks WHERE barcode_stocks.po_id = pos.id ) stock_b,
-		(SELECT SUM(barcode_requests.qty)  FROM barcode_requests WHERE barcode_requests.po_id = pos.id AND barcode_requests.status != 'error') request_b,
-		(SELECT SUM(carelabel_stocks.qty)  FROM carelabel_stocks WHERE carelabel_stocks.po_id = pos.id ) stock_c,
-		(SELECT SUM(carelabel_requests.qty)  FROM carelabel_requests WHERE carelabel_requests.po_id = pos.id AND carelabel_requests.status != 'error') request_c
-		FROM pos
-		LEFT JOIN barcode_stocks ON barcode_stocks.po_id = pos.id
-		LEFT JOIN barcode_requests ON barcode_requests.po_id = pos.id
-		LEFT JOIN carelabel_stocks ON carelabel_stocks.po_id = pos.id
-		LEFT JOIN carelabel_requests ON carelabel_requests.po_id = pos.id
-		LEFT JOIN [172.27.161.200].[posummary].dbo.pro as posum ON posum.po_new = pos.po_new
-		WHERE pos.closed_po = 'Open'
-		GROUP BY	pos.id,
-					pos.po,
-					posum.location_all,
-					pos.po_new,
-					pos.size,
-					pos.style,
-					pos.color,
-					pos.color_desc,
-					pos.season,
-					pos.flash,
-					pos.brand,
-					pos.skeda,
-					pos.total_order_qty,
-					pos.hangtag,
-					pos.no_lines_by_skeda,
-					pos.loc_id_su
+        cursor.execute("""SELECT  
+    pos.id,
+    pos.po,
+    posum.location_all,
+    pos.size,
+    pos.style,
+    pos.color,
+    pos.color_desc,
+    pos.flash,
+    pos.brand,
+    pos.skeda,
+    pos.total_order_qty,
+    pos.no_lines_by_skeda,
+    pos.hangtag,
+    p.location,
 
-		ORDER BY pos.po asc,
-			     pos.size desc""")
+    bs.stock_b,
+    br.request_b,
+    cs.stock_c,
+    cr.request_c
+
+FROM pos
+
+LEFT JOIN prep_locations AS p ON p.id = pos.loc_id_su
+LEFT JOIN [172.27.161.200].[posummary].dbo.pro AS posum ON posum.po_new = pos.po_new
+
+-- Pre-aggregated subqueries
+LEFT JOIN (
+    SELECT po_id, SUM(qty) AS stock_b
+    FROM barcode_stocks
+    GROUP BY po_id
+) AS bs ON bs.po_id = pos.id
+
+LEFT JOIN (
+    SELECT po_id, SUM(qty) AS request_b
+    FROM barcode_requests
+    WHERE status != 'error'
+    GROUP BY po_id
+) AS br ON br.po_id = pos.id
+
+LEFT JOIN (
+    SELECT po_id, SUM(qty) AS stock_c
+    FROM carelabel_stocks
+    GROUP BY po_id
+) AS cs ON cs.po_id = pos.id
+
+LEFT JOIN (
+    SELECT po_id, SUM(qty) AS request_c
+    FROM carelabel_requests
+    WHERE status != 'error'
+    GROUP BY po_id
+) AS cr ON cr.po_id = pos.id
+
+WHERE pos.closed_po = 'Open'
+
+ORDER BY pos.po ASC, pos.size DESC""")
         lines = cursor.fetchall()
         columns = [col[0] for col in cursor.description]
         data = [dict(zip(columns, row)) for row in lines]
@@ -191,22 +201,49 @@ def barcode_requests(request, id=None, action=None):
     with connections['default'].cursor() as cursor:
         cursor.execute("""
             SELECT 
-                r.*, 
-                (SELECT SUM(barcode_stocks.qty) FROM barcode_stocks WHERE barcode_stocks.po_id = r.po_id) as stocks,
-                (SELECT SUM(barcode_requests.qty) FROM barcode_requests WHERE barcode_requests.po_id = r.po_id AND barcode_requests.status != 'error') as requests,
-                pos.total_order_qty,
-                pos.style,
-                pos.color,
-                pos.po_new
-            FROM barcode_requests as r
-            JOIN pos ON pos.id = r.po_id
-            WHERE 
-            (CAST(r.created_at AS DATE) = CAST(GETDATE() AS DATE) AND r.status NOT IN ('error'))
-            OR r.status = 'pending'
-            GROUP BY 
-            r.id, r.po_id, r.user_id, r.ponum, r.size, r.module, r.leader, r.status, r.type, r.comment, r.qty, r.created_at, r.updated_at,
-            pos.total_order_qty, pos.style, pos.color, pos.po_new
-            ORDER BY r.status desc, r.created_at asc
+    r.id,
+    r.po_id,
+    r.user_id,
+    r.ponum,
+    r.size,
+    r.module,
+    r.leader,
+    r.status,
+    r.type,
+    r.comment,
+    r.qty,
+    r.created_at,
+    r.updated_at,
+    pos.total_order_qty,
+    pos.style,
+    pos.color,
+    pos.po_new,
+    ISNULL(bs.stock_qty, 0) AS stocks,
+    ISNULL(br.request_qty, 0) AS requests
+FROM barcode_requests AS r
+JOIN pos ON pos.id = r.po_id
+
+-- Pre-aggregated stock sums
+LEFT JOIN (
+    SELECT po_id, SUM(qty) AS stock_qty
+    FROM barcode_stocks
+    GROUP BY po_id
+) AS bs ON bs.po_id = r.po_id
+
+-- Pre-aggregated request sums (excluding 'error')
+LEFT JOIN (
+    SELECT po_id, SUM(qty) AS request_qty
+    FROM barcode_requests
+    WHERE status != 'error'
+    GROUP BY po_id
+) AS br ON br.po_id = r.po_id
+
+WHERE 
+    (CAST(r.created_at AS DATE) = CAST(GETDATE() AS DATE) AND r.status NOT IN ('error'))
+    OR r.status = 'pending'
+ORDER BY 
+    r.status DESC,
+    r.created_at ASC;
         """)
 
         lines = cursor.fetchall()
@@ -321,24 +358,50 @@ def carelabel_requests(request, id=None, action=None):
     with connections['default'].cursor() as cursor:
         cursor.execute("""
             SELECT 
-                r.*, 
-                (SELECT SUM(carelabel_stocks.qty) FROM carelabel_stocks WHERE carelabel_stocks.po_id = r.po_id) as stocks,
-                (SELECT SUM(carelabel_requests.qty) FROM carelabel_requests WHERE carelabel_requests.po_id = r.po_id AND carelabel_requests.status != 'error') as requests,
-                pos.total_order_qty,
-                pos.style,
-                pos.color,
-                pos.po_new
-            FROM carelabel_requests as r
-            JOIN pos ON pos.id = r.po_id
-            WHERE 
-            (CAST(r.created_at AS DATE) = CAST(GETDATE() AS DATE) AND r.status NOT IN ('error'))
-            OR r.status = 'pending'
-            GROUP BY 
-            r.id, r.po_id, r.user_id, r.ponum, r.size, r.module, r.leader, r.status, r.type, r.comment, r.qty, r.created_at, r.updated_at,
-            pos.total_order_qty, pos.style, pos.color, pos.po_new
-            ORDER BY r.status desc, r.created_at asc
+    r.id,
+    r.po_id,
+    r.user_id,
+    r.ponum,
+    r.size,
+    r.module,
+    r.leader,
+    r.status,
+    r.type,
+    r.comment,
+    r.qty,
+    r.created_at,
+    r.updated_at,
+    pos.total_order_qty,
+    pos.style,
+    pos.color,
+    pos.po_new,
+    ISNULL(cs.stock_qty, 0) AS stocks,
+    ISNULL(cr.request_qty, 0) AS requests
+FROM carelabel_requests AS r
+JOIN pos ON pos.id = r.po_id
 
-        """)
+-- Pre-aggregated stock sums
+LEFT JOIN (
+    SELECT po_id, SUM(qty) AS stock_qty
+    FROM carelabel_stocks
+    GROUP BY po_id
+) AS cs ON cs.po_id = r.po_id
+
+-- Pre-aggregated request sums (excluding 'error')
+LEFT JOIN (
+    SELECT po_id, SUM(qty) AS request_qty
+    FROM carelabel_requests
+    WHERE status != 'error'
+    GROUP BY po_id
+) AS cr ON cr.po_id = r.po_id
+
+WHERE 
+    (CAST(r.created_at AS DATE) = CAST(GETDATE() AS DATE) AND r.status NOT IN ('error'))
+    OR r.status = 'pending'
+ORDER BY 
+    r.status DESC,
+    r.created_at ASC;
+""")
 
         lines = cursor.fetchall()
         columns = [col[0] for col in cursor.description]
@@ -481,20 +544,50 @@ def secondq_requests(request, id=None, action=None):
     with connections['default'].cursor() as cursor:
         cursor.execute("""
             SELECT 
-                r.*, 
-                (SELECT SUM(secondq_requests.qty) FROM secondq_requests WHERE secondq_requests.po_id = r.po_id) as stocks,
-                (SELECT SUM(secondq_requests.qty) FROM secondq_requests WHERE secondq_requests.po_id = r.po_id AND secondq_requests.status != 'error') as requests,
-                pos.total_order_qty,
-                pos.po_new
-            FROM secondq_requests as r
-            JOIN pos ON pos.id = r.po_id
-            WHERE 
-            (CAST(r.created_at AS DATE) = CAST(GETDATE() AS DATE) AND r.status NOT IN ('error'))
-            OR r.status = 'pending'
-            GROUP BY 
-            r.id, r.po_id, r.user_id, r.ponum, r.size, r.module, r.leader, r.status, r.type, r.comment, r.qty, r.created_at, r.updated_at,
-            pos.total_order_qty, r.style, r.color, r.materiale, r.tg2, r.[desc], r.ccc, r.cd, r.barcode, pos.po_new
-            ORDER BY r.status desc, r.created_at asc
+    r.id,
+    r.po_id,
+    r.user_id,
+    r.ponum,
+    r.size,
+    r.module,
+    r.leader,
+    r.status,
+    r.type,
+    r.comment,
+    r.qty,
+    r.created_at,
+    r.updated_at,
+    r.style,
+    r.color,
+    r.materiale,
+    r.tg2,
+    r.[desc],
+    r.ccc,
+    r.cd,
+    r.barcode,
+    pos.total_order_qty,
+    pos.po_new,
+    ISNULL(sr.stock_qty, 0) AS stocks,
+    ISNULL(sr.request_qty, 0) AS requests
+FROM secondq_requests AS r
+JOIN pos ON pos.id = r.po_id
+
+-- Pre-aggregated stock and request sums
+LEFT JOIN (
+    SELECT 
+        po_id,
+        SUM(qty) AS stock_qty,
+        SUM(CASE WHEN status != 'error' THEN qty ELSE 0 END) AS request_qty
+    FROM secondq_requests
+    GROUP BY po_id
+) AS sr ON sr.po_id = r.po_id
+
+WHERE 
+    (CAST(r.created_at AS DATE) = CAST(GETDATE() AS DATE) AND r.status NOT IN ('error'))
+    OR r.status = 'pending'
+ORDER BY 
+    r.status DESC,
+    r.created_at ASC
         """)
 
         lines = cursor.fetchall()

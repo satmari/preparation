@@ -17,6 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 # from preparation.admin import custom_admin_site
+from django.conf.urls.static import static
+
+import debug_toolbar
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,3 +33,10 @@ urlpatterns = [
     path('kikinda/', include('kikinda.urls')),
     path('senta/', include('senta.urls')),
 ]
+
+
+# if settings.DEBUG:
+#     urlpatterns += [
+#         path('__debug__/', include(debug_toolbar.urls)),
+#     ]
+#     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
