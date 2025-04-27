@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-bmxc-h$+cflwf&+g#5r9onr-t-b(+eztq(mz2^dyp++m^f0ni1
 DEBUG = True
 
 ALLOWED_HOSTS = ['172.27.161.193', 'localhost', '127.0.0.1']
-FORCE_SCRIPT_NAME = '/preparationApp'
+FORCE_SCRIPT_NAME = '/preparation'
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # 'debug_toolbar',
+    'debug_toolbar',
 
     'core',
     'preparation',
@@ -63,8 +63,8 @@ MIDDLEWARE = [
     # 'django.middleware.cache.UpdateCacheMiddleware',
     # 'django.middleware.cache.FetchFromCacheMiddleware',
 
-    # 'django.middleware.common.CommonMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 
 ]
 
