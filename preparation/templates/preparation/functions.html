@@ -3,21 +3,23 @@
 {% load static %}
 {% block content %}
 <div class="container mt-4 text-center">
-    <h2 class="mb-4">Functions</h2>
-
-    <div class="d-grid gap-3">
-        <a href="{% url 'preparation:add_to_stock' %}" class="btn btn-light border w-25 mx-auto">Add to Stock</a>
-        <a href="{% url 'preparation:back_from_module' %}" class="btn btn-light border w-25 mx-auto">Back from module</a>
-        <a href="{% url 'preparation:reduce_from_stock' %}" class="btn btn-light border w-25 mx-auto">Reduce from Stock</a>
-        <a href="{% url 'preparation:manual_request' %}" class="btn btn-light border w-25 mx-auto">Manual request</a>
+    <div class="panel panel-default mx-auto" style="width: 400px;">
+        <div class="panel-heading"><strong>Functions</strong></div>
         <br>
-        <a href="{% url 'preparation:transfer_to_kikinda' %}" class="btn btn-light border w-25 mx-auto">Transfer to Kikinda</a>
-        <a href="{% url 'preparation:transfer_to_senta' %}" class="btn btn-light border w-25 mx-auto">Transfer to Senta</a>
-        <br>
-        <a href="{% url 'preparation:throw_away' %}" class="btn btn-light border w-25 mx-auto">Throw away</a>
-        <a href="{% url 'preparation:leftover' %}" class="btn btn-light border w-25 mx-auto">Leftover</a>
-  </div>
 
+            <div class="d-grid gap-3">
+                <a href="{% url 'preparation:add_to_stock' %}" class="btn btn-light border w-100 mx-auto">Add to Stock</a>
+                <a href="{% url 'preparation:back_from_module' %}" class="btn btn-light border w-100 mx-auto">Back from module</a>
+                <a href="{% url 'preparation:reduce_from_stock' %}" class="btn btn-light border w-100 mx-auto">Reduce from Stock</a>
+                <a href="{% url 'preparation:manual_request' %}" class="btn btn-light border w-100 mx-auto">Manual request</a>
+                <br>
+                <a href="{% url 'preparation:transfer_to_kikinda' %}" class="btn btn-light border w-100 mx-auto">Transfer to Kikinda</a>
+                <a href="{% url 'preparation:transfer_to_senta' %}" class="btn btn-light border w-100 mx-auto">Transfer to Senta</a>
+                <br>
+                <a href="{% url 'preparation:throw_away' %}" class="btn btn-light border w-100 mx-auto">Throw away</a>
+                <a href="{% url 'preparation:leftover' %}" class="btn btn-light border w-100 mx-auto">Leftover</a>
+            </div>
+    </div>
 </div>
 {% endblock %}
 

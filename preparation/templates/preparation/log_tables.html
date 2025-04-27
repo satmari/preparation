@@ -57,19 +57,24 @@
     </div>
 
 {% else %}
-    <div class="container mt-4 text-center">
-        <h2 class="mb-4">Log tables</h2>
+<div class="container mt-4 text-center">
+    <div class="panel panel-default mx-auto" style="width: 400px;">
+        <div class="panel-heading"><strong>Log tables</strong></div>
+        <br>
 
         <div class="d-grid gap-3">
-            <a href="{% url 'preparation:log_tables_action' 'stock_b' %}" class="btn btn-light border w-25 mx-auto">Barcode stock</a>
-            <a href="{% url 'preparation:log_tables_action' 'request_b' %}" class="btn btn-light border w-25 mx-auto">Barcode requests</a>
+            <a href="{% url 'preparation:log_tables_action' 'stock_b' %}" class="btn btn-light border w-100 mx-auto">Barcode stock</a>
+            <a href="{% url 'preparation:log_tables_action' 'request_b' %}" class="btn btn-light border w-100 mx-auto">Barcode requests</a>
             <br>
-            <a href="{% url 'preparation:log_tables_action' 'stock_c' %}" class="btn btn-light border w-25 mx-auto">Carelabel stock</a>
-            <a href="{% url 'preparation:log_tables_action' 'request_c' %}" class="btn btn-light border w-25 mx-auto">Carelabel requests</a>
+            <a href="{% url 'preparation:log_tables_action' 'stock_c' %}" class="btn btn-light border w-100 mx-auto">Carelabel stock</a>
+            <a href="{% url 'preparation:log_tables_action' 'request_c' %}" class="btn btn-light border w-100 mx-auto">Carelabel requests</a>
             <br>
-            <a href="{% url 'preparation:log_tables_action' 'request_s' %}" class="btn btn-light border w-25 mx-auto">SecondQ requests</a>
-      </div>
+            <a href="{% url 'preparation:log_tables_action' 'request_s' %}" class="btn btn-light border w-100 mx-auto">SecondQ requests</a>
+        </div>
+
     </div>
+</div>
+
 {% endif %}
 
 {% endblock %}
