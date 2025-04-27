@@ -80,6 +80,17 @@
         </tbody>
     </table>
 </div>
+{% else %}
+    {% if not request_data %}
+        <div class="container-fluid">
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <h2 style="margin-right: 10px;">Second quality request table</h2>
+            </div>
+
+                Request table is empty
+            </div>
+        </div>
+    {% endif %}
 {% endif %}
 
 {% if request_data %}

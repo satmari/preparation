@@ -33,10 +33,12 @@
                 <th></th>
                 <th>PO</th>
                 <th>Size</th>
+                <th>Qty</th>
                 <th>Style</th>
                 <th>Color</th>
+                <th>Line</th>
+                <th>Leader</th>
                 <th>Status</th>
-                <th>Qty</th>
                 <th>Comment</th>
                 <th style="background-color: deepskyblue">C to print</th>
                 <th style="background-color: deepskyblue">C on stock</th>
@@ -50,12 +52,14 @@
                 <td><a href="{% url 'preparation:carelabel_request_action' 'edit' req.id %}" class="btn btn-primary w-100 btn-sm">Edit</a></td>
                 <td>{{ req.po_new }}</td>
                 <td>{{ req.size }}</td>
+                <td>{{ req.qty }}</td>
                 <td>{{ req.style }}</td>
                 <td>{{ req.color }}</td>
+                <td>{{ req.module }}</td>
+                <td>{{ req.leader }}</td>
                 <td style="background-color: {% if req.status|lower == 'pending' %}#f8d7da{% elif req.status|lower == 'confirmed' %}#d4edda{% endif %}; color: #000;">
                     {{ req.status }}
                 </td>
-                <td>{{ req.qty }}</td>
                 <td>{{ req.comment }}</td>
                 <td>{{ req.to_print_c }}</td>
                 <td>{{ req.on_stock_c }}</td>
@@ -66,6 +70,17 @@
         </tbody>
     </table>
 </div>
+{% else %}
+    {% if not request_data %}
+        <div class="container-fluid">
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <h2 style="margin-right: 10px;">Carelabel request table</h2>
+            </div>
+
+                Request table is empty
+            </div>
+        </div>
+    {% endif %}
 {% endif %}
 
 {% if request_data %}
@@ -107,7 +122,8 @@
 
                     <div class="panel-body mt-3">
                         <label id="qty">Qty/Količina:</label>
-                        <input type="number" name="qty" class="form-control" value="{{ request_data.qty }}" min="1" required>
+                        <input type="number" name="qty" class="form-control" value="{{ request_data.qty|default:'' }}" min="1" required>
+
                     </div>
                     <br>
 
@@ -127,7 +143,21 @@
     </div>
 </div>
 {% endif %}
+{% if success_msg %}
+                <div class="alert alert-success " role="alert">
+                    {{ success_msg }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
 
+            {% if errors %}
+                <div class="alert alert-danger " role="alert">
+                    {% for error in errors %}
+                        <div>{{ error }}</div>
+                    {% endfor %}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
 
 {% endblock %}
 

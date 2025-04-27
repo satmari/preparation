@@ -40,8 +40,8 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'core:main_page' %}">Preparation App</a>
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'core:main_page' %}">&nbsp; &nbsp; Preparation</a>
 
             <div class="collapse navbar-collapse justify-content-between">
                 <ul class="navbar-nav">
@@ -88,6 +88,16 @@
                         {% endif %}
 
                         {% if is_line %}
+
+                            <a class="navbar-brand" href="#">|</a>
+				        	<a class="navbar-brand" href="http://172.27.161.171/trebovanje"><b>Trebovanje</b></a>
+                            <a class="navbar-brand" href="#">|</a>
+                            <!-- <a class="navbar-brand" href="http://172.27.161.171/downtime"><b>Downtime</b></a>
+                            <a class="navbar-brand" href="#">|</a> -->
+                            <a class="navbar-brand" href="http://172.27.161.171/cutting"><b>Cutting</b></a>
+                            <a class="navbar-brand" href="#">|</a>
+
+
                             <li class="nav-item">
                                 <a class="nav-link pos-link" href="{% url 'line:request_history' 'b' user.username %}">Barcode History</a>
                             </li>

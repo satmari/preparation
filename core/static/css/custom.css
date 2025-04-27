@@ -52,3 +52,15 @@ div.panel.panel-default {
 .alert.fade-out {
   display: none;
 }
+
+.navbar {
+    border-color: #080808 !important;
+    background-image: linear-gradient(rgb(234, 234, 234),
+        rgb(90, 85, 85) 60%,
+        rgba(148, 148, 148, 0.92)) !important;
+    border: 1px solid transparent;
+}
+
+.navbar-nav .pos-link {
+    color: #eee !important;
+}
