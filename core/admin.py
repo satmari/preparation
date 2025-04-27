@@ -7,6 +7,8 @@ import openpyxl
 from django.http import HttpResponse
 
 
+
+
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
     list_display = ['username', 'group_names', 'is_staff', 'is_active']
@@ -96,4 +98,63 @@ class PosAdmin(admin.ModelAdmin):
     list_filter = ('po', 'style' ,'closed_po')
     actions = [export_pos_to_excel]  # Add export action
 
+
+# Register models manually
+@admin.register(BarcodeStocks)
+class BarcodeStocksAdmin(admin.ModelAdmin):
+    list_display = ('id', 'po_id', 'user_id', 'ponum', 'size', 'qty', 'module', 'status')
+    search_fields = ('ponum',)
+
+@admin.register(CarelabelStocks)
+class CarelabelStocksAdmin(admin.ModelAdmin):
+    list_display = ('id', 'po_id', 'user_id', 'ponum', 'size', 'qty', 'module', 'status')
+    search_fields = ('ponum',)
+
+@admin.register(BarcodeRequests)
+class BarcodeRequestsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'po_id', 'user_id', 'ponum', 'size', 'qty', 'module', 'status')
+    search_fields = ('ponum',)
+
+@admin.register(CarelabelRequests)
+class CarelabelRequestsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'po_id', 'user_id', 'ponum', 'size', 'qty', 'module', 'status')
+    search_fields = ('ponum',)
+
+
+@admin.register(BarcodeKIStocks)
+class BarcodeKIStocksAdmin(admin.ModelAdmin):
+    list_display = ('id', 'po_id', 'user_id', 'ponum', 'size', 'qty', 'module', 'status')
+    search_fields = ('ponum',)
+
+@admin.register(CarelabelKIStocks)
+class CarelabelKIStocksAdmin(admin.ModelAdmin):
+    list_display = ('id', 'po_id', 'user_id', 'ponum', 'size', 'qty', 'module', 'status')
+    search_fields = ('ponum',)
+
+@admin.register(BarcodeSEStocks)
+class BarcodeSEStocksAdmin(admin.ModelAdmin):
+    list_display = ('id', 'po_id', 'user_id', 'ponum', 'size', 'qty', 'module', 'status')
+    search_fields = ('ponum',)
+
+@admin.register(CarelabelSEStocks)
+class CarelabelSEStocksAdmin(admin.ModelAdmin):
+    list_display = ('id', 'po_id', 'user_id', 'ponum', 'size', 'qty', 'module', 'status')
+    search_fields = ('ponum',)
+
+@admin.register(ThrowAway)
+class ThrowAwayAdmin(admin.ModelAdmin):
+    list_display = ('id', 'material', 'type', 'qty', 'created_at')
+
+@admin.register(Leftovers)
+class LeftoversAdmin(admin.ModelAdmin):
+    list_display = ('id', 'material', 'sku', 'price', 'qty', 'status', 'location')
+
+@admin.register(PrepLocations)
+class PrepLocationsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'location', 'location_desc', 'location_plant')
+
+@admin.register(SecondQRequests)
+class SecondQRequestsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'po_id', 'user_id', 'ponum', 'size', 'qty', 'module', 'status')
+    search_fields = ('ponum',)
 

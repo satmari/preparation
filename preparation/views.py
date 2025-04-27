@@ -12,7 +12,7 @@ from django.db import connection, connections, transaction
 from django.contrib import messages
 #from django.http import JsonResponse
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.http import HttpResponse, JsonResponse
 import logging
 logger = logging.getLogger(__name__)
@@ -1775,35 +1775,35 @@ def log_tables(request, action=None):
 
         elif action == 'stock_b':
             # return HttpResponse('stock b')
-            data = BarcodeStocks.objects.all().order_by('-created_at')
+            data = BarcodeStocks.objects.filter(created_at__gte=datetime.now() - timedelta(days=365)).order_by('-created_at')
             title = 'Barcode Stock'
             type = 's'
             return render(request, 'preparation/log_tables.html', {'data':data, 'title':title, 'type':type})
 
         elif action == 'request_b':
             # return HttpResponse('request b')
-            data = BarcodeRequests.objects.all().order_by('-created_at')
+            data = BarcodeRequests.objects.filter(created_at__gte=datetime.now() - timedelta(days=365)).order_by('-created_at')
             title = 'Barcode Requests'
             type = 'r'
             return render(request, 'preparation/log_tables.html', {'data': data, 'title': title, 'type':type})
 
         elif action == 'stock_c':
             # return HttpResponse('stock c')
-            data = CarelabelStocks.objects.all().order_by('-created_at')
+            data = CarelabelStocks.objects.filter(created_at__gte=datetime.now() - timedelta(days=365)).order_by('-created_at')
             title = 'Carelabel Stock'
             type = 's'
             return render(request, 'preparation/log_tables.html', {'data': data, 'title': title, 'type':type})
 
         elif action == 'request_c':
             # return HttpResponse('request c')
-            data = CarelabelRequests.objects.all().order_by('-created_at')
+            data = CarelabelRequests.objects.filter(created_at__gte=datetime.now() - timedelta(days=365)).order_by('-created_at')
             title = 'Carelabel Requests'
             type = 'r'
             return render(request, 'preparation/log_tables.html', {'data': data, 'title': title, 'type':type})
 
         elif action == 'request_s':
             # return HttpResponse('request s')
-            data = SecondQRequests.objects.all().order_by('-created_at')
+            data = SecondQRequests.objects.filter(created_at__gte=datetime.now() - timedelta(days=365)).order_by('-created_at')
             title = 'Second quality requests'
             type = '2'
             return render(request, 'preparation/log_tables.html', {'data': data, 'title': title, 'type':type})
