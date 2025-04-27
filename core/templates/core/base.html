@@ -64,13 +64,13 @@
                                 <a class="nav-link pos-link" href="{% url 'preparation:functions' %}"><b>Functions</b></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link pos-link" href="{% url 'preparation:barcode_requests' %}">Barcode requests</a>
+                                <a class="nav-link pos-link" href="{% url 'preparation:barcode_requests' %}"><span style="color:darkseagreen">Barcode requests</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link pos-link" href="{% url 'preparation:carelabel_requests' %}">Carelabel requests</a>
+                                <a class="nav-link pos-link" href="{% url 'preparation:carelabel_requests' %}"><span style="color:deepskyblue">Carelabel requests</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link pos-link" href="{% url 'preparation:secondq_requests' %}">II Quality requests</a>
+                                <a class="nav-link pos-link" href="{% url 'preparation:secondq_requests' %}"><span style="color:orange">SecondQ requests</span></span></a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link pos-link" href="{% url 'preparation:leftover_table' %}">Leftover</a>
@@ -164,16 +164,31 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        // Auto fade-out alerts
         const alerts = document.querySelectorAll('.alert');
         alerts.forEach(alert => {
-            // Add fade-out after a short delay
             setTimeout(() => {
                 alert.classList.remove('show');
                 alert.classList.add('fade');
-            }, 4000);  // 4 seconds delay before fading out
+            }, 4000); // 4 seconds delay before fading out
+        });
+
+        // Auto focus on Select2 search field when dropdown opens
+        const selects = document.querySelectorAll('.select2');
+        selects.forEach(select => {
+            $(select).select2({
+                dropdownAutoWidth: true,
+                width: '100%'
+            }).on('select2:open', function () {
+                let searchField = document.querySelector('.select2-container--open .select2-search__field');
+                if (searchField) {
+                    searchField.focus();
+                }
+            });
         });
     });
 </script>
+
 <script>
 <!--    document.addEventListener("DOMContentLoaded", function() {-->
 <!--        const alerts = document.querySelectorAll('.alert');-->

@@ -70,3 +70,7 @@ div.panel.panel-default {
 .alert.fade-out {
   display: none;
 }
+
+.btn-group-sm>.btn, .btn-sm {
+    --bs-btn-padding-y: 0 !important;
+}
