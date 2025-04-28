@@ -85,6 +85,9 @@
                 <th>SAP Material</th>
                 <th>Skeda</th>
                 <th>No Lines By Skeda</th>
+                <th>Loc ID SU</th>
+                <th>Loc ID KI</th>
+                <th>Loc ID SE</th>
                 <th>Updated</th>
                 <th></th>
             </tr>
@@ -107,6 +110,9 @@
                 <td>{{ pos.sap_material }}</td>
                 <td>{{ pos.skeda }}</td>
                 <td>{{ pos.no_lines_by_skeda }}</td>
+                <td>{{ pos.loc_id_su }}</td>
+                <td>{{ pos.loc_id_ki }}</td>
+                <td>{{ pos.loc_id_se }}</td>
                 <td>{{ pos.updated_at|date:"Y-m-d H:i" }}</td>
                 <td><a href="{% url 'preparation:edit_pos' pos.id %}" class="btn btn-primary btn-sm">Edit</a></td>
             </tr>
@@ -125,7 +131,7 @@
             paging: true,
             ordering: true,
             searching: true,
-            pageLength: 10,
+            pageLength: 20,
             lengthMenu: [10, 20, 50, 100, 500, 1000],
             responsive: true,
             scrollCollapse: true,  // Allow table to shrink
