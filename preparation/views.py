@@ -499,7 +499,7 @@ def secondq_requests(request, id=None, action=None):
 
 
         elif action == "update":
-            # return HttpResponse("Update action executed.")
+            return HttpResponse("Update action executed.")
 
             pending_requests = SecondQRequests.objects.using('default').filter(status='pending')
 
