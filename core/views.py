@@ -1,9 +1,10 @@
 #core\views.py
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login
 import openpyxl
-from core.models import CustomUser
+from core.models import *
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from django.contrib.auth.models import Group
@@ -81,53 +82,131 @@ def admin_dashboard(request):
     # return render(request, 'core/admin_dashboard.html', {'is_admin': is_admin})
 
 def import_users(request):
-    if request.method == "POST" and request.FILES['file']:
+    import_source = request.POST.get('import_source')
+
+    if request.method == "POST" and request.FILES.get('file'):
+
         file = request.FILES['file']
-        try:
-            # Open the Excel file
-            wb = openpyxl.load_workbook(file)
-            sheet = wb.active
-            users_added = 0
-            users_failed = 0
 
-            for row in sheet.iter_rows(min_row=2, values_only=True):
-                username, password, group_name = row
+        if import_source == 'import_users':
+            try:
+                wb = openpyxl.load_workbook(file)
+                sheet = wb.active
+                users_added = 0
+                users_failed = 0
 
-                # Check if username exists
-                if CustomUser.objects.filter(username=username).exists():
-                    users_failed += 1
-                    continue
+                for row in sheet.iter_rows(min_row=2, values_only=True):
+                    username, password, group_name = row
 
-                # Hash password
-                hashed_password = make_password(password)
+                    if CustomUser.objects.filter(username=username).exists():
+                        users_failed += 1
+                        continue
 
-                # Create or update user
-                user = CustomUser.objects.create(username=username, password=hashed_password)
+                    hashed_password = make_password(password)
+                    user = CustomUser.objects.create(username=username, password=hashed_password)
 
-                # # Optionally, add to superuser or specific group
-                # if username == "superadmin":  # Replace this condition with your superadmin check logic
-                #     user.is_superuser = True
-                #     user.is_staff = True
-                #     user.save()
+                    group, created = Group.objects.get_or_create(name=group_name)
+                    user.groups.add(group)
 
-                # Retrieve or create the group
-                group, created = Group.objects.get_or_create(name=group_name)
+                    users_added += 1
 
-                # Assign the user to the group
-                user.groups.add(group)
+                messages.success(request, f'Users imported successfully! Added: {users_added}, Failed: {users_failed}')
+                return redirect('admin:core_customuser_changelist')
 
-                users_added += 1
+            except Exception as e:
+                messages.error(request, f"Error: {str(e)}")
+                return redirect('admin:core_customuser_changelist')
 
-            # return JsonResponse({'status': 'success', 'users_added': users_added, 'users_failed': users_failed})
-            messages.success(request, 'Users imported successfully!')
-            # return HttpResponse('Imported users successfully.')
-            return redirect('admin:core_customuser_changelist')
+        elif import_source == 'import_kistock':
+            try:
+                wb = openpyxl.load_workbook(file)
+                sheet = wb.active
+                added = 0
+                failed = 0
 
-        # except Exception as e:
-        #     return JsonResponse({'status': 'error', 'message': str(e)})
-        except Exception as e:
-            # return HttpResponse(f"Error: {str(e)}")
-            messages.error(request, f"Error: {str(e)}")
+                for row in sheet.iter_rows(min_row=2, values_only=True):
+                    commesa, accessory, stock = row
+
+                    try:
+                        pos = Pos.objects.get(po=commesa)
+                    except Pos.DoesNotExist:
+                        failed += 1
+                        continue
+
+                    if accessory.lower() == "barcode":
+                        BarcodeKIStocks.objects.create(
+                            po_id=pos.id,
+                            user_id=request.user.id,
+                            ponum=pos.po,
+                            size=pos.size,
+                            qty=stock,
+                            qty_to_receive=None,
+                            module='',
+                            status='stock',
+                            type=''
+                        )
+                        added += 1
+
+                    elif accessory.lower() == "carelabel":
+                        CarelabelKIStocks.objects.create(
+                            po_id=pos.id,
+                            user_id=request.user.id,
+                            ponum=pos.po,
+                            size=pos.size,
+                            qty=stock,
+                            qty_to_receive=None,
+                            module='',
+                            status='stock',
+                            type=''
+                        )
+                        added += 1
+
+                    else:
+                        failed += 1
+
+                messages.success(request, f'Imported stock successfully! Added: {added}, Failed: {failed}')
+                return redirect('admin:core_customuser_changelist')
+
+            except Exception as e:
+                messages.error(request, f"Error: {str(e)}")
+                return redirect('admin:core_customuser_changelist')
+
+        elif import_source == 'import_ki_po_loc':
+
+            try:
+                wb = openpyxl.load_workbook(file)
+                sheet = wb.active
+                added = 0
+                failed = 0
+
+                for row in sheet.iter_rows(min_row=2, values_only=True):
+                    commesa, location_name = row
+                    try:
+                        pos = Pos.objects.get(po=commesa)
+
+                    except Pos.DoesNotExist:
+                        failed += 1
+                        continue
+                    try:
+                        location = PrepLocations.objects.get(location=location_name)
+                    except PrepLocations.DoesNotExist:
+
+                        failed += 1
+                        continue
+
+                    # Update the KI location ID
+                    pos.loc_id_ki = location.id
+                    pos.save()
+                    added += 1
+                messages.success(request, f'Location update successful! Added: {added}, Failed: {failed}')
+                return redirect('admin:core_customuser_changelist')
+
+            except Exception as e:
+                messages.error(request, f"Error: {str(e)}")
+                return redirect('admin:core_customuser_changelist')
+
+        else:
+            messages.error(request, 'Invalid import source.')
             return redirect('admin:core_customuser_changelist')
 
     return render(request, 'core/import_users.html')

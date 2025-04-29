@@ -5,8 +5,29 @@
   <h1>Import Users</h1>
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
+    <input type="hidden" name="import_source" value="import_users">
     <label for="file">Upload Excel File:</label>
     <input type="file" name="file" id="file" required>
+    <button type="submit">Import</button>
+  </form>
+
+<hr>
+<h1>Import Ki_Stock</h1>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="import_source" value="import_kistock">
+    <label for="file">Upload Excel File:</label>
+    <input type="file" name="file" id="file1" required>
+    <button type="submit">Import</button>
+  </form>
+
+<hr>
+<h1>Import PO Loc Ki</h1>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="import_source" value="import_ki_po_loc">
+    <label for="file">Upload Excel File:</label>
+    <input type="file" name="file" id="file2" required>
     <button type="submit">Import</button>
   </form>
 {% endblock %}

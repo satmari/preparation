@@ -1421,7 +1421,7 @@ def manual_request(request):
         # print(request.POST)
         po_num = request.POST.get('po')
         qty = int(request.POST.get('qty') or 0)
-        print(qty)
+        # print(qty)
         barcode = request.POST.get('barcode', '0')
         carelabel = request.POST.get('carelabel', '0')
         modul = request.POST.get('modul')
@@ -1447,7 +1447,7 @@ def manual_request(request):
         if barcode != '0':
 
             if not errors:  # Proceed if no errors so far
-                # try:
+                try:
                     BarcodeRequests.objects.create(
                         po_id=po.id,
                         user_id=request.user.id,
@@ -1462,14 +1462,14 @@ def manual_request(request):
 
                     )
                     success_msg += "Barcode manual Requests uspesno snimljen. <br>"  # Append the success message
-                # except Exception as e:
-                #     errors.append("Problem saving to Barcode manual Requests table")
+                except Exception as e:
+                    errors.append("Problem saving to Barcode manual Requests table")
 
         # Handle carelabel
         if carelabel != '0':
 
             if not errors:  # Proceed if no errors so far
-                # try:
+                try:
                     CarelabelRequests.objects.create(
                         po_id=po.id,
                         user_id=request.user.id,
@@ -1484,8 +1484,8 @@ def manual_request(request):
 
                     )
                     success_msg += "Carelabel manual Requests uspesno snimljen."  # Append the success message
-                # except Exception as e:
-                #     errors.append("Problem saving to Carelabel manual Requests table")
+                except Exception as e:
+                    errors.append("Problem saving to Carelabel manual Requests table")
 
         if carelabel == '0' and barcode == '0':
             errors.append("Nije oznacen ni barcode ni carelabel")
@@ -1775,35 +1775,35 @@ def log_tables(request, action=None):
 
         elif action == 'stock_b':
             # return HttpResponse('stock b')
-            data = BarcodeStocks.objects.filter(created_at__gte=datetime.now() - timedelta(days=365)).order_by('-created_at')
+            data = BarcodeStocks.objects.filter(created_at__gte=datetime.now() - timedelta(days=183)).order_by('-created_at')
             title = 'Barcode Stock'
             type = 's'
             return render(request, 'preparation/log_tables.html', {'data':data, 'title':title, 'type':type})
 
         elif action == 'request_b':
             # return HttpResponse('request b')
-            data = BarcodeRequests.objects.filter(created_at__gte=datetime.now() - timedelta(days=365)).order_by('-created_at')
+            data = BarcodeRequests.objects.filter(created_at__gte=datetime.now() - timedelta(days=183)).order_by('-created_at')
             title = 'Barcode Requests'
             type = 'r'
             return render(request, 'preparation/log_tables.html', {'data': data, 'title': title, 'type':type})
 
         elif action == 'stock_c':
             # return HttpResponse('stock c')
-            data = CarelabelStocks.objects.filter(created_at__gte=datetime.now() - timedelta(days=365)).order_by('-created_at')
+            data = CarelabelStocks.objects.filter(created_at__gte=datetime.now() - timedelta(days=183)).order_by('-created_at')
             title = 'Carelabel Stock'
             type = 's'
             return render(request, 'preparation/log_tables.html', {'data': data, 'title': title, 'type':type})
 
         elif action == 'request_c':
             # return HttpResponse('request c')
-            data = CarelabelRequests.objects.filter(created_at__gte=datetime.now() - timedelta(days=365)).order_by('-created_at')
+            data = CarelabelRequests.objects.filter(created_at__gte=datetime.now() - timedelta(days=183)).order_by('-created_at')
             title = 'Carelabel Requests'
             type = 'r'
             return render(request, 'preparation/log_tables.html', {'data': data, 'title': title, 'type':type})
 
         elif action == 'request_s':
             # return HttpResponse('request s')
-            data = SecondQRequests.objects.filter(created_at__gte=datetime.now() - timedelta(days=365)).order_by('-created_at')
+            data = SecondQRequests.objects.filter(created_at__gte=datetime.now() - timedelta(days=183)).order_by('-created_at')
             title = 'Second quality requests'
             type = '2'
             return render(request, 'preparation/log_tables.html', {'data': data, 'title': title, 'type':type})
