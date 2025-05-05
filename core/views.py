@@ -172,7 +172,6 @@ def import_users(request):
                 return redirect('admin:core_customuser_changelist')
 
         elif import_source == 'import_ki_po_loc':
-
             try:
                 wb = openpyxl.load_workbook(file)
                 sheet = wb.active
@@ -183,8 +182,8 @@ def import_users(request):
                     commesa, location_name = row
                     try:
                         pos = Pos.objects.get(po=commesa)
-
                     except Pos.DoesNotExist:
+
                         failed += 1
                         continue
                     try:

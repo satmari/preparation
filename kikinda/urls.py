@@ -19,5 +19,4 @@ urlpatterns = [
     path('return_to_main/', views.return_to_main, name='return_to_main'),
     path('reduce_from_stock/', views.reduce_from_stock, name='reduce_from_stock'),
 
-
 ]

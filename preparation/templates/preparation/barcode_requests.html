@@ -49,7 +49,7 @@
             {% for req in data %}
             <tr>
                 <td><a href="{% url 'preparation:barcode_request_action' 'edit' req.id %}" class="btn btn-primary w-100 btn-sm">Edit</a></td>
-                <td>{{ req.po_new }}</td>
+                <td><b>{{ req.po_new }}</b></td>
                 <td>{{ req.size }}</td>
                 <td>{{ req.qty }}</td>
                 <td>{{ req.style }}</td>
@@ -60,7 +60,10 @@
                     {{ req.status }}
                 </td>
                 <td>{{ req.comment }}</td>
-                <td>{{ req.to_print_b }}</td>
+                <td class="{% if req.to_print_b|add:0 == 0 %}zuto
+                           {% elif req.to_print_b|add:0 > 0 %}zeleno
+                           {% elif req.to_print_b|add:0 < 0 %}crveno
+                           {% endif %}"><b>{{ req.to_print_b }}</b></td>
                 <td>{{ req.on_stock_b }}</td>
 
                 <td>{{ req.created_at|date:"Y-m-d H:i" }}</td>

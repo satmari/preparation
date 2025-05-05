@@ -74,3 +74,13 @@ div.panel.panel-default {
 .btn-group-sm>.btn, .btn-sm {
     --bs-btn-padding-y: 0 !important;
 }
+
+.zuto{
+    background-color: #FFFC98 !important;
+}
+.zeleno {
+    background-color: #98FFB3 !important;
+}
+.crveno {
+    background-color: #FF9F9F !important;
+}

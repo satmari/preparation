@@ -88,18 +88,18 @@ ORDER BY pos.po ASC, pos.size DESC""")
 
         for row in data:
             total_order_qty = row.get('total_order_qty') or 0
-            row['95'] = round(total_order_qty * 0.95,1)
+            row['90'] = round(total_order_qty * 0.90,0)
 
             stock_b = row.get('stock_b') or 0
             request_b = row.get('request_b') or 0
-            row['stock_percentage_b'] = round((stock_b / total_order_qty * 100), 2) if total_order_qty else 0
+            row['stock_percentage_b'] = round((stock_b / total_order_qty * 100), 1) if total_order_qty else 0
             row['to_print_b'] = total_order_qty - stock_b
             row['on_stock_b'] = stock_b - request_b
             row['request_b'] = request_b
 
             stock_c = row.get('stock_c') or 0
             request_c = row.get('request_c') or 0
-            row['stock_percentage_c'] = round((stock_c / total_order_qty * 100), 2) if total_order_qty else 0
+            row['stock_percentage_c'] = round((stock_c / total_order_qty * 100), 1) if total_order_qty else 0
             row['to_print_c'] = total_order_qty - stock_c
             row['on_stock_c'] = stock_c - request_c
             row['request_c'] = request_c

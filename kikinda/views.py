@@ -117,8 +117,8 @@ LEFT JOIN (
 ) AS cks ON cks.po_id = pos.id
 
 WHERE 
-    pos.closed_po = 'Open'
-    AND posum.location_all = 'Kikinda'
+    pos.closed_po = 'Open' AND
+    posum.location_all = 'Kikinda'
 
 ORDER BY 
     pos.po ASC,
@@ -895,3 +895,4 @@ def reduce_from_stock(request):
         'pos': pos,
 
     })
+
