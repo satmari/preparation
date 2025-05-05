@@ -968,9 +968,9 @@ def back_from_module(request):
                         user_id=request.user.id,
                         ponum=po_num,
                         size=po.size,
-                        qty=int(qty) * (-1),  # negative qty
+                        qty=int(qty) ,  # negative qty
                         module=modul,
-                        type="return_from_line",
+                        type="in_line",
                         status="stock",
                         comment=comment,
 
@@ -989,9 +989,9 @@ def back_from_module(request):
                         user_id=request.user.id,
                         ponum=po_num,
                         size=po.size,
-                        qty=int(qty) * (-1),  # negative qty
+                        qty=int(qty),  # negative qty
                         module=modul,
-                        type="return_from_line",
+                        type="in_line",
                         status="stock",
                         comment=comment,
 
