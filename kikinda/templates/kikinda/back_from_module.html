@@ -29,7 +29,7 @@
                     </div>
                 {% endif %}
 
-                <form method="POST" action="{% url 'preparation:back_from_module' %}">
+                <form method="POST" action="{% url 'kikinda:back_from_module' %}">
                     {% csrf_token %}
 
                     <label id="po_new">Po/Komesa: </label>
