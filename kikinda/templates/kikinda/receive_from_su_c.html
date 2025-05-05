@@ -52,8 +52,9 @@
                                     <td>{{ req.color }}</td>
                                     <td>{{ req.qty }}</td>
                                     <td>{{ req.location }}</td>
-                                    <td>
-                                        <a href="{% url 'kikinda:receive_from_su_c' req.id %}" class="btn btn-success btn-sm center-block">Receive</a>
+                                    <td class="d-flex gap-2">
+                                        <a href="{% url 'kikinda:receive_from_su_c' req.id %}?action=receive" class="btn btn-success btn-sm d-inline-block">Receive</a>
+                                        <a href="{% url 'kikinda:receive_from_su_c' req.id %}?action=delete" class="btn btn-danger btn-sm d-inline-block">Delete</a>
                                     </td>
                                 </tr>
                               {% endfor %}

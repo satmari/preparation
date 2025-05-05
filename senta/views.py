@@ -164,80 +164,108 @@ def receive_from_su_b(request, id=None):
     errors = []
     success_msg = ""
 
-    # find list of lines to receive
-    with connections['default'].cursor() as cursor:
-        cursor.execute(
-            """SELECT *,
-                (SELECT po_new FROM pos WHERE pos.id = barcode_se_stocks.po_id) as po_new,
-                (SELECT style FROM pos WHERE pos.id = barcode_se_stocks.po_id) as style,
-                (SELECT color FROM pos WHERE pos.id = barcode_se_stocks.po_id) as color,
-                (SELECT l.location FROM pos as p
-                JOIN prep_locations as l ON l.id = p.loc_id_se
-                WHERE p.id = barcode_se_stocks.po_id) as location
-            FROM barcode_se_stocks
-            WHERE status = 'to_receive'""")
-        lines = cursor.fetchall()
-        columns = [col[0] for col in cursor.description]
-        data = [dict(zip(columns, row)) for row in lines]
+    def fetch_data():
+        with connections['default'].cursor() as cursor:
+            cursor.execute(
+                """SELECT *,
+                    (SELECT po_new FROM pos WHERE pos.id = barcode_se_stocks.po_id) as po_new,
+                    (SELECT style FROM pos WHERE pos.id = barcode_se_stocks.po_id) as style,
+                    (SELECT color FROM pos WHERE pos.id = barcode_se_stocks.po_id) as color,
+                    (SELECT l.location FROM pos as p
+                    JOIN prep_locations as l ON l.id = p.loc_id_se
+                    WHERE p.id = barcode_se_stocks.po_id) as location
+                FROM barcode_se_stocks
+                WHERE status = 'to_receive'"""
+            )
+            lines = cursor.fetchall()
+            columns = [col[0] for col in cursor.description]
+            data = [dict(zip(columns, row)) for row in lines]
 
     if id is not None:
-        # Handle the case with an ID
+        action = request.GET.get('action', 'receive')
 
-        with connections['default'].cursor() as cursor:
-            cursor.execute("""
-                   SELECT *,
-                       (SELECT po_new FROM pos WHERE pos.id = barcode_se_stocks.po_id) as po_new,
-                       (SELECT style FROM pos WHERE pos.id = barcode_se_stocks.po_id) as style,
-                       (SELECT color FROM pos WHERE pos.id = barcode_se_stocks.po_id) as color,
-                       (SELECT loc_id_se FROM pos WHERE pos.id = barcode_se_stocks.po_id) as location_id,
-                       (SELECT l.location FROM pos as p
-                        JOIN prep_locations as l ON l.id = p.loc_id_se
-                        WHERE p.id = barcode_se_stocks.po_id) as location
-                   FROM barcode_se_stocks
-                   WHERE status = 'to_receive' AND id = %s
-               """, [id])
-            row = cursor.fetchone()
-            columns = [col[0] for col in cursor.description]
-            data = dict(zip(columns, row))
+        if action == 'delete':
+            try:
+                barcode = get_object_or_404(BarcodeSEStocks, id=id)
+                po_id = barcode.po_id
+                qty = barcode.qty
 
-        # Extract required fields
-        id = data["id"]
-        qty = data["qty"]
-        location = data["location"]
-        location_id = data["location_id"]
+                # Delete the barcode record
+                barcode.delete()
 
-        # Authenticated user info
-        user = request.user
-        module = user.username.lower()  # or user.get_full_name().lower() if needed
+                # Also delete the matching BarcodeRequest
+                BarcodeRequests.objects.filter(
+                    po_id=po_id,
+                    module='senta',
+                    type='transfer_se',
+                    qty=qty
+                ).delete()
 
-        if module == "kikinda":
-            location_plant = "Kikinda"
-        elif module == "senta":
-            location_plant = "Senta"
+                success_msg = "Uspešno obrisano."
+            except Exception as e:
+                errors.append("Neuspešno brisanje.")
+
+            data = fetch_data()
+            return render(request, 'senta/receive_from_su_b.html', {
+                'data': data,
+                'success_msg': success_msg,
+                'errors': errors
+            })
+
         else:
-            location_plant = "Subotica"
+            with connections['default'].cursor() as cursor:
+                cursor.execute("""
+                       SELECT *,
+                           (SELECT po_new FROM pos WHERE pos.id = barcode_se_stocks.po_id) as po_new,
+                           (SELECT style FROM pos WHERE pos.id = barcode_se_stocks.po_id) as style,
+                           (SELECT color FROM pos WHERE pos.id = barcode_se_stocks.po_id) as color,
+                           (SELECT loc_id_se FROM pos WHERE pos.id = barcode_se_stocks.po_id) as location_id,
+                           (SELECT l.location FROM pos as p
+                            JOIN prep_locations as l ON l.id = p.loc_id_se
+                            WHERE p.id = barcode_se_stocks.po_id) as location
+                       FROM barcode_se_stocks
+                       WHERE status = 'to_receive' AND id = %s
+                   """, [id])
+                row = cursor.fetchone()
+                columns = [col[0] for col in cursor.description]
+                data = dict(zip(columns, row))
 
-        # Fetch prep_locations for the plant
-        with connections['default'].cursor() as cursor:
-            cursor.execute("""
-                    SELECT * FROM prep_locations WHERE location_plant = %s
-                """, [location_plant])
-            location_rows = cursor.fetchall()
-            columns = [col[0] for col in cursor.description]
-            locations = [dict(zip(columns, row)) for row in location_rows]
+            # Extract required fields
+            id = data["id"]
+            qty = data["qty"]
+            location = data["location"]
+            location_id = data["location_id"]
 
-        # Build select options
-        locationsArray = {'': ''}
-        for item in locations:
-            locationsArray[item['id']] = item['location']
+            user = request.user
+            module = user.username.lower()  # or user.get_full_name().lower() if needed
 
-        return render(request, 'senta/receive_from_su_b.html', {
-            'id': id,
-            'qty': qty,
-            'location': location,
-            'location_id': str(location_id),
-            'locationsArray': locationsArray,
-        })
+            if module == "kikinda":
+                location_plant = "Kikinda"
+            elif module == "senta":
+                location_plant = "Senta"
+            else:
+                location_plant = "Subotica"
+
+            with connections['default'].cursor() as cursor:
+                cursor.execute("""
+                        SELECT * FROM prep_locations WHERE location_plant = %s
+                    """, [location_plant])
+                location_rows = cursor.fetchall()
+                columns = [col[0] for col in cursor.description]
+                locations = [dict(zip(columns, row)) for row in location_rows]
+
+            # Build select options
+            locationsArray = {'': ''}
+            for item in locations:
+                locationsArray[item['id']] = item['location']
+
+            return render(request, 'senta/receive_from_su_b.html', {
+                'id': id,
+                'qty': qty,
+                'location': location,
+                'location_id': str(location_id),
+                'locationsArray': locationsArray,
+            })
 
     elif request.method == 'POST':
         # return HttpResponse("POST request received successfully!")
@@ -269,35 +297,16 @@ def receive_from_su_b(request, id=None):
         except Exception as e:
             errors.append("Problem to save in table")
 
-        if not errors:
-            with connections['default'].cursor() as cursor:
-                cursor.execute(
-                    """SELECT *,
-                        (SELECT po_new FROM pos WHERE pos.id = barcode_se_stocks.po_id) as po_new,
-                        (SELECT style FROM pos WHERE pos.id = barcode_se_stocks.po_id) as style,
-                        (SELECT color FROM pos WHERE pos.id = barcode_se_stocks.po_id) as color,
-                        (SELECT l.location FROM pos as p
-                        JOIN prep_locations as l ON l.id = p.loc_id_se
-                        WHERE p.id = barcode_se_stocks.po_id) as location
-                    FROM barcode_se_stocks
-                    WHERE status = 'to_receive'""")
-                lines = cursor.fetchall()
-                columns = [col[0] for col in cursor.description]
-                data = [dict(zip(columns, row)) for row in lines]
-
-            return render(request, 'senta/receive_from_su_b.html', {
-                'data': data,
-                'success_msg': success_msg
-            })
-
-        # If errors exist, pass them to the template
+        data = fetch_data()
         return render(request, 'senta/receive_from_su_b.html', {
             'data': data,
+            'success_msg': success_msg,
             'errors': errors
         })
 
     else:
 
+        data = fetch_data()
         return render(request, 'senta/receive_from_su_b.html', {'data':data})
 
 def receive_from_su_c(request, id=None):
@@ -306,80 +315,110 @@ def receive_from_su_c(request, id=None):
     errors = []
     success_msg = ""
 
-    # find list of lines to receive
-    with connections['default'].cursor() as cursor:
-        cursor.execute(
-            """SELECT *,
-                (SELECT po_new FROM pos WHERE pos.id = carelabel_se_stocks.po_id) as po_new,
-                (SELECT style FROM pos WHERE pos.id = carelabel_se_stocks.po_id) as style,
-                (SELECT color FROM pos WHERE pos.id = carelabel_se_stocks.po_id) as color,
-                (SELECT l.location FROM pos as p
-                JOIN prep_locations as l ON l.id = p.loc_id_se
-                WHERE p.id = carelabel_se_stocks.po_id) as location
-            FROM carelabel_se_stocks
-            WHERE status = 'to_receive'""")
-        lines = cursor.fetchall()
-        columns = [col[0] for col in cursor.description]
-        data = [dict(zip(columns, row)) for row in lines]
+    def fetch_data():
+        with connections['default'].cursor() as cursor:
+            cursor.execute(
+                """SELECT *,
+                    (SELECT po_new FROM pos WHERE pos.id = carelabel_se_stocks.po_id) as po_new,
+                    (SELECT style FROM pos WHERE pos.id = carelabel_se_stocks.po_id) as style,
+                    (SELECT color FROM pos WHERE pos.id = carelabel_se_stocks.po_id) as color,
+                    (SELECT l.location FROM pos as p
+                    JOIN prep_locations as l ON l.id = p.loc_id_se
+                    WHERE p.id = carelabel_se_stocks.po_id) as location
+                FROM carelabel_se_stocks
+                WHERE status = 'to_receive'""")
+            lines = cursor.fetchall()
+            columns = [col[0] for col in cursor.description]
+            data = [dict(zip(columns, row)) for row in lines]
 
     if id is not None:
-        # Handle the case with an ID
+        action = request.GET.get('action', 'receive')
 
-        with connections['default'].cursor() as cursor:
-            cursor.execute("""
-                   SELECT *,
-                       (SELECT po_new FROM pos WHERE pos.id = carelabel_se_stocks.po_id) as po_new,
-                       (SELECT style FROM pos WHERE pos.id = carelabel_se_stocks.po_id) as style,
-                       (SELECT color FROM pos WHERE pos.id = carelabel_se_stocks.po_id) as color,
-                       (SELECT loc_id_se FROM pos WHERE pos.id = carelabel_se_stocks.po_id) as location_id,
-                       (SELECT l.location FROM pos as p
-                        JOIN prep_locations as l ON l.id = p.loc_id_se
-                        WHERE p.id = carelabel_se_stocks.po_id) as location
-                   FROM carelabel_se_stocks
-                   WHERE status = 'to_receive' AND id = %s
-               """, [id])
-            row = cursor.fetchone()
-            columns = [col[0] for col in cursor.description]
-            data = dict(zip(columns, row))
+        if action == 'delete':
+            try:
+                carelabel = get_object_or_404(CarelabelSEStocks, id=id)
+                po_id = carelabel.po_id
+                qty = carelabel.qty
 
-        # Extract required fields
-        id = data["id"]
-        qty = data["qty"]
-        location = data["location"]
-        location_id = data["location_id"]
+                # Delete the barcode record
+                carelabel.delete()
 
-        # Authenticated user info
-        user = request.user
-        module = user.username.lower()  # or user.get_full_name().lower() if needed
+                # Also delete the matching BarcodeRequest
+                CarelabelRequests.objects.filter(
+                    po_id=po_id,
+                    module='senta',
+                    type='transfer_se',
+                    qty=qty
+                ).delete()
 
-        if module == "kikinda":
-            location_plant = "Kikinda"
-        elif module == "senta":
-            location_plant = "Senta"
+                success_msg = "Uspešno obrisano."
+            except Exception as e:
+                errors.append("Neuspešno brisanje.")
+
+            data = fetch_data()
+            return render(request, 'senta/receive_from_su_c.html', {
+                'data': data,
+                'success_msg': success_msg,
+                'errors': errors
+            })
+
         else:
-            location_plant = "Subotica"
 
-        # Fetch prep_locations for the plant
-        with connections['default'].cursor() as cursor:
-            cursor.execute("""
-                    SELECT * FROM prep_locations WHERE location_plant = %s
-                """, [location_plant])
-            location_rows = cursor.fetchall()
-            columns = [col[0] for col in cursor.description]
-            locations = [dict(zip(columns, row)) for row in location_rows]
+            with connections['default'].cursor() as cursor:
+                cursor.execute("""
+                       SELECT *,
+                           (SELECT po_new FROM pos WHERE pos.id = carelabel_se_stocks.po_id) as po_new,
+                           (SELECT style FROM pos WHERE pos.id = carelabel_se_stocks.po_id) as style,
+                           (SELECT color FROM pos WHERE pos.id = carelabel_se_stocks.po_id) as color,
+                           (SELECT loc_id_se FROM pos WHERE pos.id = carelabel_se_stocks.po_id) as location_id,
+                           (SELECT l.location FROM pos as p
+                            JOIN prep_locations as l ON l.id = p.loc_id_se
+                            WHERE p.id = carelabel_se_stocks.po_id) as location
+                       FROM carelabel_se_stocks
+                       WHERE status = 'to_receive' AND id = %s
+                   """, [id])
+                row = cursor.fetchone()
+                columns = [col[0] for col in cursor.description]
+                data = dict(zip(columns, row))
 
-        # Build select options
-        locationsArray = {'': ''}
-        for item in locations:
-            locationsArray[item['id']] = item['location']
+            # Extract required fields
+            id = data["id"]
+            qty = data["qty"]
+            location = data["location"]
+            location_id = data["location_id"]
 
-        return render(request, 'senta/receive_from_su_c.html', {
-            'id': id,
-            'qty': qty,
-            'location': location,
-            'location_id': str(location_id),
-            'locationsArray': locationsArray,
-        })
+            # Authenticated user info
+            user = request.user
+            module = user.username.lower()  # or user.get_full_name().lower() if needed
+
+            if module == "kikinda":
+                location_plant = "Kikinda"
+            elif module == "senta":
+                location_plant = "Senta"
+            else:
+                location_plant = "Subotica"
+
+            # Fetch prep_locations for the plant
+            with connections['default'].cursor() as cursor:
+                cursor.execute("""
+                        SELECT * FROM prep_locations WHERE location_plant = %s
+                    """, [location_plant])
+                location_rows = cursor.fetchall()
+                columns = [col[0] for col in cursor.description]
+                locations = [dict(zip(columns, row)) for row in location_rows]
+
+            # Build select options
+            locationsArray = {'': ''}
+            for item in locations:
+                locationsArray[item['id']] = item['location']
+
+            return render(request, 'senta/receive_from_su_c.html', {
+                'id': id,
+                'qty': qty,
+                'location': location,
+                'location_id': str(location_id),
+                'locationsArray': locationsArray,
+            })
 
     elif request.method == 'POST':
         # return HttpResponse("POST request received successfully!")
@@ -411,35 +450,15 @@ def receive_from_su_c(request, id=None):
         except Exception as e:
             errors.append("Problem to save in table")
 
-        if not errors:
-            with connections['default'].cursor() as cursor:
-                cursor.execute(
-                    """SELECT *,
-                        (SELECT po_new FROM pos WHERE pos.id = carelabel_se_stocks.po_id) as po_new,
-                        (SELECT style FROM pos WHERE pos.id = carelabel_se_stocks.po_id) as style,
-                        (SELECT color FROM pos WHERE pos.id = carelabel_se_stocks.po_id) as color,
-                        (SELECT l.location FROM pos as p
-                        JOIN prep_locations as l ON l.id = p.loc_id_se
-                        WHERE p.id = carelabel_se_stocks.po_id) as location
-                    FROM carelabel_se_stocks
-                    WHERE status = 'to_receive'""")
-                lines = cursor.fetchall()
-                columns = [col[0] for col in cursor.description]
-                data = [dict(zip(columns, row)) for row in lines]
-
-            return render(request, 'senta/receive_from_su_c.html', {
-                'data': data,
-                'success_msg': success_msg
-            })
-
-        # If errors exist, pass them to the template
+        data = fetch_data()
         return render(request, 'senta/receive_from_su_c.html', {
             'data': data,
+            'success_msg': success_msg,
             'errors': errors
         })
 
     else:
-
+        data = fetch_data()
         return render(request, 'senta/receive_from_su_c.html', {'data':data})
 
 def give_to_the_line(request):
