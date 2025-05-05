@@ -18,5 +18,6 @@ urlpatterns = [
     path('give_to_the_line/', views.give_to_the_line, name='give_to_the_line'),
     path('return_to_main/', views.return_to_main, name='return_to_main'),
     path('reduce_from_stock/', views.reduce_from_stock, name='reduce_from_stock'),
+    path('back_from_module/', views.back_from_module, name='back_from_module'),
 
 ]

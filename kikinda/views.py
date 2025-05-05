@@ -902,3 +902,125 @@ def reduce_from_stock(request):
 
     })
 
+def back_from_module(request):
+    # return HttpResponse("back_from_module view is working!")
+
+    # find list of modules/lines
+    with connections['bbstock_db'].cursor() as cursor:
+        cursor.execute("""
+            SELECT [location] as line FROM [bbStock].[dbo].[locations]
+             WHERE location_dest = 'KIKINDA'
+        """)
+        lines = cursor.fetchall()
+    lines = [row[0] for row in lines]
+    # print(lines)
+
+    with connections['default'].cursor() as cursor:
+        cursor.execute("""
+                    SELECT  p.po_new as po
+                    FROM [pos] as p
+                    JOIN [172.27.161.200].[posummary].[dbo].[pro] as ps ON ps.po_new = p.po
+                    WHERE p.closed_po = 'Open' AND ps.location_all = 'Kikinda'
+                    ORDER BY p.created_at desc
+            """)
+        pos_rows = cursor.fetchall()
+    # pos = [row[0] for row in pos_rows]
+    pos = [{'po': row[0]} for row in pos_rows]
+
+    errors = []
+    success_msg = ""
+
+    if request.method == 'POST':
+        # print(request.POST)
+        po_num = request.POST.get('po')
+        qty = request.POST.get('qty')
+        barcode = request.POST.get('barcode', '0')
+        carelabel = request.POST.get('carelabel', '0')
+        modul = request.POST.get('modul')
+        comment = request.POST.get('comment', '')
+
+        # Validate required fields
+        if not po_num or len(po_num) < 6 or len(po_num) > 7:
+            errors.append("PO number must be 6-7 characters long")
+
+        if not qty:
+            errors.append("Qty/Kolicina je obavezna")
+
+        if not modul:
+            errors.append("Modul/line polje je obavezno")
+
+        # Verify if PO exists and is not closed
+        try:
+            po = Pos.objects.get(po=po_num)
+        except ObjectDoesNotExist:
+            errors.append("Komesa doesn't exist in the PO table")
+        else:
+            if po.closed_po == 'Closed':
+                errors.append("PO is Closed")
+
+        # Handle barcode
+        if barcode != '0':
+
+            if not errors:  # Proceed if no errors so far
+                try:
+                    BarcodeKIStocks.objects.create(
+                        po_id=po.id,
+                        user_id=request.user.id,
+                        ponum=po_num,
+                        size=po.size,
+                        qty=int(qty) * (-1),  # negative qty
+                        module=modul,
+                        type="return_from_line",
+                        status="stock",
+                        comment=comment,
+
+                    )
+                    success_msg += "BarcodeKIStock uspesno snimljen. <br>"  # Append the success message
+                except Exception as e:
+                    errors.append("Problem saving to BarcodeKIStock table")
+
+        # Handle carelabel
+        if carelabel != '0':
+
+            if not errors:  # Proceed if no errors so far
+                try:
+                    CarelabelKIStocks.objects.create(
+                        po_id=po.id,
+                        user_id=request.user.id,
+                        ponum=po_num,
+                        size=po.size,
+                        qty=int(qty) * (-1),  # negative qty
+                        module=modul,
+                        type="return_from_line",
+                        status="stock",
+                        comment=comment,
+
+                    )
+                    success_msg += "CarelabelKIStocks uspesno snimljen."  # Append the success message
+                except Exception as e:
+                    errors.append("Problem saving to CarelabelKIStocks table")
+
+        if carelabel == '0' and barcode == '0':
+            errors.append("Nije oznacen ni barcode ni carelabel")
+
+        # If there are no errors, pass success_msg to template
+        if not errors:
+            return render(request, 'kikinda/back_from_module.html', {
+                'pos': pos,
+                'lines': lines,
+                'success_msg': success_msg
+            })
+
+        # If errors exist, pass them to the template
+        return render(request, 'kikinda/back_from_module.html', {
+            'pos': pos,
+            'lines': lines,
+            'errors': errors
+        })
+
+
+    # If GET request, just render the form with open POS
+    return render(request, 'kikinda/back_from_module.html', {
+        'pos': pos,
+        'lines': lines
+    })

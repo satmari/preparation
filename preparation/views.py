@@ -1085,16 +1085,6 @@ def transfer_to_kikinda(request):
             if error_msg_b == "":  # Proceed if no errors so far
                 try:
 
-                    # BarcodeStocks.objects.create(
-                    #     po_id=po.id,
-                    #     user_id=request.user.id,
-                    #     ponum=po_num,
-                    #     size=po.size,
-                    #     qty=int(qty) * (-1),  # negative qty
-                    #     type="transfer_ki",
-                    #     comment=comment,
-                    #
-                    # )
                     BarcodeRequests.objects.create(
                         po_id=po.id,
                         user_id=request.user.id,
@@ -1149,15 +1139,6 @@ def transfer_to_kikinda(request):
 
             if error_msg_c == "":  # Proceed if no errors so far
                 try:
-                    # CarelabelStocks.objects.create(
-                    #     po_id=po.id,
-                    #     user_id=request.user.id,
-                    #     ponum=po_num,
-                    #     size=po.size,
-                    #     qty=int(qty) * (-1),  # negative qty
-                    #     type="transfer_ki",
-                    #     comment=comment,
-                    # )
 
                     CarelabelRequests.objects.create(
                         po_id=po.id,
