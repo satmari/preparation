@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 def kikinda_dashboard(request):
     # is_kikinda = request.user.groups.filter(name='kikinda').exists()
-    # return render(request, 'senta/kikinda_dashboard.html', {'is_kikinda': is_kikinda})
+    # return render(request, 'kikinda/kikinda_dashboard.html', {'is_kikinda': is_kikinda})
     return render(request, 'kikinda/kikinda_dashboard.html')
 
 def po_stock(request):
