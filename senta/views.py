@@ -179,7 +179,7 @@ def receive_from_su_b(request, id=None):
             )
             lines = cursor.fetchall()
             columns = [col[0] for col in cursor.description]
-            data = [dict(zip(columns, row)) for row in lines]
+            return [dict(zip(columns, row)) for row in lines]
 
     if id is not None:
         action = request.GET.get('action', 'receive')
@@ -329,7 +329,7 @@ def receive_from_su_c(request, id=None):
                 WHERE status = 'to_receive'""")
             lines = cursor.fetchall()
             columns = [col[0] for col in cursor.description]
-            data = [dict(zip(columns, row)) for row in lines]
+            return [dict(zip(columns, row)) for row in lines]
 
     if id is not None:
         action = request.GET.get('action', 'receive')
