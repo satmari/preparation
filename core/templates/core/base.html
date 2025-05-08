@@ -165,6 +165,8 @@
 <script src="{% static 'js/select2.min.js' %}"></script>
 <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'js/dataTables.fixedHeader.min.js' %}"></script>
+<script src="{% static 'js/xlsx.full.min.js' %}"></script>
+
 
 {% block scripts %}{% endblock %}
 
@@ -193,6 +195,53 @@
             });
         });
     });
+</script>
+
+<script>
+function exportFilteredTable() {
+    const table = document.getElementById("pos-table");
+
+    if ($.fn.dataTable.isDataTable(table)) {
+        const dt = $(table).DataTable();
+        dt.page.len(-1).draw();
+
+        setTimeout(() => {
+            const ws = XLSX.utils.table_to_sheet(table, { raw: false });
+            const wb = XLSX.utils.book_new();
+
+            // Get column index of the "Color" header
+            const headers = table.querySelectorAll("thead tr th");
+            let colorColIndex = -1;
+            headers.forEach((th, index) => {
+                if (th.textContent.trim().toLowerCase() === "color") {
+                    colorColIndex = index;
+                }
+            });
+
+            if (colorColIndex === -1) {
+                alert("Color column not found!");
+                return;
+            }
+
+            // Apply formatting to "Color" column
+            const range = XLSX.utils.decode_range(ws['!ref']);
+            for (let R = range.s.r + 1; R <= range.e.r; ++R) { // skip header
+                const cellAddress = XLSX.utils.encode_cell({ r: R, c: colorColIndex });
+                const cell = ws[cellAddress];
+                if (cell) {
+                    cell.z = '@';
+                    cell.t = 's';
+                    cell.v = cell.v.toString().padStart(3, '0');
+                }
+            }
+
+            XLSX.utils.book_append_sheet(wb, ws, "FilteredData");
+            XLSX.writeFile(wb, "filtered_export.xlsx");
+
+            dt.page.len(10).draw();
+        }, 300);
+    }
+}
 </script>
 
 <script>
