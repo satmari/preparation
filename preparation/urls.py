@@ -24,6 +24,7 @@ urlpatterns = [
     path('reduce_from_stock/', views.reduce_from_stock, name='reduce_from_stock'),
     path('throw_away/', views.throw_away, name='throw_away'),
     path('leftover/', views.leftover, name='leftover'),
+    path('leftover2/', views.leftover2, name='leftover2'),
     path('transfer_to_kikinda/', views.transfer_to_kikinda, name='transfer_to_kikinda'),
     path('transfer_to_senta/', views.transfer_to_senta, name='transfer_to_senta'),
     path('manual_request/', views.manual_request, name='manual_request'),
@@ -31,6 +32,10 @@ urlpatterns = [
     path('leftover_table/',views.leftover_table, name='leftover_table'),
     path('leftover_table_all/',views.leftover_table_all, name='leftover_table_all'),
     path('import_file/',views.import_file ,name='import_file'),
+
+    path('leftover_table2/',views.leftover_table2, name='leftover_table2'),
+    path('leftover_table_all2/',views.leftover_table_all2, name='leftover_table_all2'),
+    path('import_file2/',views.import_file2 ,name='import_file2'),
 
     path('prep_locations/', views.prep_locations, name='prep_locations'),
     path('prep_locations/edit/<int:l_id>/', views.prep_locations, name='prep_locations_edit'),

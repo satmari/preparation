@@ -76,6 +76,9 @@
                                 <a class="nav-link pos-link" href="{% url 'preparation:leftover_table' %}">Leftover</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link pos-link" href="{% url 'preparation:leftover_table2' %}">Leftover 2</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link pos-link" href="{% url 'preparation:prep_locations' %}">Locations</a>
                             </li>
                             <li class="nav-item">
@@ -118,6 +121,9 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link pos-link" href="{% url 'preparation:leftover_table' %}">Leftover</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link pos-link" href="{% url 'preparation:leftover_table2' %}">Leftover 2</a>
                                 </li>
                         {% endif %}
 
@@ -206,6 +212,26 @@ function exportFilteredTable() {
         dt.page.len(-1).draw();
 
         setTimeout(() => {
+            const rows = table.querySelectorAll("tbody tr");
+            const originalValues = [];
+
+            // Replace spaces with non-breaking spaces in Material and SKU columns
+            rows.forEach(row => {
+                const materialCell = row.cells[0];
+                const skuCell = row.cells[1];
+
+                const originalMaterial = materialCell.textContent;
+                const originalSKU = skuCell.textContent;
+
+                originalValues.push({
+                    material: originalMaterial,
+                    sku: originalSKU
+                });
+
+                materialCell.textContent = originalMaterial.replace(/ /g, '\u00A0');
+                skuCell.textContent = originalSKU.replace(/ /g, '\u00A0');
+            });
+
             const ws = XLSX.utils.table_to_sheet(table, { raw: false });
             const wb = XLSX.utils.book_new();
 
@@ -218,31 +244,37 @@ function exportFilteredTable() {
                 }
             });
 
-            if (colorColIndex === -1) {
-                alert("Color column not found!");
-                return;
-            }
-
-            // Apply formatting to "Color" column
-            const range = XLSX.utils.decode_range(ws['!ref']);
-            for (let R = range.s.r + 1; R <= range.e.r; ++R) { // skip header
-                const cellAddress = XLSX.utils.encode_cell({ r: R, c: colorColIndex });
-                const cell = ws[cellAddress];
-                if (cell) {
-                    cell.z = '@';
-                    cell.t = 's';
-                    cell.v = cell.v.toString().padStart(3, '0');
+            // Apply formatting to "Color" column if it exists
+            if (colorColIndex !== -1) {
+                const range = XLSX.utils.decode_range(ws['!ref']);
+                for (let R = range.s.r + 1; R <= range.e.r; ++R) {
+                    const cellAddress = XLSX.utils.encode_cell({ r: R, c: colorColIndex });
+                    const cell = ws[cellAddress];
+                    if (cell) {
+                        cell.z = '@';
+                        cell.t = 's';
+                        cell.v = cell.v.toString().padStart(3, '0');
+                    }
                 }
             }
 
             XLSX.utils.book_append_sheet(wb, ws, "FilteredData");
             XLSX.writeFile(wb, "filtered_export.xlsx");
 
+            // Restore original Material and SKU values
+            rows.forEach((row, index) => {
+                row.cells[0].textContent = originalValues[index].material;
+                row.cells[1].textContent = originalValues[index].sku;
+            });
+
             dt.page.len(10).draw();
         }, 300);
     }
 }
 </script>
+
+
+
 
 <script>
 <!--    document.addEventListener("DOMContentLoaded", function() {-->

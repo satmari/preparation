@@ -81,6 +81,7 @@ class BarcodeStocks(models.Model):
     class Meta:
         db_table = 'barcode_stocks'
 
+
 class CarelabelStocks(models.Model):
     id = models.AutoField(primary_key=True)
     po_id = models.IntegerField()
@@ -165,6 +166,25 @@ class Leftovers(models.Model):
 
     class Meta:
         db_table = 'leftovers'
+
+
+class Leftovers2(models.Model):
+    id = models.AutoField(primary_key=True)
+    material = models.CharField(max_length=255)
+    sku = models.CharField(max_length=255)
+    type = models.CharField(max_length=255)
+    price = models.FloatField(null=True)
+    ponum = models.CharField(max_length=255, null=True)
+    qty = models.IntegerField()
+    status = models.CharField(max_length=255)
+    location = models.CharField(max_length=255, null=True, blank=True)
+    place = models.CharField(max_length=255, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'leftovers2'
+
 
 class BarcodeKIStocks(models.Model):
     id = models.AutoField(primary_key=True)

@@ -1,0 +1,246 @@
+{% extends "core/base.html" %}
+
+{% load static %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong>Create Leftover2</strong></div>
+                <br>
+
+                <!-- Errors -->
+                {% if errors %}
+                    <div class="alert alert-danger " role="alert">
+                        <ul>
+                            {% for error in errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+                <!-- Success -->
+                {% if success_msg %}
+                    <div class="alert alert-success " role="alert">
+                         {{ success_msg|safe }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+
+                <form method="POST" action="{% url 'preparation:leftover2' %}">
+                    {% csrf_token %}
+
+                    <label id="material_id">Material/Artical: </label>
+                    <select id="materials" name="material" class="form-control select2" required>
+                        <option value="">-- Izaberi Material/Artical --</option>
+                        {% for item in materials %}
+                            <option value="{{ item }}">{{ item }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <br>
+
+                    <label id="sku_id">SKU: </label>
+                    <select id="skus" name="sku" class="form-control select2" required>
+                        <option value="">-- Izaberi SKU --</option>
+                        {% for item in skus %}
+                            <option value="{{ item }}">{{ item }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <br>
+
+                    <div class="panel-body mt-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3 text-center">
+                                    <label class="form-label d-block"><strong>Barcode</strong></label>
+                                    <div class="form-check d-inline-block">
+                                        <input type="radio" class="form-check-input larger-checkbox" name="mode" id="barcode" value="barcode">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3 text-center">
+                                    <label class="form-label d-block"><strong>Carelabel</strong></label>
+                                    <div class="form-check d-inline-block">
+                                        <input type="radio" class="form-check-input larger-checkbox" name="mode" id="carelabel" value="carelabel">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+
+                    <label id="price" style="display:none;">Price (for Barcodes):</label>
+                    <br>
+                    <input type="number" name="price" class="form-control" step="0.01" min="0"  style="display:none;">
+                    <br>
+
+                    <div id="po_container" style="display: none;">
+                        <label for="pos" id="po_new">PO/Komesa:</label>
+                        <select name="po" id="pos" class="form-control select2">
+                            <option value="">-- Select PO/Komesa --</option>
+                            {% for po in pos %}
+                                <option value="{{ po }}">{{ po }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <br>
+
+                    <label id="location_id">Location: </label>
+                    <select id="location" name="location" class="form-control" required>
+                        <option value="">-- Izaberi location --</option>
+                        <option value="Subotica">Subotica</option>
+                        <option value="Kikinda">Kikinda</option>
+                    </select>
+                    <br>
+
+                    <label id="place_id">Place (Kikinda locations only):</label>
+                    <select id="place" name="place" class="form-control">
+                        <option value="">-- Izaberi mesto --</option>
+                        <option value="PREP 1-1">PREP 1-1</option>
+                        <option value="PREP 1-2">PREP 1-2</option>
+                        <option value="PREP 1-3">PREP 1-3</option>
+                        <option value="PREP 1-4">PREP 1-4</option>
+                        <option value="PREP 2-1">PREP 2-1</option>
+                        <option value="PREP 2-2">PREP 2-2</option>
+                        <option value="PREP 2-3">PREP 2-3</option>
+                        <option value="PREP 2-4">PREP 2-4</option>
+                        <option value="PREP 3-1">PREP 3-1</option>
+                        <option value="PREP 3-2">PREP 3-2</option>
+                        <option value="PREP 3-3">PREP 3-3</option>
+                        <option value="PREP 3-4">PREP 3-4</option>
+                    </select>
+                    <br>
+
+                    <label id="qty">Qty/Količina:</label>
+                    <input type="number" name="qty" class="form-control" required>
+                    <br>
+
+                    <label id="status_id">Status: </label>
+                    <select id="status" name="status" class="form-control" required>
+                        <option value="">-- Izaberi Status --</option>
+                        <option value="ON STOCK">ON STOCK (+)</option>
+                        <option value="USED">USED (-)</option>
+                    </select>
+                    <br>
+
+                    <div class="panel-body mt-4">
+                        <input type="submit" value="Save" class="btn btn-success">
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // --- Select2 Initializations ---
+        $('#materials').select2({
+            width: '100%',
+            placeholder: "Izaberite materijal iz liste",
+            allowClear: true,
+            minimumInputLength: 1,
+            language: {
+                noResults: () => "Materijal nije ponadjen.",
+                inputTooShort: () => "Unesite pocetno slovo materijala i pojaviće se lista materijala"
+            }
+        });
+
+        $('#skus').select2({
+            width: '100%',
+            placeholder: "Izaberite sku iz liste",
+            allowClear: true,
+            minimumInputLength: 1,
+            language: {
+                noResults: () => "SKU nije ponadjen.",
+                inputTooShort: () => "Unesite pocetno slovo sku-a i pojaviće se lista sku-a"
+            }
+        });
+
+        $('#pos').select2({
+            width: '100%',
+            placeholder: "Izaberite PO iz liste",
+            allowClear: true,
+            minimumInputLength: 2,
+            language: {
+                noResults: () => "Komesa nije ponadjena.",
+                inputTooShort: () => "Unesite početni broj komese sa 7 cifara i pojaviće se lista otvorenih komesa"
+            }
+        });
+
+        function toggleFields() {
+            const selectedMode = document.querySelector('input[name="mode"]:checked');
+            const priceLabel = document.getElementById('price');
+            const priceInput = document.querySelector('input[name="price"]');
+
+            const poContainer = document.getElementById('po_container');
+
+            if (!selectedMode) {
+                priceLabel.style.display = "none";
+                priceInput.style.display = "none";
+                priceInput.required = false;
+
+                poContainer.style.display = "none";
+                return;
+            }
+
+            if (selectedMode.value === "barcode") {
+                priceLabel.style.display = "block";
+                priceInput.style.display = "block";
+                priceInput.required = true;
+
+                poContainer.style.display = "none";
+                $('#pos').val(null).trigger('change');
+            } else if (selectedMode.value === "carelabel") {
+                priceLabel.style.display = "none";
+                priceInput.style.display = "none";
+                priceInput.required = false;
+                priceInput.value = "";
+
+                poContainer.style.display = "block";
+
+                const posOptions = $('#pos option').length;
+                if (posOptions <= 1) {
+                    $('#pos').append('<option value="" disabled selected>Nema dostupnih komesa</option>');
+                }
+            }
+        }
+
+        // --- Toggle Kikinda place dropdown ---
+        function togglePlaceDropdown() {
+            const placeId = document.getElementById("place_id");
+            const placeSelect = document.getElementById("place");
+            if (document.getElementById("location").value === "Kikinda") {
+                placeId.style.display = "block";
+                placeSelect.style.display = "block";
+            } else {
+                placeId.style.display = "none";
+                placeSelect.style.display = "none";
+            }
+        }
+
+        // Add event listeners for mode change
+        document.querySelectorAll('input[name="mode"]').forEach(function (radio) {
+            radio.addEventListener('change', toggleFields);
+        });
+
+        // Add event listener for location change
+        document.getElementById("location").addEventListener("change", togglePlaceDropdown);
+
+        // Initial field visibility on page load
+        toggleFields();
+        togglePlaceDropdown();
+    });
+</script>
+
+
+{% endblock %}
