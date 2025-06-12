@@ -5,7 +5,7 @@
 <div class="container-fluid">
     <div style="display: flex; align-items: center; justify-content: center;">
         <h2 style="margin-right: 10px;">Leftover 2 table</h2>
-        &nbsp;<button onclick="exportFilteredTable()" class="btn btn-info btn-sm">Export in Excel</button>&nbsp;
+        &nbsp;<button onclick="exportFilteredTable()" class="btn btn-in fo btn-sm">Export in Excel</button>&nbsp;
         &nbsp;&nbsp;
         <a href="{% url 'preparation:leftover_table_all2' %}" class="btn btn-danger btn-sm">Full leftover table</a>
         &nbsp;&nbsp;
@@ -26,7 +26,7 @@
                 <th><b>PRO</b> (carelabel)</th>
                 <th><b>Location</b></th>
                 <th><b>Place</b></th>
-                <th><span style="color:red">Qty (sum)</span></th>
+                <th><span style="color:red">Total Qty (sum)</span></th>
 
             </tr>
         </thead>
@@ -40,7 +40,7 @@
                 <td>{{ pos.ponum }}</td>
                 <td>{{ pos.location }}</td>
                 <td>{{ pos.place }}</td>
-                <td>{{ pos.qty }}</td>
+                <td><span style="color:red">{{ pos.qty }}</span></td>
             </tr>
             {% endfor %}
         </tbody>

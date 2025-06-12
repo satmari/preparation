@@ -1057,7 +1057,7 @@ def leftover2(request):
                     SELECT  p.po_new as po
                     FROM [pos] as p
                     JOIN [172.27.161.200].[posummary].[dbo].[pro] as ps ON ps.po_new = p.po
-                    WHERE p.closed_po = 'Open' --AND ps.location_all = 'Kikinda'
+                    WHERE p.closed_po = 'Open' 
                     ORDER BY p.created_at desc;
             """
         )
