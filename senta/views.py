@@ -272,7 +272,9 @@ def receive_from_su_b(request, id=None):
 
         id = request.POST.get('id')
         qty = request.POST.get('qty')
-        location_id = request.POST.get('location_id')
+        # location_id = request.POST.get('location_id')
+        location_id = request.POST.get('location_id') or '14'  # default location for senta
+        location_id = int(location_id)
 
         try:
             qty = int(qty)
@@ -425,7 +427,10 @@ def receive_from_su_c(request, id=None):
 
         id = request.POST.get('id')
         qty = request.POST.get('qty')
-        location_id = request.POST.get('location_id')
+        # location_id = request.POST.get('location_id')
+
+        location_id = request.POST.get('location_id') or '14'  # default location for senta
+        location_id = int(location_id)
 
         try:
             qty = int(qty)

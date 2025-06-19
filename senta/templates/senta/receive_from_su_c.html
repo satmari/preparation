@@ -76,14 +76,9 @@
 
                     <div class="panel-body">
                         <p>Location: </p>
-                        {% if location_id == 'None' %}
-                            <p><i>lokacija za ovaj pro nije unesena, izaberite lokaciju</i></p>
-                        {% else %}
-                            <p><i>lokacija za ovaj PRO je {{ location }}, ali ako zelite da promenite izaberite drugu lokaciju</i></p>
-                        {% endif %}
-                        <select name="location_id" class="form-control" required>
+                        <select name="location_id" class="form-control" disabled>
                             {% for key, value in locationsArray.items %}
-                                <option value="{{ key }}" {% if key|stringformat:"s" == location_id|stringformat:"s" %}selected{% endif %}>
+                                <option value="{{ key }}" {% if key|stringformat:"s" == "14" %}selected{% endif %}>
                                     {{ value }}
                                 </option>
                             {% endfor %}
