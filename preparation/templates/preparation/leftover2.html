@@ -54,20 +54,28 @@
 
                     <div class="panel-body mt-4">
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3 text-center">
-                                    <label class="form-label d-block"><strong>Barcode</strong></label>
-                                    <div class="form-check d-inline-block">
-                                        <input type="radio" class="form-check-input larger-checkbox" name="mode" id="barcode" value="barcode">
-                                    </div>
+                            <div class="col-md-3 text-center">
+                                <label class="form-label d-block"><strong>Barcode</strong></label>
+                                <div class="form-check d-inline-block">
+                                    <input type="radio" class="form-check-input larger-checkbox" name="mode" id="barcode" value="barcode">
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="mb-3 text-center">
-                                    <label class="form-label d-block"><strong>Carelabel</strong></label>
-                                    <div class="form-check d-inline-block">
-                                        <input type="radio" class="form-check-input larger-checkbox" name="mode" id="carelabel" value="carelabel">
-                                    </div>
+                            <div class="col-md-3 text-center">
+                                <label class="form-label d-block"><strong>Carelabel</strong></label>
+                                <div class="form-check d-inline-block">
+                                    <input type="radio" class="form-check-input larger-checkbox" name="mode" id="carelabel" value="carelabel">
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <label class="form-label d-block"><strong>RFID</strong></label>
+                                <div class="form-check d-inline-block">
+                                    <input type="radio" class="form-check-input larger-checkbox" name="mode" id="rfid" value="rfid">
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <label class="form-label d-block"><strong>Sticker</strong></label>
+                                <div class="form-check d-inline-block">
+                                    <input type="radio" class="form-check-input larger-checkbox" name="mode" id="sticker" value="sticker">
                                 </div>
                             </div>
                         </div>
@@ -80,7 +88,8 @@
                     <br>
 
                     <div id="po_container" style="display: none;">
-                        <label for="pos" id="po_new">PO/Komesa:</label>
+                        <label for="pos" id="po_new">PO/Komesa (for Carelabels, RFID, Sticker):</label>
+                        <br>
                         <select name="po" id="pos" class="form-control select2">
                             <option value="">-- Select PO/Komesa --</option>
                             {% for po in pos %}
@@ -117,7 +126,7 @@
                     <br>
 
                     <label id="qty">Qty/Količina:</label>
-                    <input type="number" name="qty" class="form-control" required>
+                    <input type="number" name="qty" class="form-control" min="1" step="1" required>
                     <br>
 
                     <label id="status_id">Status: </label>
@@ -181,7 +190,6 @@
             const selectedMode = document.querySelector('input[name="mode"]:checked');
             const priceLabel = document.getElementById('price');
             const priceInput = document.querySelector('input[name="price"]');
-
             const poContainer = document.getElementById('po_container');
 
             if (!selectedMode) {
@@ -194,13 +202,16 @@
             }
 
             if (selectedMode.value === "barcode") {
+                // Barcode logic stays the same
                 priceLabel.style.display = "block";
                 priceInput.style.display = "block";
                 priceInput.required = true;
 
                 poContainer.style.display = "none";
                 $('#pos').val(null).trigger('change');
-            } else if (selectedMode.value === "carelabel") {
+            }
+            else if (["carelabel", "rfid", "sticker"].includes(selectedMode.value)) {
+                // Carelabel, RFID and Sticker share the same logic
                 priceLabel.style.display = "none";
                 priceInput.style.display = "none";
                 priceInput.required = false;

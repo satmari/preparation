@@ -106,6 +106,7 @@ ORDER BY pos.po ASC, pos.size DESC""")
 
     return render(request, 'preparation/po_stock.html', {'data': data})
 
+#Request tables
 def barcode_requests(request, id=None, action=None):
     success_msg = ""
     errors = []
@@ -609,6 +610,7 @@ ORDER BY
         'errors': errors
     })
 
+#Functions
 def functions(request):
     # return HttpResponse("Stock view is working!")
 
@@ -1057,7 +1059,7 @@ def leftover2(request):
                     SELECT  p.po_new as po
                     FROM [pos] as p
                     JOIN [172.27.161.200].[posummary].[dbo].[pro] as ps ON ps.po_new = p.po
-                    WHERE p.closed_po = 'Open' 
+                    WHERE p.closed_po = 'Closed' AND ps.[deleted] != 'DELETED' 
                     ORDER BY p.created_at desc;
             """
         )
@@ -1093,13 +1095,12 @@ def leftover2(request):
         if not selected_type:
             errors.append("Nije označeno da li je Barcode ili Carelabel.")
         else:
-            # Check required fields based on type
             if selected_type == 'barcode':
                 if not price:
                     errors.append("Cena (Price) mora biti uneta za Barcode.")
-            elif selected_type == 'carelabel':
+            elif selected_type in ['carelabel', 'rfid', 'sticker']:
                 if not po_num:
-                    errors.append("PO/Komesa mora biti izabrana za Carelabel.")
+                    errors.append("PO/Komesa mora biti izabrana za Carelabel, RFID ili Sticker.")
             else:
                 errors.append("Nepoznat tip unosa.")
 
@@ -1757,119 +1758,70 @@ def leftover_table_all2(request):
 
     return render(request, 'preparation/leftover_table_all2.html', {'data': data})
 
+def delete_leftover2(request, pk):
+    if request.method == "POST":
+        item = get_object_or_404(Leftovers2, pk=pk)
+        item.delete()
+        return JsonResponse({'success': True})
+
+def update_leftover2(request, pk):
+    if request.method == "POST":
+        item = get_object_or_404(Leftovers2, pk=pk)
+        item.material = request.POST.get('material')
+        item.sku = request.POST.get('sku')
+        item.type = request.POST.get('type')
+        item.price = request.POST.get('price')
+        item.ponum = request.POST.get('ponum')
+        item.location = request.POST.get('location')
+        item.place = request.POST.get('place')
+        item.status = request.POST.get('status')
+        item.qty = request.POST.get('qty')
+        item.save()
+        return JsonResponse({'success': True})
+
+
 def import_file2(request):
     if request.method == "POST":
-
-        # print("POST request received")
         import_source = request.POST.get('import_source')
         uploaded_file = request.FILES.get('file')
-        # print("Import source:", import_source)
-        # print("Uploaded file:", uploaded_file)
 
         if not uploaded_file:
             messages.error(request, "No file uploaded.")
-            return redirect('preparation:import_file2')  # fixed name if needed
+            return redirect('preparation:import_file2')
 
         if import_source == 'import_leftover':
             try:
-                # print("Starting Leftover Import...")
                 wb = openpyxl.load_workbook(uploaded_file)
                 sheet = wb.active
                 lines_added = 0
                 lines_failed = 0
                 error_lines = []
 
-                headers = [cell.value.strip().lower() if cell.value else "" for cell in
-                           next(sheet.iter_rows(min_row=1, max_row=1))]
+                # Map Excel headers to database fields
+                headers_map = {
+                    'material': 'material',
+                    'sku': 'sku',
+                    'type': 'type',
+                    'price(barcode)': 'price',
+                    'pro(carelabel)': 'ponum',
+                    'location': 'location',
+                    'place': 'place',
+                    'total qty (sum)': 'qty',
+                }
 
-                expected_columns = ['material', 'sku', 'type', 'price', 'ponum', 'location', 'place', 'qty']
+                # Read header row
+                headers = [str(cell.value).strip().lower() if cell.value else "" for cell in next(sheet.iter_rows(min_row=1, max_row=1))]
 
+                # Build header indices
                 header_indices = {}
-                for col in expected_columns:
-                    if col in headers:
-                        header_indices[col] = headers.index(col)
+                for excel_header, field_name in headers_map.items():
+                    if excel_header in headers:
+                        header_indices[field_name] = headers.index(excel_header)
                     else:
-                        messages.error(request, f"Missing expected column: {col}")
+                        messages.error(request, f"Missing expected column: {excel_header}")
                         return redirect('preparation:import_file2')
 
-                for idx, row in enumerate(sheet.iter_rows(min_row=2, values_only=True), start=2):
-                    try:
-
-                        material = row[header_indices['material']]
-                        sku = row[header_indices['sku']]
-                        type_ = row[header_indices['type']]
-                        price = row[header_indices['price']]
-                        ponum = row[header_indices['ponum']]
-                        location = row[header_indices['location']]
-                        place = row[header_indices['place']]
-                        qty = row[header_indices['qty']]
-
-                        # Validation
-                        if not material or not sku or not type_ or not location or qty is None:
-                            raise ValueError("Missing required field(s).")
-
-                        if type_.lower() == 'barcode' and (price is None or price == ''):
-                            raise ValueError("Missing price for type 'barcode'.")
-
-                        if type_.lower() == 'carelabel' and (ponum is None or ponum == ''):
-                            raise ValueError("Missing ponum for type 'carelabel'.")
-
-                        qty = int(qty)
-                        price = float(price) if price not in [None, ''] else None
-                        status = 'ON STOCK' if qty > 0 else 'USED'
-
-                        ponum = ponum if ponum is not None else ""
-                        place = place if place is not None else ""
-
-                        Leftovers2.objects.create(
-                            material=material,
-                            sku=sku.strip(),
-                            type=type_,
-                            price=price,
-                            ponum=ponum,
-                            location=location,
-                            place=place,
-                            qty=qty,
-                            status=status
-                        )
-                        lines_added += 1
-                    except Exception as e:
-                        lines_failed += 1
-                        error_lines.append(f"Row {idx}: {str(e)}")
-                        continue
-
-                messages.success(request, f"Import finished. Added: {lines_added}, Failed: {lines_failed}")
-                if error_lines:
-                    for err in error_lines:
-                        messages.warning(request, err)
-
-            except Exception as e:
-                messages.error(request, f"Error: {str(e)}")
-
-            # return HttpResponse("Upload received and matched import_leftover!")
-            return redirect('preparation:import_file2')
-
-        elif import_source == 'import_leftover_neg':
-            try:
-                # print("Starting Leftover Import...")
-                wb = openpyxl.load_workbook(uploaded_file)
-                sheet = wb.active
-                lines_added = 0
-                lines_failed = 0
-                error_lines = []
-
-                headers = [cell.value.strip().lower() if cell.value else "" for cell in
-                           next(sheet.iter_rows(min_row=1, max_row=1))]
-
-                expected_columns = ['material', 'sku', 'type', 'price', 'ponum', 'location', 'place', 'qty']
-                header_indices = {}
-                for col in expected_columns:
-                    if col in headers:
-                        header_indices[col] = headers.index(col)
-                    else:
-                        messages.error(request, f"Missing expected column: {col}")
-                        return redirect('preparation:import_file2')
-
+                # Process data rows
                 for idx, row in enumerate(sheet.iter_rows(min_row=2, values_only=True), start=2):
                     try:
                         material = row[header_indices['material']]
@@ -1888,8 +1840,8 @@ def import_file2(request):
                         if type_.lower() == 'barcode' and (price is None or price == ''):
                             raise ValueError("Missing price for type 'barcode'.")
 
-                        if type_.lower() == 'carelabel' and (ponum is None or ponum == ''):
-                            raise ValueError("Missing ponum for type 'carelabel'.")
+                        if type_.lower() in ('carelabel', 'sticker', 'rfid') and (ponum is None or ponum == ''):
+                            raise ValueError(f"Missing ponum for type '{type_}'.")
 
                         qty = int(qty)
                         price = float(price) if price not in [None, ''] else None
@@ -1898,7 +1850,7 @@ def import_file2(request):
                         ponum = ponum if ponum is not None else ""
                         place = place if place is not None else ""
 
-
+                        # Save to database
                         Leftovers2.objects.create(
                             material=material,
                             sku=sku.strip(),
@@ -1916,19 +1868,20 @@ def import_file2(request):
                         error_lines.append(f"Row {idx}: {str(e)}")
                         continue
 
+                # Show success and errors
                 messages.success(request, f"Import finished. Added: {lines_added}, Failed: {lines_failed}")
                 if error_lines:
                     for err in error_lines:
                         messages.warning(request, err)
 
             except Exception as e:
-                messages.error(request, f"Error: {str(e)}")
+                messages.error(request, f"Error during import: {str(e)}")
 
-                # return HttpResponse("Upload received and matched import_leftover!")
             return redirect('preparation:import_file2')
 
     return render(request, 'preparation/import.html')
 
+#Locations
 def prep_locations(request, l_id=None):
     user = request.user
     module = user.username.lower()

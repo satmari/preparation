@@ -35,6 +35,8 @@ urlpatterns = [
 
     path('leftover_table2/',views.leftover_table2, name='leftover_table2'),
     path('leftover_table_all2/',views.leftover_table_all2, name='leftover_table_all2'),
+    path('leftover2/delete/<int:pk>/', views.delete_leftover2, name='delete_leftover2'),
+    path('leftover2/update/<int:pk>/', views.update_leftover2, name='update_leftover2'),
     path('import_file2/',views.import_file2 ,name='import_file2'),
 
     path('prep_locations/', views.prep_locations, name='prep_locations'),
