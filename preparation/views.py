@@ -16,7 +16,8 @@ from datetime import datetime, timedelta
 from django.http import HttpResponse, JsonResponse
 import logging
 logger = logging.getLogger(__name__)
-
+import json
+from django.db.models import Sum
 
 def preparation_dashboard(request):
     # is_preparation = request.user.groups.filter(name='preparations').exists()
@@ -1778,6 +1779,107 @@ def update_leftover2(request, pk):
         item.qty = request.POST.get('qty')
         item.save()
         return JsonResponse({'success': True})
+
+def send_between_locations(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            print("Received data:", data)
+
+            # Clean incoming data (remove leading/trailing spaces but keep inner spaces)
+            material = data.get('material', '').strip()
+            sku = data.get('sku', '').strip()
+            type_ = data.get('type', '').strip()
+            location = data.get('location', '').strip()
+            destination = data.get('destination', '').strip()
+
+            ponum = data.get('ponum', '')
+            ponum = ponum.strip() if ponum is not None else ''
+
+            place = data.get('place', '')
+            place = place.strip() if place is not None else ''
+
+            # Handle price correctly (comma or dot)
+            price_raw = data.get('price')
+            price = ''
+            if price_raw not in [None, '']:
+                try:
+                    price = float(str(price_raw).replace(',', '.'))
+                except ValueError:
+                    return JsonResponse({'error': 'Invalid price format'}, status=400)
+
+            # Handle send_qty safely
+            try:
+                send_qty = int(data.get('send_qty'))
+            except (ValueError, TypeError):
+                return JsonResponse({'error': 'Invalid quantity'}, status=400)
+
+            # Validate send_qty
+            if send_qty <= 0:
+                return JsonResponse({'error': 'Quantity must be greater than zero'}, status=400)
+
+            # Build filters
+            filters = {
+                'material': material,
+                'sku': sku,
+                'type': type_,
+                'location': location,
+            }
+
+            if price != '':
+                filters['price'] = price
+            else:
+                price = ''  # ensure it's empty string when blank
+
+            filters['ponum'] = ponum
+            filters['place'] = place
+
+            print("Final filters used:", filters)
+
+            # Check total available
+            total_available = Leftovers2.objects.filter(**filters).aggregate(
+                total_qty=Sum('qty')
+            )['total_qty'] or 0
+
+            print(f"Total available: {total_available}, Send qty: {send_qty}")
+
+            if total_available < send_qty:
+                return JsonResponse({
+                    'error': f'Not enough stock to send. Available: {total_available}'
+                }, status=400)
+
+            # Deduct from source
+            Leftovers2.objects.create(
+                material=material,
+                sku=sku,
+                type=type_,
+                price=price,
+                ponum=ponum,
+                qty=-send_qty,
+                status=f'SENT_TO_{destination.upper()}',
+                location=location,
+                place=place
+            )
+
+            # Add to destination
+            Leftovers2.objects.create(
+                material=material,
+                sku=sku,
+                type=type_,
+                price=price,
+                ponum=ponum,
+                qty=send_qty,
+                status=f'RECEIVED_FROM_{location.upper()}',
+                location=destination,
+                place=''
+            )
+
+            return JsonResponse({'success': True})
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
 def import_file2(request):

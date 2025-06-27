@@ -1,18 +1,14 @@
 {% extends "core/base.html" %}
-
 {% load static %}
+
 {% block content %}
 <div class="container-fluid">
     <div style="display: flex; align-items: center; justify-content: center;">
         <h2 style="margin-right: 10px;">Leftover 2 table all</h2>
-        &nbsp;<button onclick="exportFilteredTable()" class="btn btn-in fo btn-sm">Export in Excel</button>&nbsp;
-
-    <br>
+        &nbsp;<button onclick="exportFilteredTable()" class="btn btn-info btn-sm">Export in Excel</button>&nbsp;
     </div>
     <hr>
 
-
-    <!-- Table with sortable columns -->
     <table class="table table-striped table-bordered custom-table" id="pos-table" style="width: 100%;">
         <thead>
             <tr>
@@ -26,8 +22,7 @@
                 <th>Status</th>
                 <th>Qty</th>
                 <th>Updated</th>
-                <th></th>
-
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -44,17 +39,34 @@
                 <td>{{ pos.qty }}</td>
                 <td>{{ pos.updated_at|date:"Y-m-d H:i" }}</td>
                 <td>
-                    <button class="btn btn-danger btn-sm" onclick="openDeleteModal({{ pos.id }})">Delete</button>
-                    <button class="btn btn-warning btn-sm" onclick="openEditModal({{ pos.id }}, '{{ pos.material }}', '{{ pos.sku }}', '{{ pos.type }}', '{{ pos.price }}', '{{ pos.ponum }}', '{{ pos.location }}', '{{ pos.place }}', '{{ pos.status }}', '{{ pos.qty }}')">Edit</button>
+                    <button class="btn btn-danger btn-sm"
+                        onclick="openDeleteModal('{{ pos.id }}', '{% url 'preparation:delete_leftover2' pos.id %}')">
+                        Delete
+                    </button>
+                    <button class="btn btn-warning btn-sm"
+                        onclick="openEditModal(
+                            '{{ pos.id }}',
+                            '{{ pos.material }}',
+                            '{{ pos.sku }}',
+                            '{{ pos.type }}',
+                            '{{ pos.price }}',
+                            '{{ pos.ponum }}',
+                            '{{ pos.location }}',
+                            '{{ pos.place }}',
+                            '{{ pos.status }}',
+                            '{{ pos.qty }}',
+                            '{% url 'preparation:update_leftover2' pos.id %}'
+                        )">
+                        Edit
+                    </button>
                 </td>
-
             </tr>
             {% endfor %}
         </tbody>
     </table>
-
 </div>
 
+<!-- Delete Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -72,6 +84,7 @@
   </div>
 </div>
 
+<!-- Edit Modal -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -82,42 +95,15 @@
         <form id="editForm">
           <input type="hidden" id="editId">
           <div class="row">
-            <div class="col-md-6">
-              <label>Material</label>
-              <input type="text" id="editMaterial" class="form-control">
-            </div>
-            <div class="col-md-6">
-              <label>SKU</label>
-              <input type="text" id="editSku" class="form-control">
-            </div>
-            <div class="col-md-6">
-              <label>Type</label>
-              <input type="text" id="editType" class="form-control">
-            </div>
-            <div class="col-md-6">
-              <label>Price</label>
-              <input type="number" step="0.01" id="editPrice" class="form-control">
-            </div>
-            <div class="col-md-6">
-              <label>PRO</label>
-              <input type="text" id="editPonum" class="form-control">
-            </div>
-            <div class="col-md-6">
-              <label>Location</label>
-              <input type="text" id="editLocation" class="form-control">
-            </div>
-            <div class="col-md-6">
-              <label>Place</label>
-              <input type="text" id="editPlace" class="form-control">
-            </div>
-            <div class="col-md-6">
-              <label>Status</label>
-              <input type="text" id="editStatus" class="form-control">
-            </div>
-            <div class="col-md-6">
-              <label>Qty</label>
-              <input type="number" id="editQty" class="form-control">
-            </div>
+            <div class="col-md-6"><label>Material</label><input type="text" id="editMaterial" class="form-control"></div>
+            <div class="col-md-6"><label>SKU</label><input type="text" id="editSku" class="form-control"></div>
+            <div class="col-md-6"><label>Type</label><input type="text" id="editType" class="form-control"></div>
+            <div class="col-md-6"><label>Price</label><input type="number" step="0.01" id="editPrice" class="form-control"></div>
+            <div class="col-md-6"><label>PRO</label><input type="text" id="editPonum" class="form-control"></div>
+            <div class="col-md-6"><label>Location</label><input type="text" id="editLocation" class="form-control"></div>
+            <div class="col-md-6"><label>Place</label><input type="text" id="editPlace" class="form-control"></div>
+            <div class="col-md-6"><label>Status</label><input type="text" id="editStatus" class="form-control"></div>
+            <div class="col-md-6"><label>Qty</label><input type="number" id="editQty" class="form-control"></div>
           </div>
         </form>
       </div>
@@ -128,13 +114,11 @@
     </div>
   </div>
 </div>
-
 {% endblock %}
 
 {% block scripts %}
 <script>
     $(document).ready(function() {
-        // Initialize DataTable
         var table = $('#pos-table').DataTable({
             paging: true,
             ordering: true,
@@ -144,25 +128,22 @@
             responsive: true,
             scrollCollapse: true,
         });
-
-        // Initialize FixedHeader
         new $.fn.dataTable.FixedHeader(table);
     });
 </script>
 
 <script>
-    var deleteId = null;
-    const deleteUrlTemplate = "{% url 'preparation:delete_leftover2' 0 %}".replace('0', '');
-    const updateUrlTemplate = "{% url 'preparation:update_leftover2' 0 %}".replace('0', '');
+    let deleteUrl = '';
+    let updateUrl = '';
 
-    function openDeleteModal(id) {
-        deleteId = id;
-        var myModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    function openDeleteModal(id, url) {
+        deleteUrl = url;
+        const myModal = new bootstrap.Modal(document.getElementById('deleteModal'));
         myModal.show();
     }
 
     document.getElementById('confirmDelete').addEventListener('click', function() {
-        fetch(`${deleteUrlTemplate}${deleteId}/`, {
+        fetch(deleteUrl, {
             method: 'POST',
             headers: {
                 'X-CSRFToken': '{{ csrf_token }}'
@@ -170,11 +151,13 @@
         }).then(response => {
             if (response.ok) {
                 location.reload();
+            } else {
+                alert("Error deleting.");
             }
         });
     });
 
-    function openEditModal(id, material, sku, type, price, ponum, location, place, status, qty) {
+    function openEditModal(id, material, sku, type, price, ponum, location, place, status, qty, url) {
         document.getElementById('editId').value = id;
         document.getElementById('editMaterial').value = material;
         document.getElementById('editSku').value = sku;
@@ -186,12 +169,13 @@
         document.getElementById('editStatus').value = status;
         document.getElementById('editQty').value = qty;
 
-        var myModal = new bootstrap.Modal(document.getElementById('editModal'));
+        updateUrl = url;
+
+        const myModal = new bootstrap.Modal(document.getElementById('editModal'));
         myModal.show();
     }
 
     function submitEdit() {
-        const id = document.getElementById('editId').value;
         const formData = new FormData();
         formData.append('material', document.getElementById('editMaterial').value);
         formData.append('sku', document.getElementById('editSku').value);
@@ -203,7 +187,7 @@
         formData.append('status', document.getElementById('editStatus').value);
         formData.append('qty', document.getElementById('editQty').value);
 
-        fetch(`${updateUrlTemplate}${id}/`, {
+        fetch(updateUrl, {
             method: 'POST',
             headers: {
                 'X-CSRFToken': '{{ csrf_token }}'
@@ -212,10 +196,10 @@
         }).then(response => {
             if (response.ok) {
                 location.reload();
+            } else {
+                alert("Error updating.");
             }
         });
     }
 </script>
 {% endblock %}
-
-
