@@ -1060,8 +1060,8 @@ def leftover2(request):
                     SELECT  p.po_new as po
                     FROM [pos] as p
                     JOIN [172.27.161.200].[posummary].[dbo].[pro] as ps ON ps.po_new = p.po
-                    WHERE p.closed_po = 'Closed' AND ps.[deleted] != 'DELETED' 
-                    ORDER BY p.created_at desc;
+                    WHERE ps.[deleted] != 'DELETED' and p.created_at > '2024-01-01'
+                    ORDER BY p.created_at desc
             """
         )
         pos = cursor.fetchall()
@@ -1880,7 +1880,6 @@ def send_between_locations(request):
             return JsonResponse({'error': str(e)}, status=500)
 
     return JsonResponse({'error': 'Invalid request'}, status=400)
-
 
 def import_file2(request):
     if request.method == "POST":
