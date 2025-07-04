@@ -2161,6 +2161,7 @@ def edit_pos(request, pos_id):
         pos.total_order_qty = request.POST.get('total_order_qty')
         pos.comment = request.POST.get('comment')
         pos.closed_po = request.POST.get('closed_po')
+        pos.type = request.POST.get('type')  # Add this line
 
         pos.save()  # Save updated PO entry
         messages.success(request, "PO updated successfully!")

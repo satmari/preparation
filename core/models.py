@@ -205,6 +205,7 @@ class BarcodeKIStocks(models.Model):
     class Meta:
         db_table = 'barcode_ki_stocks'
 
+
 class CarelabelKIStocks(models.Model):
     id = models.AutoField(primary_key=True)
     po_id = models.IntegerField()

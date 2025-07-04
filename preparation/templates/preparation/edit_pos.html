@@ -26,6 +26,17 @@
             <label for="total_order_qty" class="form-label">Total order qty:</label>
             <input type="text" id="total_order_qty" name="total_order_qty" class="form-control" value="{{ pos.total_order_qty }}" required>
         </div>
+
+        <div class="mb-3">
+            <label for="type" class="form-label">Type:</label>
+            <select name="type" id="type" class="form-select" required>
+                <option value="" {% if not pos.type %}selected{% endif %}>-- Select Type --</option>
+                <option value="ORANGE" {% if pos.type == "ORANGE" %}selected{% endif %}>ORANGE</option>
+                <option value="GREEN" {% if pos.type == "GREEN" %}selected{% endif %}>GREEN</option>
+                <option value="None" >None</option>
+            </select>
+        </div>
+
         <div class="mb-3">
             <label for="comment" class="form-label">Comment:</label>
             <input type="text" id="comment" name="comment" class="form-control" value="{{ pos.comment }}" required>
