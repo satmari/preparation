@@ -1786,10 +1786,10 @@ def send_between_locations(request):
             data = json.loads(request.body)
             print("Received data:", data)
 
-            # Clean incoming data (remove leading/trailing spaces but keep inner spaces)
+            # Clean incoming data
             material = data.get('material', '').strip()
             sku = data.get('sku', '').strip()
-            type_ = data.get('type', '').strip()
+            type_ = data.get('type', '').strip().lower()
             location = data.get('location', '').strip()
             destination = data.get('destination', '').strip()
 
@@ -1799,24 +1799,23 @@ def send_between_locations(request):
             place = data.get('place', '')
             place = place.strip() if place is not None else ''
 
-            # Handle price correctly (comma or dot)
-            price_raw = data.get('price')
-            price = ''
-            if price_raw not in [None, '']:
-                try:
-                    price = float(str(price_raw).replace(',', '.'))
-                except ValueError:
-                    return JsonResponse({'error': 'Invalid price format'}, status=400)
-
-            # Handle send_qty safely
+            # Handle send_qty
             try:
                 send_qty = int(data.get('send_qty'))
+                if send_qty <= 0:
+                    return JsonResponse({'error': 'Quantity must be greater than zero'}, status=400)
             except (ValueError, TypeError):
                 return JsonResponse({'error': 'Invalid quantity'}, status=400)
 
-            # Validate send_qty
-            if send_qty <= 0:
-                return JsonResponse({'error': 'Quantity must be greater than zero'}, status=400)
+            price = ''
+            if type_ == 'barcode':
+                price_raw = data.get('price')
+                if price_raw not in [None, '']:
+                    try:
+                        price = float(str(price_raw).replace(',', '.'))
+                    except ValueError:
+                        return JsonResponse({'error': 'Invalid price format'}, status=400)
+            # For non-barcode types, ignore price and allow ponum
 
             # Build filters
             filters = {
@@ -1824,19 +1823,15 @@ def send_between_locations(request):
                 'sku': sku,
                 'type': type_,
                 'location': location,
+                'ponum': ponum,
+                'place': place
             }
 
-            if price != '':
-                filters['price'] = price
-            else:
-                price = ''  # ensure it's empty string when blank
-
-            filters['ponum'] = ponum
-            filters['place'] = place
+            if type_ == 'barcode':
+                filters['price'] = price  # add price only for barcode
 
             print("Final filters used:", filters)
 
-            # Check total available
             total_available = Leftovers2.objects.filter(**filters).aggregate(
                 total_qty=Sum('qty')
             )['total_qty'] or 0
@@ -1853,7 +1848,7 @@ def send_between_locations(request):
                 material=material,
                 sku=sku,
                 type=type_,
-                price=price,
+                price=price if type_ == 'barcode' else None,
                 ponum=ponum,
                 qty=-send_qty,
                 status=f'SENT_TO_{destination.upper()}',
@@ -1866,7 +1861,7 @@ def send_between_locations(request):
                 material=material,
                 sku=sku,
                 type=type_,
-                price=price,
+                price=price if type_ == 'barcode' else None,
                 ponum=ponum,
                 qty=send_qty,
                 status=f'RECEIVED_FROM_{location.upper()}',
