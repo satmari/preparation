@@ -53,7 +53,7 @@
                         )">
                         Send to Subotica
                     </button>
-                    {% elif pos.location == 'Subotica' %}
+                    {% elif pos.location == 'Subotica' or pos.location == 'Senta' %}
                     <button class="btn btn-primary btn-sm"
                         onclick="openSendModal(
                             '{{ forloop.counter }}',
@@ -64,8 +64,8 @@
                             '{{ pos.place|escapejs }}',
                             '{{ pos.qty|escapejs }}',
                             'Kikinda'
-                        )">
-                        Send to Kikinda
+                        )" disabled>
+                        Send to Subotica
                     </button>
                     {% else %}
                     <button class="btn btn-secondary btn-sm" disabled>No action</button>
