@@ -112,7 +112,12 @@
                     {% endif %}
                 <br>
 
-                    <a href="{% url 'preparation:carelabel_request_action' 'error' request_data.id %}" class="btn btn-danger btn-sm">Set request as error</a>
+                    <!-- <a href="{% url 'preparation:carelabel_request_action' 'error' request_data.id %}" class="btn btn-danger btn-sm">Set request as error</a>-->
+                    <a href="{% url 'preparation:carelabel_request_action' 'error' request_data.id %}"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('⚠️ Are you sure you want to mark this request as ERROR? ');">
+                       Set request as error
+                    </a>
                 &nbsp;&nbsp;
                     <a href="{% url 'preparation:carelabel_request_action' 'rfid' request_data.id %}" class="btn btn-info btn-sm">Confirm request for RFID labels</a>
                 &nbsp;&nbsp;
