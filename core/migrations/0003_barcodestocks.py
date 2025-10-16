@@ -26,6 +26,7 @@ class Migration(migrations.Migration):
                 ('machine', models.TextField(blank=True, null=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
+                ('qty_waste', models.IntegerField(blank=True, null=True)),
             ],
             options={
                 'db_table': 'barcode_stocks',

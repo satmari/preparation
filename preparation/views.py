@@ -631,6 +631,7 @@ def add_to_stock(request):
         machine = request.POST.get('machine')
         machine_c = request.POST.get('machine_c')
         comment = request.POST.get('comment', '')
+        qty_waste = int(request.POST.get('qty_waste') or 0)
 
         # Validate required fields
         if not po_num or len(po_num) < 6 or len(po_num) > 7:
@@ -663,7 +664,8 @@ def add_to_stock(request):
                         qty=qty,
                         type="new",
                         comment=comment,
-                        machine=machine
+                        machine=machine,
+                        qty_waste=qty_waste
                     )
                     success_msg += "BarcodeStocks uspesno snimljen. <br>"  # Append the success message
                 except Exception as e:
