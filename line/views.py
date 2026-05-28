@@ -4,7 +4,7 @@ from datetime import timedelta
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import connection, connections
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils import timezone
 
 from core.models import *
@@ -48,7 +48,7 @@ def request_for_b_c(request, leader=None):
     # print(leader)
 
     error_msg = ""
-    success_msg = ""
+    success_msg = request.session.pop('success_msg', '')
 
     with connections['default'].cursor() as cursor:
         cursor.execute("""
@@ -131,11 +131,8 @@ def request_for_b_c(request, leader=None):
 
         # If there are no errors, pass success_msg to template
         if not error_msg:
-            return render(request, 'line/request_for_b_c.html', {
-                'pos': pos,
-                'leader': leader,
-                'success_msg': success_msg,
-            })
+            request.session['success_msg'] = success_msg
+            return redirect('line:request_for_b_c', leader=leader)
 
         # If errors exist, pass them to the template
         return render(request, 'line/request_for_b_c.html', {
@@ -146,15 +143,16 @@ def request_for_b_c(request, leader=None):
 
     else:
         return render(request, 'line/request_for_b_c.html', {
-            'leader':leader,
-            'pos':pos,
+            'leader': leader,
+            'pos': pos,
+            'success_msg': success_msg,
         })
 
 def request_for_sq(request, leader=None):
     # print(leader)
 
     error_msg = ""
-    success_msg = ""
+    success_msg = request.session.pop('success_msg', '')
 
     with connections['default'].cursor() as cursor:
         cursor.execute("""
@@ -213,12 +211,8 @@ def request_for_sq(request, leader=None):
 
         # If there are no errors, pass success_msg to template
         if not error_msg:
-            return render(request, 'line/request_for_sq.html', {
-                'pos': pos,
-                'leader': leader,
-                'success_msg': success_msg,
-                'error_msg': error_msg,
-            })
+            request.session['success_msg'] = success_msg
+            return redirect('line:request_for_sq', leader=leader)
 
         # If errors exist, pass them to the template
         return render(request, 'line/request_for_sq.html', {
@@ -229,8 +223,9 @@ def request_for_sq(request, leader=None):
 
     else:
         return render(request, 'line/request_for_sq.html', {
-            'leader':leader,
-            'pos':pos,
+            'leader': leader,
+            'pos': pos,
+            'success_msg': success_msg,
         })
 
 def request_history(request, type, line):

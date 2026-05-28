@@ -109,7 +109,7 @@ ORDER BY pos.po ASC, pos.size DESC""")
 
 #Request tables
 def barcode_requests(request, id=None, action=None):
-    success_msg = ""
+    success_msg = request.session.pop('success_msg', '')
     errors = []
 
     if request.method == 'POST':
@@ -130,6 +130,10 @@ def barcode_requests(request, id=None, action=None):
             errors.append("Request not found.")
         except ValueError:
             errors.append("Invalid quantity.")
+
+        if not errors:
+            request.session['success_msg'] = success_msg
+            return redirect('preparation:barcode_requests')
 
         #stay on same page
         # return render(request, 'preparation/barcode_requests.html', {
@@ -182,6 +186,24 @@ def barcode_requests(request, id=None, action=None):
                 columns = [col[0] for col in cursor.description]
                 request_new = dict(zip(columns, row))
 
+            material_str = None
+            try:
+                with connections['trebovanje_db'].cursor() as cursor:
+                    cursor.execute("""
+                        SELECT wc, material
+                        FROM trebovanje.dbo.sap_coois_all
+                        WHERE po LIKE %s
+                          AND wc NOT IN ('WCPS','WC03I','WC03I_K','WC03I_Z','WC03O','WC03O_K','WC03O_Z')
+                          AND material NOT LIKE 'K%%'
+                          AND material NOT LIKE 'CUT%%'
+                        ORDER BY wc ASC
+                    """, ['%' + request_new['ponum']])
+                    mat_rows = cursor.fetchall()
+                if mat_rows:
+                    material_str = '   '.join(f"{r[0]}-{r[1]}" for r in mat_rows)
+            except Exception:
+                pass
+
             PrintRequestLabels.objects.create(
                 po_id=request_new['po_id'],
                 po=request_new['ponum'],
@@ -194,7 +216,8 @@ def barcode_requests(request, id=None, action=None):
                 comment=request_new.get('comment'),
                 created=request_new['created_at'].strftime('%Y-%m-%d %H:%M') if request_new['created_at'] else '',
                 printer="Preparacija Zebra",
-                qty=request_new['qty']
+                qty=request_new['qty'],
+                material=material_str
             )
 
             success_msg = "Request sent to printer."
@@ -266,7 +289,7 @@ ORDER BY
     })
 
 def carelabel_requests(request, id=None, action=None):
-    success_msg = ""
+    success_msg = request.session.pop('success_msg', '')
     errors = []
 
     if request.method == 'POST':
@@ -287,6 +310,10 @@ def carelabel_requests(request, id=None, action=None):
             errors.append("Request not found.")
         except ValueError:
             errors.append("Invalid quantity.")
+
+        if not errors:
+            request.session['success_msg'] = success_msg
+            return redirect('preparation:carelabel_requests')
 
         #stay on same page
         # return render(request, 'preparation/carelabel_requests.html', {
@@ -339,6 +366,24 @@ def carelabel_requests(request, id=None, action=None):
                 columns = [col[0] for col in cursor.description]
                 request_new = dict(zip(columns, row))
 
+            material_str = None
+            try:
+                with connections['trebovanje_db'].cursor() as cursor:
+                    cursor.execute("""
+                        SELECT wc, material
+                        FROM trebovanje.dbo.sap_coois_all
+                        WHERE po LIKE %s
+                          AND wc NOT IN ('WCPS','WC03I','WC03I_K','WC03I_Z','WC03O','WC03O_K','WC03O_Z')
+                          AND material NOT LIKE 'K%%'
+                          AND material NOT LIKE 'CUT%%'
+                        ORDER BY wc ASC
+                    """, ['%' + request_new['ponum']])
+                    mat_rows = cursor.fetchall()
+                if mat_rows:
+                    material_str = '   '.join(f"{r[0]}-{r[1]}" for r in mat_rows)
+            except Exception:
+                pass
+
             PrintRequestLabels.objects.create(
                 po_id=request_new['po_id'],
                 po=request_new['ponum'],
@@ -351,7 +396,8 @@ def carelabel_requests(request, id=None, action=None):
                 comment=request_new.get('comment'),
                 created=request_new['created_at'].strftime('%Y-%m-%d %H:%M') if request_new['created_at'] else '',
                 printer="Preparacija Zebra",
-                qty=request_new['qty']
+                qty=request_new['qty'],
+                material=material_str
             )
 
             success_msg = "Request sent to printer."
@@ -423,7 +469,7 @@ ORDER BY
     })
 
 def secondq_requests(request, id=None, action=None):
-    success_msg = ""
+    success_msg = request.session.pop('success_msg', '')
     errors = []
 
     if request.method == 'POST':
@@ -444,6 +490,10 @@ def secondq_requests(request, id=None, action=None):
             errors.append("Request not found.")
         except ValueError:
             errors.append("Invalid quantity.")
+
+        if not errors:
+            request.session['success_msg'] = success_msg
+            return redirect('preparation:secondq_requests')
 
         #stay on same page
         # return render(request, 'preparation/secondq_requests.html', {
@@ -620,7 +670,7 @@ def functions(request):
 def add_to_stock(request):
     # return HttpResponse("add_to_stock view is working!")
     errors = []
-    success_msg = ""
+    success_msg = request.session.pop('success_msg', '')
 
     if request.method == 'POST':
         # print(request.POST)
@@ -697,10 +747,8 @@ def add_to_stock(request):
 
         # If there are no errors, pass success_msg to template
         if not errors:
-            return render(request, 'preparation/add_to_stock.html', {
-                'pos': Pos.objects.filter(closed_po='Open'),
-                'success_msg': success_msg
-            })
+            request.session['success_msg'] = success_msg
+            return redirect('preparation:add_to_stock')
 
         # If errors exist, pass them to the template
         return render(request, 'preparation/add_to_stock.html', {
@@ -709,7 +757,10 @@ def add_to_stock(request):
         })
 
     # If GET request, just render the form with open POS
-    return render(request, 'preparation/add_to_stock.html', {'pos': Pos.objects.filter(closed_po='Open')})
+    return render(request, 'preparation/add_to_stock.html', {
+        'pos': Pos.objects.filter(closed_po='Open'),
+        'success_msg': success_msg
+    })
 
 def back_from_module(request):
     # return HttpResponse("back_from_module view is working!")
@@ -722,7 +773,7 @@ def back_from_module(request):
     # print(lines)
 
     errors = []
-    success_msg = ""
+    success_msg = request.session.pop('success_msg', '')
 
     if request.method == 'POST':
         # print(request.POST)
@@ -799,11 +850,8 @@ def back_from_module(request):
 
         # If there are no errors, pass success_msg to template
         if not errors:
-            return render(request, 'preparation/back_from_module.html', {
-                'pos': Pos.objects.filter(closed_po='Open'),
-                'lines': lines,
-                'success_msg': success_msg
-            })
+            request.session['success_msg'] = success_msg
+            return redirect('preparation:back_from_module')
 
         # If errors exist, pass them to the template
         return render(request, 'preparation/back_from_module.html', {
@@ -816,14 +864,15 @@ def back_from_module(request):
     # If GET request, just render the form with open POS
     return render(request, 'preparation/back_from_module.html', {
         'pos': Pos.objects.filter(closed_po='Open'),
-        'lines': lines
+        'lines': lines,
+        'success_msg': success_msg
     })
 
 def reduce_from_stock(request):
     # return HttpResponse("reduce_from_stock view is working!")
 
     errors = []
-    success_msg = ""
+    success_msg = request.session.pop('success_msg', '')
 
     if request.method == 'POST':
         # print(request.POST)
@@ -892,10 +941,8 @@ def reduce_from_stock(request):
 
         # If there are no errors, pass success_msg to template
         if not errors:
-            return render(request, 'preparation/reduce_from_stock.html', {
-                'pos': Pos.objects.filter(closed_po='Open'),
-                'success_msg': success_msg
-            })
+            request.session['success_msg'] = success_msg
+            return redirect('preparation:reduce_from_stock')
 
         # If errors exist, pass them to the template
         return render(request, 'preparation/reduce_from_stock.html', {
@@ -905,14 +952,15 @@ def reduce_from_stock(request):
 
     # If GET request, just render the form with open POS
     return render(request, 'preparation/reduce_from_stock.html', {
-        'pos': Pos.objects.filter(closed_po='Open')
+        'pos': Pos.objects.filter(closed_po='Open'),
+        'success_msg': success_msg
     })
 
 def throw_away(request):
     # return HttpResponse("throw_away view is working!")
 
     errors = []
-    success_msg = ""
+    success_msg = request.session.pop('success_msg', '')
 
     # find list of materials
     with connections['trebovanje_db'].cursor() as cursor:
@@ -942,10 +990,8 @@ def throw_away(request):
 
         # If there are no errors, pass success_msg to template
         if not errors:
-            return render(request, 'preparation/throw_away.html', {
-                'materials': materials,
-                'success_msg': success_msg
-            })
+            request.session['success_msg'] = success_msg
+            return redirect('preparation:throw_away')
 
         # If errors exist, pass them to the template
         return render(request, 'preparation/throw_away.html', {
@@ -955,14 +1001,15 @@ def throw_away(request):
 
     # If GET request, just render the form with open POS
     return render(request, 'preparation/throw_away.html', {
-        'materials': materials
+        'materials': materials,
+        'success_msg': success_msg
     })
 
 def leftover(request):
     # return HttpResponse("Stock view is working!")
 
     errors = []
-    success_msg = ""
+    success_msg = request.session.pop('success_msg', '')
 
     # find list of materials
     with connections['trebovanje_db'].cursor() as cursor:
@@ -1018,11 +1065,8 @@ def leftover(request):
 
         # If there are no errors, pass success_msg to template
         if not errors:
-            return render(request, 'preparation/leftover.html', {
-                'materials': materials,
-                'skus': skus,
-                'success_msg': success_msg
-            })
+            request.session['success_msg'] = success_msg
+            return redirect('preparation:leftover')
 
         # If errors exist, pass them to the template
         return render(request, 'preparation/leftover.html', {
@@ -1031,13 +1075,17 @@ def leftover(request):
             'errors': errors
         })
 
-    return render(request, 'preparation/leftover.html', {'materials': materials, 'skus': skus})
+    return render(request, 'preparation/leftover.html', {
+        'materials': materials,
+        'skus': skus,
+        'success_msg': success_msg
+    })
 
 def leftover2(request):
     # Leftover 2
 
     errors = []
-    success_msg = ""
+    success_msg = request.session.pop('success_msg', '')
 
     # find list of materials
     with connections['trebovanje_db'].cursor() as cursor:
@@ -1127,12 +1175,8 @@ def leftover2(request):
 
         # If there are no errors, pass success_msg to template
         if not errors:
-            return render(request, 'preparation/leftover2.html', {
-                'materials': materials,
-                'skus': skus,
-                'pos': pos,
-                'success_msg': success_msg
-            })
+            request.session['success_msg'] = success_msg
+            return redirect('preparation:leftover2')
 
         # If errors exist, pass them to the template
         return render(request, 'preparation/leftover2.html', {
@@ -1143,15 +1187,20 @@ def leftover2(request):
         })
 
     # print("POs:", list(pos))
-    return render(request, 'preparation/leftover2.html', {'materials': materials, 'skus': skus, 'pos':pos })
+    return render(request, 'preparation/leftover2.html', {
+        'materials': materials,
+        'skus': skus,
+        'pos': pos,
+        'success_msg': success_msg
+    })
 
 def transfer_to_kikinda(request):
     # return HttpResponse("transfer_to_kikinda view is working!")
 
     error_msg = ""
-    error_msg_b = ""
-    error_msg_c = ""
-    success_msg = ""
+    error_msg_b = request.session.pop('error_msg_b', '')
+    error_msg_c = request.session.pop('error_msg_c', '')
+    success_msg = request.session.pop('success_msg', '')
 
     with connections['default'].cursor() as cursor:
         cursor.execute(
@@ -1300,12 +1349,10 @@ def transfer_to_kikinda(request):
 
         # If there are no errors, pass success_msg to template
         if not error_msg:
-            return render(request, 'preparation/transfer_to_kikinda.html', {
-                'pos': pos,
-                'success_msg': success_msg,
-                'error_msg_b': error_msg_b,
-                'error_msg_c': error_msg_c,
-            })
+            request.session['success_msg'] = success_msg
+            request.session['error_msg_b'] = error_msg_b
+            request.session['error_msg_c'] = error_msg_c
+            return redirect('preparation:transfer_to_kikinda')
 
         # If errors exist, pass them to the template
         return render(request, 'preparation/transfer_to_kikinda.html', {
@@ -1317,16 +1364,19 @@ def transfer_to_kikinda(request):
 
     # If GET request, just render the form with open POS
     return render(request, 'preparation/transfer_to_kikinda.html', {
-        'pos': pos
+        'pos': pos,
+        'success_msg': success_msg,
+        'error_msg_b': error_msg_b,
+        'error_msg_c': error_msg_c,
     })
 
 def transfer_to_senta(request):
     # return HttpResponse("transfer_to_senta view is under construction!")
 
     error_msg = ""
-    error_msg_b = ""
-    error_msg_c = ""
-    success_msg = ""
+    error_msg_b = request.session.pop('error_msg_b', '')
+    error_msg_c = request.session.pop('error_msg_c', '')
+    success_msg = request.session.pop('success_msg', '')
 
     with connections['default'].cursor() as cursor:
         cursor.execute(
@@ -1471,12 +1521,10 @@ def transfer_to_senta(request):
 
         # If there are no errors, pass success_msg to template
         if not error_msg:
-            return render(request, 'preparation/transfer_to_senta.html', {
-                'pos': pos,
-                'success_msg': success_msg,
-                'error_msg_b': error_msg_b,
-                'error_msg_c': error_msg_c,
-            })
+            request.session['success_msg'] = success_msg
+            request.session['error_msg_b'] = error_msg_b
+            request.session['error_msg_c'] = error_msg_c
+            return redirect('preparation:transfer_to_senta')
 
         # If errors exist, pass them to the template
         return render(request, 'preparation/transfer_to_senta.html', {
@@ -1488,7 +1536,10 @@ def transfer_to_senta(request):
 
     # If GET request, just render the form with open POS
     return render(request, 'preparation/transfer_to_senta.html', {
-        'pos': pos
+        'pos': pos,
+        'success_msg': success_msg,
+        'error_msg_b': error_msg_b,
+        'error_msg_c': error_msg_c,
     })
 
 def manual_request(request):
@@ -1502,7 +1553,7 @@ def manual_request(request):
     # print(lines)
 
     errors = []
-    success_msg = ""
+    success_msg = request.session.pop('success_msg', '')
 
     if request.method == 'POST':
         # print(request.POST)
@@ -1579,11 +1630,8 @@ def manual_request(request):
 
         # If there are no errors, pass success_msg to template
         if not errors:
-            return render(request, 'preparation/manual_request.html', {
-                'pos': Pos.objects.filter(closed_po='Open'),
-                'lines': lines,
-                'success_msg': success_msg
-            })
+            request.session['success_msg'] = success_msg
+            return redirect('preparation:manual_request')
 
         # If errors exist, pass them to the template
         return render(request, 'preparation/manual_request.html', {
@@ -1595,7 +1643,8 @@ def manual_request(request):
     # If GET request, just render the form with open POS
     return render(request, 'preparation/manual_request.html', {
         'pos': Pos.objects.filter(closed_po='Open'),
-        'lines': lines
+        'lines': lines,
+        'success_msg': success_msg
     })
 
 #Leftover

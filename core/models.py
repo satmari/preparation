@@ -290,6 +290,7 @@ class PrintRequestLabels(models.Model):
     created = models.CharField(max_length=255, null=True, blank=True)
     printer = models.CharField(max_length=255, null=True, blank=True)
     qty = models.CharField(max_length=255, null=True, blank=True)
+    material = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -292,16 +292,23 @@ def receive_from_su_b(request, id=None):
         except Exception as e:
             errors.append("Problem pri čuvanju u tabeli.")
 
+        if not errors:
+            request.session['success_msg'] = success_msg
+            return redirect('kikinda:receive_from_su_b')
+
         data = fetch_data()
         return render(request, 'kikinda/receive_from_su_b.html', {
             'data': data,
-            'success_msg': success_msg,
             'errors': errors
         })
 
     else:
+        success_msg = request.session.pop('success_msg', '')
         data = fetch_data()
-        return render(request, 'kikinda/receive_from_su_b.html', {'data': data})
+        return render(request, 'kikinda/receive_from_su_b.html', {
+            'data': data,
+            'success_msg': success_msg
+        })
 
 def receive_from_su_c(request, id=None):
     errors = []
@@ -437,24 +444,31 @@ def receive_from_su_c(request, id=None):
         except Exception as e:
             errors.append("Problem pri čuvanju u tabeli.")
 
+        if not errors:
+            request.session['success_msg'] = success_msg
+            return redirect('kikinda:receive_from_su_c')
+
         data = fetch_data()
         return render(request, 'kikinda/receive_from_su_c.html', {
             'data': data,
-            'success_msg': success_msg,
             'errors': errors
         })
 
     else:
+        success_msg = request.session.pop('success_msg', '')
         data = fetch_data()
-        return render(request, 'kikinda/receive_from_su_c.html', {'data': data})
+        return render(request, 'kikinda/receive_from_su_c.html', {
+            'data': data,
+            'success_msg': success_msg
+        })
 
 def give_to_the_line(request):
     # return HttpResponse("functions view is working!")
 
     error_msg = ""
-    error_msg_b = ""
-    error_msg_c = ""
-    success_msg = ""
+    error_msg_b = request.session.pop('error_msg_b', '')
+    error_msg_c = request.session.pop('error_msg_c', '')
+    success_msg = request.session.pop('success_msg', '')
 
     with connections['bbstock_db'].cursor() as cursor:
         cursor.execute("""
@@ -568,13 +582,10 @@ def give_to_the_line(request):
 
         # If there are no errors, pass success_msg to template
         if not error_msg:
-            return render(request, 'kikinda/give_to_the_line.html', {
-                'pos': pos,
-                'lines': lines,
-                'success_msg': success_msg,
-                'error_msg_b': error_msg_b,
-                'error_msg_c': error_msg_c,
-            })
+            request.session['success_msg'] = success_msg
+            request.session['error_msg_b'] = error_msg_b
+            request.session['error_msg_c'] = error_msg_c
+            return redirect('kikinda:give_to_the_line')
 
         # If errors exist, pass them to the template
         return render(request, 'kikinda/give_to_the_line.html', {
@@ -588,16 +599,19 @@ def give_to_the_line(request):
     # print(pos)
     return render(request, 'kikinda/give_to_the_line.html', {
         'pos': pos,
-        'lines': lines
+        'lines': lines,
+        'success_msg': success_msg,
+        'error_msg_b': error_msg_b,
+        'error_msg_c': error_msg_c,
     })
 
 def return_to_main(request):
     # return HttpResponse("functions view is working!")
 
     error_msg = ""
-    error_msg_b = ""
-    error_msg_c = ""
-    success_msg = ""
+    error_msg_b = request.session.pop('error_msg_b', '')
+    error_msg_c = request.session.pop('error_msg_c', '')
+    success_msg = request.session.pop('success_msg', '')
 
     with connections['default'].cursor() as cursor:
         cursor.execute("""
@@ -749,12 +763,10 @@ def return_to_main(request):
 
         # If there are no errors, pass success_msg to template
         if not error_msg:
-            return render(request, 'kikinda/return_to_main.html', {
-                'pos': pos,
-                'success_msg': success_msg,
-                'error_msg_b': error_msg_b,
-                'error_msg_c': error_msg_c,
-            })
+            request.session['success_msg'] = success_msg
+            request.session['error_msg_b'] = error_msg_b
+            request.session['error_msg_c'] = error_msg_c
+            return redirect('kikinda:return_to_main')
 
         # If errors exist, pass them to the template
         return render(request, 'kikinda/return_to_main.html', {
@@ -767,16 +779,18 @@ def return_to_main(request):
     # print(pos)
     return render(request, 'kikinda/return_to_main.html', {
         'pos': pos,
-
+        'success_msg': success_msg,
+        'error_msg_b': error_msg_b,
+        'error_msg_c': error_msg_c,
     })
 
 def reduce_from_stock(request):
     # return HttpResponse("functions view is working!")
 
     error_msg = ""
-    error_msg_b = ""
-    error_msg_c = ""
-    success_msg = ""
+    error_msg_b = request.session.pop('error_msg_b', '')
+    error_msg_c = request.session.pop('error_msg_c', '')
+    success_msg = request.session.pop('success_msg', '')
 
     with connections['default'].cursor() as cursor:
         cursor.execute("""
@@ -881,12 +895,10 @@ def reduce_from_stock(request):
 
         # If there are no errors, pass success_msg to template
         if not error_msg:
-            return render(request, 'kikinda/reduce_from_stock.html', {
-                'pos': pos,
-                'success_msg': success_msg,
-                'error_msg_b': error_msg_b,
-                'error_msg_c': error_msg_c,
-            })
+            request.session['success_msg'] = success_msg
+            request.session['error_msg_b'] = error_msg_b
+            request.session['error_msg_c'] = error_msg_c
+            return redirect('kikinda:reduce_from_stock')
 
         # If errors exist, pass them to the template
         return render(request, 'kikinda/reduce_from_stock.html', {
@@ -899,7 +911,9 @@ def reduce_from_stock(request):
     # print(pos)
     return render(request, 'kikinda/reduce_from_stock.html', {
         'pos': pos,
-
+        'success_msg': success_msg,
+        'error_msg_b': error_msg_b,
+        'error_msg_c': error_msg_c,
     })
 
 def back_from_module(request):
@@ -928,7 +942,7 @@ def back_from_module(request):
     pos = [{'po': row[0]} for row in pos_rows]
 
     errors = []
-    success_msg = ""
+    success_msg = request.session.pop('success_msg', '')
 
     if request.method == 'POST':
         # print(request.POST)
@@ -1005,11 +1019,8 @@ def back_from_module(request):
 
         # If there are no errors, pass success_msg to template
         if not errors:
-            return render(request, 'kikinda/back_from_module.html', {
-                'pos': pos,
-                'lines': lines,
-                'success_msg': success_msg
-            })
+            request.session['success_msg'] = success_msg
+            return redirect('kikinda:back_from_module')
 
         # If errors exist, pass them to the template
         return render(request, 'kikinda/back_from_module.html', {
@@ -1022,5 +1033,6 @@ def back_from_module(request):
     # If GET request, just render the form with open POS
     return render(request, 'kikinda/back_from_module.html', {
         'pos': pos,
-        'lines': lines
+        'lines': lines,
+        'success_msg': success_msg
     })
