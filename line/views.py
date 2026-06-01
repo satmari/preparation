@@ -1,6 +1,6 @@
 # line/views.py
 import traceback
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import connection, connections
@@ -19,13 +19,10 @@ def ll_login(request):
     error_msg = ''
 
     if request.method == 'POST':
-        # return HttpResponse("POST request received successfully!")
-
         password = request.POST.get('password')
 
         if not password or not (4 <= len(password) <= 5):
             error_msg += 'PIN must be between 4 and 5 characters.<br>'
-            # return render(request, 'line/error.html', {'msg': msg})
 
         with connections['inteos_db'].cursor() as cursor:
             cursor.execute("""
@@ -38,11 +35,14 @@ def ll_login(request):
             error_msg += 'LineLeader with this PIN does not exist <br>'
             return render(request, 'line/ll_login.html', {'error_msg': error_msg})
         else:
-            leader = rows[0][0]  # get the first Name
+            leader = rows[0][0]
             request.session['leader'] = leader
             return render(request, 'line/ll_login.html', {'leader': leader})
     else:
-        return render(request, 'line/ll_login.html')
+        success_msg = request.session.pop('success_msg', '')
+        return render(request, 'line/ll_login.html', {
+            'success_msg': success_msg,
+        })
 
 def request_for_b_c(request, leader=None):
     # print(leader)
@@ -85,54 +85,77 @@ def request_for_b_c(request, leader=None):
             if po.closed_po == 'Closed':
                 error_msg += "PO is Closed <br/>"
 
+        cutoff = datetime.now() - timedelta(seconds=15)
+
         # Handle barcode
         if barcode != '0':
+            duplicate = BarcodeRequests.objects.filter(
+                user_id=request.user.id,
+                ponum=po_num,
+                type="modul",
+                status='pending',
+                comment=comment,
+                created_at__gte=cutoff
+            ).exists()
 
-            try:
-                BarcodeRequests.objects.create(
-                    po_id=po.id,
-                    user_id=request.user.id,
-                    ponum=po_num,
-                    size=po.size,
-                    # qty=int(qty),
-                    module=request.user.username,
-                    leader=leader,
-                    type="modul",
-                    status='pending',
-                    comment=comment,
-                )
+            if not duplicate:
+                try:
+                    BarcodeRequests.objects.create(
+                        po_id=po.id,
+                        user_id=request.user.id,
+                        ponum=po_num,
+                        size=po.size,
+                        module=request.user.username,
+                        leader=leader,
+                        type="modul",
+                        status='pending',
+                        comment=comment,
+                    )
+                    success_msg += "Zahtev za barkod etikete uspešno snimljen <br>"
+                except Exception as e:
+                    traceback.print_exc()
+                    error_msg += "Problem saving to BarcodeKiStocks table"
+            else:
                 success_msg += "Zahtev za barkod etikete uspešno snimljen <br>"
-            except Exception as e:
-                traceback.print_exc()
-                error_msg += "Problem saving to BarcodeKiStocks table"
 
         # Handle carelabel
         if carelabel != '0':
+            duplicate = CarelabelRequests.objects.filter(
+                user_id=request.user.id,
+                ponum=po_num,
+                type="modul",
+                status='pending',
+                comment=comment,
+                created_at__gte=cutoff
+            ).exists()
 
-            try:
-                CarelabelRequests.objects.create(
-                    po_id=po.id,
-                    user_id=request.user.id,
-                    ponum=po_num,
-                    size=po.size,
-                    # qty=int(qty),
-                    module=request.user.username,
-                    leader=leader,
-                    type="modul",
-                    status='pending',
-                    comment=comment,
-                )
+            if not duplicate:
+                try:
+                    CarelabelRequests.objects.create(
+                        po_id=po.id,
+                        user_id=request.user.id,
+                        ponum=po_num,
+                        size=po.size,
+                        module=request.user.username,
+                        leader=leader,
+                        type="modul",
+                        status='pending',
+                        comment=comment,
+                    )
+                    success_msg += "Zahtev za stranične etikete uspešno snimljen"
+                except Exception as e:
+                    error_msg = "Problem saving to CarelabelKiStocks table"
+            else:
                 success_msg += "Zahtev za stranične etikete uspešno snimljen"
-            except Exception as e:
-                error_msg = "Problem saving to CarelabelKiStocks table"
 
         if carelabel == '0' and barcode == '0':
             error_msg = "Nije označen ni barcode ni carelabel"
 
-        # If there are no errors, pass success_msg to template
+        # If there are no errors, logout and redirect to login page with success message
         if not error_msg:
             request.session['success_msg'] = success_msg
-            return redirect('line:request_for_b_c', leader=leader)
+            request.session.pop('leader', None)
+            return redirect('line:ll_login')
 
         # If errors exist, pass them to the template
         return render(request, 'line/request_for_b_c.html', {
@@ -188,31 +211,43 @@ def request_for_sq(request, leader=None):
             if po.closed_po == 'Closed':
                 error_msg += "PO is Closed <br/>"
 
-        try:
-            SecondQRequests.objects.create(
-                po_id=po.id,
-                user_id=request.user.id,
-                ponum=po_num,
-                size=po.size,
-                style=po.style,
-                color=po.color,
-                # qty=int(qty),
-                module=request.user.username,
-                leader=leader,
-                type="modul",
-                status='pending',
-                comment=comment
-            )
+        duplicate = SecondQRequests.objects.filter(
+            user_id=request.user.id,
+            ponum=po_num,
+            type="modul",
+            status='pending',
+            comment=comment,
+            created_at__gte=datetime.now() - timedelta(seconds=15)
+        ).exists()
+
+        if not duplicate:
+            try:
+                SecondQRequests.objects.create(
+                    po_id=po.id,
+                    user_id=request.user.id,
+                    ponum=po_num,
+                    size=po.size,
+                    style=po.style,
+                    color=po.color,
+                    module=request.user.username,
+                    leader=leader,
+                    type="modul",
+                    status='pending',
+                    comment=comment
+                )
+                success_msg = "Zahtev za drugu klasu uspešno snimljen <br>"
+            except Exception as e:
+                # traceback.print_exc()
+                error_msg += "Problem saving to SecondQRequests table"
+        else:
             success_msg = "Zahtev za drugu klasu uspešno snimljen <br>"
-        except Exception as e:
-            # traceback.print_exc()
-            error_msg += "Problem saving to SecondQRequests table"
 
 
-        # If there are no errors, pass success_msg to template
+        # If there are no errors, logout and redirect to login page with success message
         if not error_msg:
             request.session['success_msg'] = success_msg
-            return redirect('line:request_for_sq', leader=leader)
+            request.session.pop('leader', None)
+            return redirect('line:ll_login')
 
         # If errors exist, pass them to the template
         return render(request, 'line/request_for_sq.html', {

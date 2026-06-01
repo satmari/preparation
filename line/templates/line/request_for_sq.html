@@ -70,7 +70,7 @@
                     <br>
 
                     <div class="panel-body mt-4">
-                        <input type="submit" value="Sačuvaj" class="btn btn-success">
+                        <input type="submit" id="submit-btn" value="Sačuvaj" class="btn btn-success">
                     </div>
                 </form>
             </div>
@@ -82,6 +82,53 @@
 {% block scripts %}
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+
+        var submitting = false;
+
+        window.addEventListener('pageshow', function () {
+            submitting = false;
+            var btn = document.getElementById('submit-btn');
+            if (btn) {
+                btn.type = 'submit';
+                btn.disabled = false;
+                btn.style.backgroundColor = '';
+                btn.style.borderColor = '';
+                btn.style.cursor = '';
+                btn.style.pointerEvents = '';
+                btn.value = 'Sačuvaj';
+            }
+        });
+
+        document.querySelector('form').addEventListener('submit', function (e) {
+            if (submitting) { e.preventDefault(); return; }
+            submitting = true;
+            var btn = document.getElementById('submit-btn');
+            btn.type = 'button';
+            btn.disabled = true;
+            btn.style.backgroundColor = '#dc3545';
+            btn.style.borderColor = '#dc3545';
+            btn.style.cursor = 'not-allowed';
+            btn.style.pointerEvents = 'none';
+            var seconds = 10;
+            btn.value = 'Sačekaj (' + seconds + 's)';
+            var interval = setInterval(function () {
+                seconds--;
+                if (seconds <= 0) {
+                    clearInterval(interval);
+                    submitting = false;
+                    btn.type = 'submit';
+                    btn.disabled = false;
+                    btn.style.backgroundColor = '';
+                    btn.style.borderColor = '';
+                    btn.style.cursor = '';
+                    btn.style.pointerEvents = '';
+                    btn.value = 'Sačuvaj';
+                } else {
+                    btn.value = 'Sačekaj (' + seconds + 's)';
+                }
+            }, 1000);
+        });
+
         // Initialize Select2 for the Pos dropdown
         $('#pos').select2({
             width: '100%',
