@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'preparation',
     'line',
     'kikinda',
-    'senta'
+    'senta',
+    'job_management',
 ]
 
 MIDDLEWARE = [
@@ -73,7 +74,7 @@ ROOT_URLCONF = 'project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'templates', BASE_DIR / 'job_management' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

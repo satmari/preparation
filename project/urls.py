@@ -32,6 +32,7 @@ urlpatterns = [
     path('line/', include('line.urls')),
     path('kikinda/', include('kikinda.urls')),
     path('senta/', include('senta.urls')),
+    path('job-management/', include('job_management.urls')),
 ]
 
 
