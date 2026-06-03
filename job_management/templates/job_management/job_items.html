@@ -14,11 +14,11 @@
 
     <div class="text-center mb-3">
         <div class="btn-group" role="group">
-            <button class="btn btn-danger prio-filter" data-prio="Priority 1" style="min-width:110px;">Priority 1</button>
-            <button class="btn btn-warning prio-filter" data-prio="Priority 2" style="min-width:110px;">Priority 2</button>
-            <button class="btn btn-info prio-filter" data-prio="Priority 3" style="min-width:110px;">Priority 3</button>
-            <button class="btn btn-secondary prio-filter" data-prio="Priority 4" style="min-width:110px;">Priority 4</button>
-            <button class="btn btn-dark prio-filter" data-prio="" style="min-width:80px;">All</button>
+            <button class="btn btn-danger prio-filter" data-prio="Priority 1" style="min-width:110px;">Priority 1 <span class="badge bg-light text-danger ms-1">{{ prio1_count }}</span></button>
+            <button class="btn btn-warning prio-filter" data-prio="Priority 2" style="min-width:110px;">Priority 2 <span class="badge bg-light text-warning ms-1">{{ prio2_count }}</span></button>
+            <button class="btn btn-info prio-filter" data-prio="Priority 3" style="min-width:110px;">Priority 3 <span class="badge bg-light text-info ms-1">{{ prio3_count }}</span></button>
+            <button class="btn btn-secondary prio-filter" data-prio="Priority 4" style="min-width:110px;">Priority 4 <span class="badge bg-light text-secondary ms-1">{{ prio4_count }}</span></button>
+            <button class="btn btn-dark prio-filter" data-prio="" style="min-width:80px;">All <span class="badge bg-light text-dark ms-1">{{ items|length }}</span></button>
         </div>
     </div>
 
@@ -176,7 +176,7 @@ $(document).ready(function () {
         ],
     });
 
-    $('.prio-filter').on('click', function () {
+$('.prio-filter').on('click', function () {
         var prio = $(this).data('prio');
         $('.prio-filter').removeClass('active');
         $(this).addClass('active');

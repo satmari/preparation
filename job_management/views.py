@@ -216,7 +216,14 @@ def job_items(request):
         key=lambda x: PRIORITY_ORDER.get(x.priority, 99)
     )
     operators = Operator.objects.filter(status='ACTIVE').order_by('operator_name')
-    return render(request, 'job_management/job_items.html', {'items': items, 'operators': operators})
+    return render(request, 'job_management/job_items.html', {
+        'items': items,
+        'operators': operators,
+        'prio1_count': sum(1 for i in items if i.priority == 'Priority 1'),
+        'prio2_count': sum(1 for i in items if i.priority == 'Priority 2'),
+        'prio3_count': sum(1 for i in items if i.priority == 'Priority 3'),
+        'prio4_count': sum(1 for i in items if i.priority == 'Priority 4'),
+    })
 
 
 @login_required
