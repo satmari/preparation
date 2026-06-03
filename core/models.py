@@ -322,3 +322,55 @@ class SecondQRequests(models.Model):
 
     class Meta:
         db_table = 'secondq_requests'
+
+
+class Operator(models.Model):
+    operator_name = models.CharField(max_length=255)
+    status = models.CharField(max_length=20, default='ACTIVE')
+
+    class Meta:
+        db_table = 'operators'
+
+    def __str__(self):
+        return self.operator_name
+
+
+class JobManagementItem(models.Model):
+    pro = models.CharField(max_length=255)
+    pro_new = models.CharField(max_length=50, null=True, blank=True)
+    pro_id = models.IntegerField(null=True, blank=True)
+    location = models.CharField(max_length=255, null=True, blank=True)
+    skeda = models.CharField(max_length=255, null=True, blank=True)
+    print_type = models.CharField(max_length=20)  # BARCODE or CARELABEL
+    pro_print_type = models.CharField(max_length=300, unique=True)
+    qty = models.IntegerField(null=True, blank=True)
+    priority = models.CharField(max_length=50, null=True, blank=True)
+    status = models.CharField(max_length=50, default='NEW')
+    operator = models.CharField(max_length=255, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'job_management_items'
+        unique_together = [['pro', 'print_type']]
+
+
+class JobManagementItemLog(models.Model):
+    pro = models.CharField(max_length=255)
+    pro_new = models.CharField(max_length=50, null=True, blank=True)
+    pro_id = models.IntegerField(null=True, blank=True)
+    location = models.CharField(max_length=255, null=True, blank=True)
+    skeda = models.CharField(max_length=255, null=True, blank=True)
+    print_type = models.CharField(max_length=20)
+    pro_print_type = models.CharField(max_length=300)
+    qty = models.IntegerField(null=True, blank=True)
+    priority = models.CharField(max_length=50, null=True, blank=True)
+    status = models.CharField(max_length=50, null=True, blank=True)
+    operator = models.CharField(max_length=255, null=True, blank=True)
+    created_new_at = models.DateTimeField(null=True, blank=True)
+    assigned_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'job_management_items_log'

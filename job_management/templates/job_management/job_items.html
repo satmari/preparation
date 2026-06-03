@@ -1,0 +1,220 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Job Management - Items{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 mt-3">
+
+    <div class="d-flex align-items-center mb-2">
+        <h5 class="mb-0">Job Management Items</h5>
+        <span class="ms-3 badge bg-secondary">{{ items|length }} records</span>
+        <a href="{% url 'job_management:pos_overview' %}" class="btn btn-sm btn-outline-secondary ms-3">&larr; Back to Job Management</a>
+    </div>
+
+    <div class="text-center mb-3">
+        <div class="btn-group" role="group">
+            <button class="btn btn-danger prio-filter" data-prio="Priority 1" style="min-width:110px;">Priority 1</button>
+            <button class="btn btn-warning prio-filter" data-prio="Priority 2" style="min-width:110px;">Priority 2</button>
+            <button class="btn btn-info prio-filter" data-prio="Priority 3" style="min-width:110px;">Priority 3</button>
+            <button class="btn btn-secondary prio-filter" data-prio="Priority 4" style="min-width:110px;">Priority 4</button>
+            <button class="btn btn-dark prio-filter" data-prio="" style="min-width:80px;">All</button>
+        </div>
+    </div>
+
+    <table id="job-items-table" class="table table-sm table-bordered table-hover" style="width:100%; font-size:0.78rem;">
+        <thead>
+            <tr>
+                <th>PRO</th>
+                <th>PRO New</th>
+                <th>PRO ID</th>
+                <th>Location</th>
+                <th>Skeda</th>
+                <th>Print Type</th>
+                <th>Priority</th>
+                <th>Qty</th>
+                <th>Status</th>
+                <th>Operator</th>
+                <th>Updated At</th>
+                <th>Created At</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr id="row-{{ item.id }}">
+                <td>{{ item.pro }}</td>
+                <td>{{ item.pro_new|default:"-" }}</td>
+                <td>{{ item.pro_id|default:"-" }}</td>
+                <td>{{ item.location|default:"-" }}</td>
+                <td>{{ item.skeda|default:"-" }}</td>
+                <td>
+                    {% if item.print_type == 'BARCODE' %}
+                        <span class="badge" style="background-color:darkseagreen; color:#000;">BARCODE</span>
+                    {% else %}
+                        <span class="badge" style="background-color:deepskyblue; color:#000;">CARELABEL</span>
+                    {% endif %}
+                </td>
+                <td data-order="{{ item.priority|default:'' }}" data-search="{{ item.priority|default:'' }}">
+                    {% if item.priority == 'Priority 1' %}
+                        <span class="badge bg-danger">Priority 1</span>
+                    {% elif item.priority == 'Priority 2' %}
+                        <span class="badge bg-warning text-dark">Priority 2</span>
+                    {% elif item.priority == 'Priority 3' %}
+                        <span class="badge bg-info text-dark">Priority 3</span>
+                    {% elif item.priority == 'Priority 4' %}
+                        <span class="badge bg-secondary">Priority 4</span>
+                    {% else %}-{% endif %}
+                </td>
+                <td>{{ item.qty|default:"-" }}</td>
+                <td class="cell-status" data-order="{{ item.status }}">
+                    {% if item.status == 'ASSIGNED' %}
+                        <span class="badge bg-primary">ASSIGNED</span>
+                    {% else %}
+                        <span class="badge bg-secondary">{{ item.status }}</span>
+                    {% endif %}
+                </td>
+                <td class="cell-operator">{{ item.operator|default:"-" }}</td>
+                <td>{{ item.updated_at|date:"Y-m-d H:i" }}</td>
+                <td>{{ item.created_at|date:"Y-m-d H:i" }}</td>
+                <td class="text-nowrap">
+                    <button class="btn btn-sm btn-outline-primary assign-btn me-1"
+                            data-id="{{ item.id }}"
+                            data-pro="{{ item.pro }}"
+                            data-type="{{ item.print_type }}">
+                        Assign Operator
+                    </button>
+                    <a href="{% url 'job_management:send_to_stock' item.id %}"
+                       class="btn btn-sm btn-success {% if item.status != 'ASSIGNED' %}disabled{% endif %}"
+>
+                        Send to Stock
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="13" class="text-center text-muted">No items yet. Use "Apply Jobs" to populate.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Assign Operator Modal -->
+<div class="modal fade" id="assignModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:420px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Assign Operator</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted mb-3" id="assign-modal-subtitle" style="font-size:0.85rem;"></p>
+                <div id="operator-options">
+                    {% for op in operators %}
+                    <div class="operator-option">
+                        <input type="radio" name="operator_radio" id="op_{{ op.id }}" value="{{ op.operator_name }}">
+                        <label for="op_{{ op.id }}">{{ op.operator_name }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary px-4" id="confirm-assign">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.operator-option { margin-bottom: 8px; }
+.operator-option input[type="radio"] { display: none; }
+.operator-option label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 13px 18px;
+    border-radius: 10px;
+    border: 2px solid #dee2e6;
+    font-size: 1.05rem;
+    transition: border-color 0.15s, background 0.15s;
+    user-select: none;
+    margin: 0;
+}
+.operator-option label::before {
+    content: '';
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid #adb5bd;
+    margin-right: 14px;
+    flex-shrink: 0;
+    transition: background 0.15s, border-color 0.15s;
+}
+.operator-option input:checked + label {
+    border-color: #0d6efd;
+    background: #e7f1ff;
+}
+.operator-option input:checked + label::before {
+    background: #0d6efd;
+    border-color: #0d6efd;
+}
+</style>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function () {
+    var table = $('#job-items-table').DataTable({
+        pageLength: 100,
+        order: [],
+        fixedHeader: true,
+        columnDefs: [
+            { targets: [1, 2], visible: false },
+        ],
+    });
+
+    $('.prio-filter').on('click', function () {
+        var prio = $(this).data('prio');
+        $('.prio-filter').removeClass('active');
+        $(this).addClass('active');
+        table.column(6).search(prio ? '^' + prio + '$' : '', true, false).draw();
+    });
+
+    var currentItemId = null;
+
+    $(document).on('click', '.assign-btn', function () {
+        currentItemId = $(this).data('id');
+        $('#assign-modal-subtitle').text($(this).data('pro') + ' — ' + $(this).data('type'));
+        $('input[name="operator_radio"]').prop('checked', false);
+        var modal = new bootstrap.Modal(document.getElementById('assignModal'));
+        modal.show();
+    });
+
+    $('#confirm-assign').on('click', function () {
+        var selected = $('input[name="operator_radio"]:checked').val();
+        if (!selected) { alert('Please select an operator.'); return; }
+
+        $.ajax({
+            url: '{% url "job_management:assign_operator" %}',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ item_id: currentItemId, operator_name: selected }),
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+            success: function (resp) {
+                if (resp.ok) {
+                    var $row = $('#row-' + currentItemId);
+                    $row.find('.cell-status').attr('data-order', 'ASSIGNED').html('<span class="badge bg-primary">ASSIGNED</span>');
+                    $row.find('.cell-operator').text(resp.operator);
+                    $row.find('a.btn-success').removeClass('disabled');
+                    bootstrap.Modal.getInstance(document.getElementById('assignModal')).hide();
+                }
+            },
+            error: function () { alert('Error saving operator.'); }
+        });
+    });
+});
+</script>
+{% endblock %}

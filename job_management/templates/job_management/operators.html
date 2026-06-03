@@ -1,0 +1,51 @@
+{% extends "core/base.html" %}
+
+{% block title %}Operators{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="max-width:560px;">
+
+    <div class="d-flex align-items-center mb-3">
+        <h5 class="mb-0">Operators</h5>
+        <a href="{% url 'job_management:pos_overview' %}" class="btn btn-sm btn-outline-secondary ms-3">&larr; Back to Job Management</a>
+    </div>
+
+    <!-- Add form -->
+    <div class="card mb-4">
+        <div class="card-body py-3">
+            <form method="post" action="{% url 'job_management:operator_add' %}" class="d-flex gap-2">
+                {% csrf_token %}
+                <input type="text" name="operator_name" class="form-control form-control-sm" placeholder="Operator name" required>
+                <button type="submit" class="btn btn-sm btn-primary text-nowrap">Add Operator</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Operator list -->
+    <ul class="list-group">
+        {% for op in operators %}
+        <li class="list-group-item d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+                <span>{{ op.operator_name }}</span>
+                {% if op.status == 'ACTIVE' %}
+                    <span class="badge bg-success">ACTIVE</span>
+                {% else %}
+                    <span class="badge bg-secondary">NOTACTIVE</span>
+                {% endif %}
+            </div>
+            <form method="post" action="{% url 'job_management:operator_edit' op.pk %}" class="d-flex align-items-center gap-2 mb-0">
+                {% csrf_token %}
+                <select name="status" class="form-select form-select-sm" style="width:120px;">
+                    <option value="ACTIVE" {% if op.status == 'ACTIVE' %}selected{% endif %}>ACTIVE</option>
+                    <option value="NOTACTIVE" {% if op.status == 'NOTACTIVE' %}selected{% endif %}>NOTACTIVE</option>
+                </select>
+                <button type="submit" class="btn btn-sm btn-outline-primary">Save</button>
+            </form>
+        </li>
+        {% empty %}
+        <li class="list-group-item text-muted">No operators found.</li>
+        {% endfor %}
+    </ul>
+
+</div>
+{% endblock %}

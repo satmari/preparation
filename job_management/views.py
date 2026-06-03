@@ -1,18 +1,20 @@
 # job_management/views.py
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.http import JsonResponse
 from django.db import connection, connections
 
 
-@login_required
-def pos_overview(request):
-
-    # Main query: pos + posummary + barcode/carelabel stocks
+def _build_pos_list():
     with connection.cursor() as cursor:
         cursor.execute("""
             SELECT
                 posum.pro                       AS posumm_pro,
                 posum.qty                       AS posumm_qty,
+                posum.id                        AS posumm_pro_id,
+                posum.location_all              AS posumm_location,
+                posum.skeda                     AS posumm_skeda,
                 pos.po,
                 pos.po_new,
                 pos.total_order_qty,
@@ -43,7 +45,6 @@ def pos_overview(request):
         columns = [col[0] for col in cursor.description]
         pos_list = [dict(zip(columns, row)) for row in rows]
 
-    # Inteos query: box qty per POnum
     with connections['inteos_db'].cursor() as cursor:
         cursor.execute("""
             WITH Delivered AS (
@@ -101,10 +102,8 @@ def pos_overview(request):
         """)
         inteos_rows = cursor.fetchall()
 
-    # RIGHT(POnum, 7) = po_new
     inteos_dict = {str(ponum or '')[-7:]: (box_qty or 0) for ponum, box_qty in inteos_rows}
 
-    # Truck/cutting query — runs on posummary_db (172.27.161.200)
     with connections['posummary_db'].cursor() as cursor:
         cursor.execute("""
             SELECT
@@ -135,7 +134,6 @@ def pos_overview(request):
         """)
         truck_rows = cursor.fetchall()
 
-    # bbStock delivered/wip/finishing — po_new = SUBSTRING(bbname, 6, 7)
     with connections['bbstock_db'].cursor() as cursor:
         cursor.execute("""
             SELECT DISTINCT SUBSTRING([bbname], 6, 7)
@@ -144,7 +142,6 @@ def pos_overview(request):
         """)
         bb_set = {row[0] for row in cursor.fetchall() if row[0]}
 
-    # Aggregate by RIGHT(pro, 7) = po_new, skip rows where total_to_send = 0
     truck_dict = {}
     for pro, qty_to_cut, qty_bb_su in truck_rows:
         total = (qty_to_cut or 0) + (qty_bb_su or 0)
@@ -201,4 +198,195 @@ def pos_overview(request):
         pos['c_prio_label'] = calc_priority(pos['c_priority'], pos['c_priority4'])
         pos['b_prio_label'] = calc_priority(pos['b_priority'], pos['b_priority4'])
 
+    return pos_list
+
+
+@login_required
+def pos_overview(request):
+    pos_list = _build_pos_list()
     return render(request, 'job_management/pos_overview.html', {'pos_list': pos_list})
+
+
+@login_required
+def job_items(request):
+    from core.models import JobManagementItem, Operator
+    PRIORITY_ORDER = {'Priority 1': 1, 'Priority 2': 2, 'Priority 3': 3, 'Priority 4': 4}
+    items = sorted(
+        JobManagementItem.objects.all(),
+        key=lambda x: PRIORITY_ORDER.get(x.priority, 99)
+    )
+    operators = Operator.objects.filter(status='ACTIVE').order_by('operator_name')
+    return render(request, 'job_management/job_items.html', {'items': items, 'operators': operators})
+
+
+@login_required
+def assign_operator(request):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST required'}, status=405)
+    from core.models import JobManagementItem
+    import json
+    data = json.loads(request.body)
+    item_id = data.get('item_id')
+    operator_name = data.get('operator_name')
+    try:
+        item = JobManagementItem.objects.get(id=item_id)
+        item.operator = operator_name
+        item.status = 'ASSIGNED'
+        item.save()
+        return JsonResponse({'ok': True, 'operator': operator_name, 'status': item.status})
+    except JobManagementItem.DoesNotExist:
+        return JsonResponse({'error': 'Not found'}, status=404)
+
+
+@login_required
+def operators_list(request):
+    from core.models import Operator
+    operators = Operator.objects.all().order_by('operator_name')
+    return render(request, 'job_management/operators.html', {'operators': operators})
+
+
+@login_required
+def send_to_stock(request, item_id):
+    from core.models import JobManagementItem, JobManagementItemLog, Pos, BarcodeStocks, CarelabelStocks
+
+    try:
+        item = JobManagementItem.objects.get(id=item_id, status='ASSIGNED')
+    except JobManagementItem.DoesNotExist:
+        messages.error(request, 'Item not found or not in ASSIGNED status.')
+        return redirect('job_management:job_items')
+
+    # Find the local Pos record via po_new
+    pos_obj = None
+    try:
+        pos_obj = Pos.objects.get(po_new=item.pro_new)
+    except (Pos.DoesNotExist, Pos.MultipleObjectsReturned):
+        pass
+
+    if request.method == 'POST':
+        qty = int(request.POST.get('qty') or 0)
+        qty_waste = int(request.POST.get('qty_waste') or 0)
+        machine = request.POST.get('machine') or request.POST.get('machine_c') or ''
+        comment = request.POST.get('comment', '')
+
+        if item.print_type == 'BARCODE' and pos_obj:
+            BarcodeStocks.objects.create(
+                po_id=pos_obj.id, user_id=request.user.id,
+                ponum=pos_obj.po, size=pos_obj.size,
+                qty=qty, qty_waste=qty_waste,
+                type='new', comment=comment, machine=machine,
+            )
+        elif item.print_type == 'CARELABEL' and pos_obj:
+            CarelabelStocks.objects.create(
+                po_id=pos_obj.id, user_id=request.user.id,
+                ponum=pos_obj.po, size=pos_obj.size,
+                qty=qty, type='new', comment=comment, machine=machine,
+            )
+
+        JobManagementItemLog.objects.create(
+            pro=item.pro, pro_new=item.pro_new, pro_id=item.pro_id,
+            location=item.location, skeda=item.skeda,
+            print_type=item.print_type, pro_print_type=item.pro_print_type,
+            qty=qty, priority=item.priority,
+            status='SENT_TO_STOCK', operator=item.operator,
+            created_new_at=item.created_at,
+            assigned_at=item.updated_at,
+        )
+        item.delete()
+
+        messages.success(request, f'Job {item.pro} ({item.print_type}) moved to log.')
+        return redirect('job_management:job_items')
+
+    return render(request, 'job_management/send_to_stock.html', {
+        'item': item,
+        'pos_obj': pos_obj,
+        'barcode_machines': ['AUTOTEX', 'SGF', 'NOVEXX', 'NOVEXX 90deg', 'ZEBRA 600'],
+    })
+
+
+@login_required
+def operator_add(request):
+    from core.models import Operator
+    if request.method == 'POST':
+        name = request.POST.get('operator_name', '').strip()
+        if name:
+            Operator.objects.create(operator_name=name, status='ACTIVE')
+    return redirect('job_management:operators_list')
+
+
+@login_required
+def operator_edit(request, pk):
+    from core.models import Operator
+    if request.method == 'POST':
+        op = Operator.objects.get(pk=pk)
+        op.status = request.POST.get('status', op.status)
+        op.save()
+    return redirect('job_management:operators_list')
+
+
+@login_required
+def apply_jobs(request):
+    if request.method != 'POST':
+        return redirect('job_management:pos_overview')
+
+    from core.models import JobManagementItem, JobManagementItemLog
+
+    # Step 1: delete all NEW items — they will be re-evaluated fresh
+    deleted_count, _ = JobManagementItem.objects.filter(status='NEW').delete()
+
+    # Step 2: collect pro_print_type keys that still exist (non-NEW statuses)
+    existing_keys = set(JobManagementItem.objects.values_list('pro_print_type', flat=True))
+
+    pos_list = _build_pos_list()
+
+    saved = 0
+    for pos in pos_list:
+        pro = pos.get('posumm_pro')
+        if not pro:
+            continue
+
+        pro_new = pos.get('po_new') or ''
+        pro_id = pos.get('posumm_pro_id')
+        location = pos.get('posumm_location')
+        skeda = pos.get('posumm_skeda')
+
+        for print_type in ['CARELABEL', 'BARCODE']:
+            pro_print_type_key = f"{pro}_{print_type}"
+
+            # Skip if already exists with a non-NEW status
+            if pro_print_type_key in existing_keys:
+                continue
+
+            if print_type == 'BARCODE':
+                prio_label = pos['b_prio_label']
+                qty_123 = pos['b_priority']
+                qty_4 = pos['b_priority4']
+            else:
+                prio_label = pos['c_prio_label']
+                qty_123 = pos['c_priority']
+                qty_4 = pos['c_priority4']
+
+            # Skip rows with no priority
+            if prio_label == 'Nothing':
+                continue
+
+            if prio_label in ('Priority 1', 'Priority 2', 'Priority 3'):
+                qty = qty_123
+            else:  # Priority 4
+                qty = qty_4
+
+            JobManagementItem.objects.create(
+                pro=pro,
+                pro_new=pro_new,
+                pro_id=pro_id,
+                location=location,
+                skeda=skeda,
+                print_type=print_type,
+                pro_print_type=pro_print_type_key,
+                qty=qty,
+                priority=prio_label,
+                status='NEW',
+            )
+            saved += 1
+
+    messages.success(request, f"Jobs applied: {deleted_count} removed, {saved} new records added.")
+    return redirect('job_management:job_items')
