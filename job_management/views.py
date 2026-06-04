@@ -397,3 +397,67 @@ def apply_jobs(request):
 
     messages.success(request, f"Jobs applied: {deleted_count} removed, {saved} new records added.")
     return redirect('job_management:job_items')
+
+
+@login_required
+def print_job_item(request, item_id):
+    from core.models import JobManagementItem, PrintRequestLabels
+    from core.utils import get_composition_str
+    from django.utils import timezone
+
+    item = JobManagementItem.objects.get(pk=item_id)
+    po = item.pro[-7:] if item.pro and len(item.pro) >= 7 else item.pro
+
+    # Get po_id, style, color, size from pos table using last 7 chars of pro
+    pos_data = {}
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT TOP 1 id, style, color, size FROM pos WHERE po = %s", [po])
+        row = cursor.fetchone()
+        if row:
+            pos_data = {'po_id': row[0], 'style': row[1], 'color': row[2], 'size': row[3]}
+
+    # Get material from trebovanje_db
+    material_str = None
+    try:
+        with connections['trebovanje_db'].cursor() as cursor:
+            cursor.execute("""
+                SELECT wc, material
+                FROM trebovanje.dbo.sap_coois_all
+                WHERE po LIKE %s
+                  AND wc NOT IN ('WCPS','WC03I','WC03I_K','WC03I_Z','WC03O','WC03O_K','WC03O_Z')
+                  AND material NOT LIKE 'K%%'
+                  AND material NOT LIKE 'CUT%%'
+                ORDER BY wc ASC
+            """, ['%' + po])
+            mat_rows = cursor.fetchall()
+        if mat_rows:
+            material_str = '   '.join(f"{r[0]}-{r[1]}" for r in mat_rows)
+    except Exception:
+        pass
+
+    composition_str = get_composition_str(po)
+
+    PrintRequestLabels.objects.create(
+        po_id=pos_data.get('po_id') or 0,
+        po=po,
+        type='Barcode' if item.print_type == 'BARCODE' else 'Carelabel',
+        style=pos_data.get('style'),
+        color=pos_data.get('color'),
+        size=pos_data.get('size'),
+        comment=item.qty,
+        created=timezone.now().strftime('%Y-%m-%d %H:%M'),
+        printer="Preparacija Zebra",
+        qty=item.qty,
+        material=material_str,
+        composition=composition_str,
+    )
+
+    messages.success(request, f"Label printed: {item.pro} — {item.print_type}.")
+    return redirect('job_management:job_items')
+
+
+@login_required
+def job_logs(request):
+    from core.models import JobManagementItemLog
+    logs = JobManagementItemLog.objects.all().order_by('-created_at')
+    return render(request, 'job_management/job_logs.html', {'logs': logs})

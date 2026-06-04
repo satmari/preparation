@@ -27,9 +27,10 @@ def preparation_dashboard(request):
 def po_stock(request):
     # return HttpResponse("po_stock view is working!")
     with connections['default'].cursor() as cursor:
-        cursor.execute("""SELECT  
+        cursor.execute("""SELECT
     pos.id,
     pos.po,
+    pos.po_new,
     posum.location_all,
     pos.size,
     pos.style,
@@ -87,21 +88,55 @@ ORDER BY pos.po ASC, pos.size DESC""")
         columns = [col[0] for col in cursor.description]
         data = [dict(zip(columns, row)) for row in lines]
 
-        for row in data:
+    # Inteos BB sum per po_new
+    inteos_dict = {}
+    try:
+        with connections['inteos_db'].cursor() as cursor:
+            cursor.execute("""
+                WITH Delivered AS (
+                    SELECT RIGHT('000000' + CAST(po AS VARCHAR(50)), 6) AS po6, SUM(qty) AS delivered_qty
+                    FROM [172.27.161.200].[bbStock].[dbo].[bbStock]
+                    WHERE status = 'DELIVERED'
+                    GROUP BY RIGHT('000000' + CAST(po AS VARCHAR(50)), 6)
+                ),
+                MainData AS (
+                    SELECT PO.POnum, SUM(BB.BoxQuant) AS box_qty
+                    FROM CNF_PO AS PO
+                    INNER JOIN CNF_BlueBox AS BB ON PO.INTKEY = BB.IntKeyPO
+                    WHERE PO.POnum LIKE '000%' AND BB.Bagno != 'LOST' AND ISNULL(PO.POClosed, 0) != 1
+                    GROUP BY PO.POnum, PO.POClosed
+                    UNION ALL
+                    SELECT PO.POnum, SUM(BB.BoxQuant) AS box_qty
+                    FROM [172.27.161.221\INTEOSKKA].[BdkCLZKKA].[dbo].[CNF_PO] AS PO
+                    INNER JOIN [172.27.161.221\INTEOSKKA].[BdkCLZKKA].[dbo].[CNF_BlueBox] AS BB ON PO.INTKEY = BB.IntKeyPO
+                    WHERE PO.POnum LIKE '000%' AND BB.Bagno != 'LOST' AND ISNULL(PO.POClosed, 0) != 1
+                    GROUP BY PO.POnum, PO.POClosed
+                )
+                SELECT POnum, SUM(box_qty) AS box_qty FROM MainData GROUP BY POnum
+            """)
+            inteos_dict = {str(row[0] or '')[-7:]: (row[1] or 0) for row in cursor.fetchall()}
+    except Exception:
+        pass
+
+    for row in data:
             total_order_qty = row.get('total_order_qty') or 0
-            row['90'] = round(total_order_qty * 0.90,0)
+            po_new = str(row.get('po_new') or '')
+            row['bb_sum'] = inteos_dict.get(po_new, '-')
+            bb = row['bb_sum'] if isinstance(row['bb_sum'], (int, float)) else 0
+            target_qty = max(total_order_qty, bb)
+            row['target_qty'] = target_qty
 
             stock_b = row.get('stock_b') or 0
             request_b = row.get('request_b') or 0
-            row['stock_percentage_b'] = round((stock_b / total_order_qty * 100), 1) if total_order_qty else 0
-            row['to_print_b'] = total_order_qty - stock_b
+            row['stock_percentage_b'] = round((stock_b / target_qty * 100), 1) if target_qty else 0
+            row['to_print_b'] = target_qty - stock_b
             row['on_stock_b'] = stock_b - request_b
             row['request_b'] = request_b
 
             stock_c = row.get('stock_c') or 0
             request_c = row.get('request_c') or 0
-            row['stock_percentage_c'] = round((stock_c / total_order_qty * 100), 1) if total_order_qty else 0
-            row['to_print_c'] = total_order_qty - stock_c
+            row['stock_percentage_c'] = round((stock_c / target_qty * 100), 1) if target_qty else 0
+            row['to_print_c'] = target_qty - stock_c
             row['on_stock_c'] = stock_c - request_c
             row['request_c'] = request_c
 
@@ -204,6 +239,9 @@ def barcode_requests(request, id=None, action=None):
             except Exception:
                 pass
 
+            from core.utils import get_composition_str
+            composition_str = get_composition_str(request_new['ponum'])
+
             PrintRequestLabels.objects.create(
                 po_id=request_new['po_id'],
                 po=request_new['ponum'],
@@ -217,7 +255,8 @@ def barcode_requests(request, id=None, action=None):
                 created=request_new['created_at'].strftime('%Y-%m-%d %H:%M') if request_new['created_at'] else '',
                 printer="Preparacija Zebra",
                 qty=request_new['qty'],
-                material=material_str
+                material=material_str,
+                composition=composition_str,
             )
 
             success_msg = "Request sent to printer."
@@ -384,6 +423,9 @@ def carelabel_requests(request, id=None, action=None):
             except Exception:
                 pass
 
+            from core.utils import get_composition_str
+            composition_str = get_composition_str(request_new['ponum'])
+
             PrintRequestLabels.objects.create(
                 po_id=request_new['po_id'],
                 po=request_new['ponum'],
@@ -397,7 +439,8 @@ def carelabel_requests(request, id=None, action=None):
                 created=request_new['created_at'].strftime('%Y-%m-%d %H:%M') if request_new['created_at'] else '',
                 printer="Preparacija Zebra",
                 qty=request_new['qty'],
-                material=material_str
+                material=material_str,
+                composition=composition_str,
             )
 
             success_msg = "Request sent to printer."

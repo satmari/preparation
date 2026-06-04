@@ -21,15 +21,6 @@
         <h5 class="mb-0">Job Management</h5>
         <span class="ms-3 badge bg-secondary">{{ pos_list|length }} records</span>
         <button onclick="exportFilteredTable()" class="btn btn-sm btn-success ms-3">Export Excel</button>
-        <a href="{% url 'job_management:operators_list' %}" class="btn btn-sm btn-outline-secondary ms-2">Operators</a>
-    </div>
-
-    <div class="d-flex justify-content-center gap-2 mb-3">
-        <form method="post" action="{% url 'job_management:apply_jobs' %}" onsubmit="return confirm('Apply jobs from current table data?');">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger" style="min-width:140px;">Apply Jobs</button>
-        </form>
-        <a href="{% url 'job_management:job_items' %}" class="btn btn-outline-primary" style="min-width:140px;">Job Items</a>
     </div>
 
     <table id="pos-table" class="table table-sm table-bordered table-hover" style="width:100%; font-size:0.78rem;">

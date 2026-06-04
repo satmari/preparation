@@ -1,0 +1,82 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Job Logs{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 mt-3">
+
+    <div class="d-flex align-items-center mb-3">
+        <h5 class="mb-0">Job Logs</h5>
+        <span class="ms-3 badge bg-secondary">{{ logs|length }} records</span>
+        <button onclick="history.back()" class="btn btn-sm btn-outline-secondary ms-3">&larr; Back</button>
+    </div>
+
+    <table id="job-logs-table" class="table table-sm table-bordered table-hover" style="width:100%; font-size:0.78rem;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>PRO</th>
+                <th>PRO New</th>
+                <th>PRO ID</th>
+                <th>Location</th>
+                <th>Skeda</th>
+                <th>Print Type</th>
+                <th>PRO Print Type</th>
+                <th>Qty</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Operator</th>
+                <th>Created New At</th>
+                <th>Assigned At</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td>{{ log.id }}</td>
+                <td>{{ log.pro }}</td>
+                <td>{{ log.pro_new|default:"-" }}</td>
+                <td>{{ log.pro_id|default:"-" }}</td>
+                <td>{{ log.location|default:"-" }}</td>
+                <td>{{ log.skeda|default:"-" }}</td>
+                <td>
+                    {% if log.print_type == 'BARCODE' %}
+                        <span class="badge" style="background-color:darkseagreen; color:#000;">BARCODE</span>
+                    {% else %}
+                        <span class="badge" style="background-color:deepskyblue; color:#000;">CARELABEL</span>
+                    {% endif %}
+                </td>
+                <td>{{ log.pro_print_type }}</td>
+                <td>{{ log.qty|default:"-" }}</td>
+                <td>{{ log.priority|default:"-" }}</td>
+                <td>{{ log.status|default:"-" }}</td>
+                <td>{{ log.operator|default:"-" }}</td>
+                <td>{{ log.created_new_at|date:"Y-m-d H:i"|default:"-" }}</td>
+                <td>{{ log.assigned_at|date:"Y-m-d H:i"|default:"-" }}</td>
+                <td>{{ log.created_at|date:"Y-m-d H:i" }}</td>
+                <td>{{ log.updated_at|date:"Y-m-d H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="16" class="text-center text-muted">No log records found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function () {
+    $('#job-logs-table').DataTable({
+        pageLength: 100,
+        order: [[14, 'desc']],
+        fixedHeader: true,
+    });
+});
+</script>
+{% endblock %}

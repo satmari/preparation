@@ -162,7 +162,19 @@ DATABASES = {
             'driver': 'ODBC Driver 17 for SQL Server',
             'extra_params': 'TrustServerCertificate=yes',
         },
-    }
+    },
+    'settings_db': {
+        'ENGINE': 'mssql',
+        'NAME': config('DB_NAME5'),
+        'USER': config('DB_USER5'),
+        'PASSWORD': config('DB_PASSWORD5'),
+        'HOST': config('DB_HOST5'),
+        'PORT': '',
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+            'extra_params': 'TrustServerCertificate=yes',
+        },
+    },
 
 }
 

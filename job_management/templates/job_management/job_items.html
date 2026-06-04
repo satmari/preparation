@@ -6,10 +6,25 @@
 {% block content %}
 <div class="container-fluid px-4 mt-3">
 
+    {% if messages %}
+    <div class="mb-2">
+        {% for msg in messages %}
+        <div class="alert alert-{{ msg.tags }} alert-dismissible fade show py-2 mb-1" role="alert">
+            {{ msg }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <div class="d-flex align-items-center mb-2">
-        <h5 class="mb-0">Job Management Items</h5>
+        <h5 class="mb-0">Job Items</h5>
         <span class="ms-3 badge bg-secondary">{{ items|length }} records</span>
-        <a href="{% url 'job_management:pos_overview' %}" class="btn btn-sm btn-outline-secondary ms-3">&larr; Back to Job Management</a>
+        <a href="{% url 'job_management:operators_list' %}" class="btn btn-outline-secondary ms-3">Operators</a>
+        <form method="post" action="{% url 'job_management:apply_jobs' %}" onsubmit="return confirm('Apply jobs from current table data?');" class="ms-2 mb-0">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Refresh Jobs</button>
+        </form>
     </div>
 
     <div class="text-center mb-3">
@@ -84,9 +99,12 @@
                             data-type="{{ item.print_type }}">
                         Assign Operator
                     </button>
+                    <a href="{% url 'job_management:print_job_item' item.id %}"
+                       class="btn btn-sm btn-primary me-1">
+                        Print
+                    </a>
                     <a href="{% url 'job_management:send_to_stock' item.id %}"
-                       class="btn btn-sm btn-success {% if item.status != 'ASSIGNED' %}disabled{% endif %}"
->
+                       class="btn btn-sm btn-success {% if item.status != 'ASSIGNED' %}disabled{% endif %}">
                         Send to Stock
                     </a>
                 </td>

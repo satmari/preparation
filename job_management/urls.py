@@ -13,4 +13,6 @@ urlpatterns = [
     path('operators/add/', views.operator_add, name='operator_add'),
     path('operators/<int:pk>/edit/', views.operator_edit, name='operator_edit'),
     path('send-to-stock/<int:item_id>/', views.send_to_stock, name='send_to_stock'),
+    path('job-logs/', views.job_logs, name='job_logs'),
+    path('print-job-item/<int:item_id>/', views.print_job_item, name='print_job_item'),
 ]
