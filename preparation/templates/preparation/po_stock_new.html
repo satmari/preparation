@@ -1,0 +1,199 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block content %}
+<style>
+    td.col-d, th.col-d { color: #999 !important; }
+    th.col-skeda, td.col-skeda {
+        position: sticky;
+        z-index: 3;
+        background: #fff;
+        min-width: 90px;
+    }
+    th.col-skeda { z-index: 4; }
+    tr:nth-child(even) td.col-skeda { background: #f2f2f2; }
+</style>
+<div class="container-fluid">
+    <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px;">
+        <h2 style="margin-right: 10px;">Stock table new</h2>
+        <button onclick="exportFilteredTable()" class="btn btn-info btn-sm">Export Excel</button>
+        <button id="btn-d" class="btn btn-sm btn-outline-secondary" onclick="toggleGroup('d')">Show more details</button>
+        <button id="btn-b" class="btn btn-sm" style="background-color:darkseagreen; color:#fff;" onclick="toggleGroup('b')">Barcode</button>
+        <button id="btn-c" class="btn btn-sm" style="background-color:deepskyblue; color:#fff;" onclick="toggleGroup('c')">Carelabel</button>
+        <button id="btn-r" class="btn btn-sm" style="background-color:#bf7fff; color:#fff;" onclick="toggleGroup('r')">RFID</button>
+    </div>
+    <br>
+
+    <table class="table table-striped table-bordered custom-table" id="pos-table" style="width:100%;">
+        <thead>
+            <tr>
+                <!-- Standard columns (always visible) -->
+                <th>PO</th>
+                <th>Location</th>
+                <th>Size</th>
+                <th>Style</th>
+                <th>Color</th>
+                <th class="col-d">Color Des</th>
+                <th class="col-d">Flash</th>
+                <th class="col-d">Brand</th>
+                <th class="col-skeda">Skeda</th>
+                <th class="col-d">Hangtag</th>
+                <th class="col-d">Num lines</th>
+                <th class="col-d">Po loc</th>
+                <th>Order Qty</th>
+                <th>BB Sum</th>
+                <th>Target Qty</th>
+
+                <!-- Barcode group -->
+                <th class="col-b" style="background-color:darkseagreen">B printed</th>
+                <th class="col-b" style="background-color:darkseagreen">B %</th>
+                <th class="col-b" style="background-color:darkseagreen">B to print</th>
+                <th class="col-b" style="background-color:darkseagreen">B on stock</th>
+                <th class="col-b" style="background-color:darkseagreen">B in prod</th>
+
+                <!-- Carelabel group -->
+                <th class="col-c" style="background-color:deepskyblue">C printed</th>
+                <th class="col-c" style="background-color:deepskyblue">C %</th>
+                <th class="col-c" style="background-color:deepskyblue">C to print</th>
+                <th class="col-c" style="background-color:deepskyblue">C on stock</th>
+                <th class="col-c" style="background-color:deepskyblue">C in prod</th>
+
+                <!-- RFID group -->
+                <th class="col-r" style="background-color:#bf7fff">R printed</th>
+                <th class="col-r" style="background-color:#bf7fff">R %</th>
+                <th class="col-r" style="background-color:#bf7fff">R to print</th>
+                <th class="col-r" style="background-color:#bf7fff">R on stock</th>
+                <th class="col-r" style="background-color:#bf7fff">R in prod</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pos in data %}
+            <tr>
+                <td><b>{{ pos.po }}</b></td>
+                <td>{{ pos.location_all }}</td>
+                <td>{{ pos.size }}</td>
+                <td>{{ pos.style }}</td>
+                <td>{{ pos.color }}</td>
+                <td class="col-d">{{ pos.color_desc }}</td>
+                <td class="col-d">{{ pos.flash }}</td>
+                <td class="col-d">{{ pos.brand }}</td>
+                <td class="col-skeda">{{ pos.skeda }}</td>
+                <td class="col-d">{{ pos.hangtag }}</td>
+                <td class="col-d">{{ pos.no_lines_by_skeda }}</td>
+                <td class="col-d">{{ pos.location }}</td>
+                <td>{{ pos.total_order_qty }}</td>
+                <td>{{ pos.bb_sum }}</td>
+                <td>{{ pos.target_qty }}</td>
+
+                <td class="col-b">{{ pos.stock_b }}</td>
+                <td class="col-b">{{ pos.pct_b }}</td>
+                <td class="col-b {% if pos.to_print_b == 0 %}zuto{% elif pos.to_print_b > 0 %}zeleno{% else %}crveno{% endif %}"><b>{{ pos.to_print_b }}</b></td>
+                <td class="col-b">{{ pos.on_stock_b }}</td>
+                <td class="col-b">{{ pos.request_b }}</td>
+
+                <td class="col-c">{{ pos.stock_c }}</td>
+                <td class="col-c">{{ pos.pct_c }}</td>
+                <td class="col-c {% if pos.to_print_c == 0 %}zuto{% elif pos.to_print_c > 0 %}zeleno{% else %}crveno{% endif %}"><b>{{ pos.to_print_c }}</b></td>
+                <td class="col-c">{{ pos.on_stock_c }}</td>
+                <td class="col-c">{{ pos.request_c }}</td>
+
+                <td class="col-r">{{ pos.stock_r }}</td>
+                <td class="col-r">{{ pos.pct_r }}</td>
+                <td class="col-r {% if pos.to_print_r == 0 %}zuto{% elif pos.to_print_r > 0 %}zeleno{% else %}crveno{% endif %}"><b>{{ pos.to_print_r }}</b></td>
+                <td class="col-r">{{ pos.on_stock_r }}</td>
+                <td class="col-r">{{ pos.request_r }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var table;
+    var groupCols = {};
+    var groupVisible = { b: true, c: true, r: true, d: false };
+
+    var btnColors = {
+        b: { on: 'darkseagreen', text: '#fff' },
+        c: { on: 'deepskyblue', text: '#fff' },
+        r: { on: '#bf7fff',     text: '#fff' },
+        d: null
+    };
+
+    function updateBtn(group) {
+        var btn = $('#btn-' + group);
+        if (group === 'd') {
+            if (groupVisible[group]) {
+                btn.removeClass('btn-outline-secondary').addClass('btn-secondary');
+            } else {
+                btn.removeClass('btn-secondary').addClass('btn-outline-secondary');
+            }
+        } else {
+            var col = btnColors[group];
+            if (groupVisible[group]) {
+                btn.css({ 'background-color': col.on, 'color': col.text, 'opacity': '1', 'text-decoration': 'none' });
+            } else {
+                btn.css({ 'background-color': '', 'color': col.on, 'opacity': '0.6',
+                          'border': '1px solid ' + col.on, 'text-decoration': 'line-through' });
+            }
+        }
+    }
+
+    function setSkedaSticky() {
+        var skedaCol = table.column('.col-skeda:first');
+        var skedaIdx = skedaCol.index();
+        var leftOffset = 0;
+        for (var i = 0; i < skedaIdx; i++) {
+            if (table.column(i).visible()) {
+                leftOffset += $(table.column(i).header()).outerWidth();
+            }
+        }
+        $(table.column(skedaIdx).header()).css('left', leftOffset + 'px');
+        table.column(skedaIdx).nodes().to$().css('left', leftOffset + 'px');
+    }
+
+    function toggleGroup(group) {
+        groupVisible[group] = !groupVisible[group];
+        groupCols[group].forEach(function(i) {
+            table.column(i).visible(groupVisible[group]);
+        });
+        updateBtn(group);
+        setSkedaSticky();
+    }
+
+    $(document).ready(function () {
+        table = $('#pos-table').DataTable({
+            paging: true,
+            ordering: true,
+            searching: true,
+            pageLength: 25,
+            lengthMenu: [10, 25, 50, 100, 500],
+            responsive: false,
+            scrollX: true,
+            scrollCollapse: true,
+            deferRender: true,
+        });
+
+        // Pamtimo indekse pre bilo kakvog togglovanja
+        ['b', 'c', 'r', 'd'].forEach(function(g) {
+            groupCols[g] = [];
+            $('#pos-table thead th').each(function(i) {
+                if ($(this).hasClass('col-' + g)) groupCols[g].push(i);
+            });
+        });
+
+        // Sakrij Details kolone po defaultu
+        groupCols['d'].forEach(function(i) {
+            table.column(i).visible(false);
+        });
+
+        setSkedaSticky();
+
+        // Postavi inicijalno stanje dugmica
+        ['b', 'c', 'r', 'd'].forEach(function(g) { updateBtn(g); });
+
+        new $.fn.dataTable.FixedHeader(table);
+    });
+</script>
+{% endblock %}

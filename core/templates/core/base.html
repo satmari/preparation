@@ -61,6 +61,9 @@
                                 <a class="nav-link pos-link" href="{% url 'preparation:po_stock' %}">Stock table</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link pos-link" href="{% url 'preparation:po_stock_new' %}"><b>Stock table new</b></a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link pos-link" href="{% url 'preparation:functions' %}"><b>Functions</b></a>
                             </li>
                             <li class="nav-item">
@@ -68,6 +71,9 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link pos-link" href="{% url 'preparation:carelabel_requests' %}"><span style="color:deepskyblue">Carelabel requests</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link pos-link" href="{% url 'preparation:rfid_requests' %}"><span style="color:#bf7fff">RFID requests</span></a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link pos-link" href="{% url 'preparation:secondq_requests' %}"><span style="color:orange">SecondQ requests</span></span></a>
@@ -109,6 +115,9 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link pos-link" href="{% url 'line:request_history' 'c' user.username %}">Carelabel History</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link pos-link" href="{% url 'line:request_history' 'r' user.username %}">RFID History</a>
                             </li>
                         {% endif %}
 

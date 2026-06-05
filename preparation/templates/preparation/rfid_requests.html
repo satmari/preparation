@@ -7,7 +7,7 @@
 {% if data %}
 <div class="container-fluid">
     <div style="display: flex; align-items: center; justify-content: center;">
-        <h2 style="margin-right: 10px;">Barcode request table</h2>
+        <h2 style="margin-right: 10px;margin-left: 20px;">RFID request table</h2>
         <button onclick="exportFilteredTable()" class="btn btn-in fo btn-sm">Export in Excel</button>&nbsp;
 
     </div>
@@ -41,15 +41,16 @@
                 <th>Leader</th>
                 <th>Status</th>
                 <th>Comment</th>
-                <th style="background-color: darkseagreen">B to print</th>
-                <th style="background-color: darkseagreen">B on stock</th>
+                <th style="background-color: mediumpurple">R to print</th>
+                <th style="background-color: mediumpurple">R on stock</th>
+
                 <th>Created</th>
             </tr>
         </thead>
         <tbody>
             {% for req in data %}
             <tr>
-                <td><a href="{% url 'preparation:barcode_request_action' 'edit' req.id %}" class="btn btn-primary w-100 btn-sm">Edit</a></td>
+                <td><a href="{% url 'preparation:rfid_request_action' 'edit' req.id %}" class="btn btn-primary w-100 btn-sm">Edit</a></td>
                 <td><b>{{ req.po_new }}</b></td>
                 <td>{{ req.size }}</td>
                 <td>{{ req.qty }}</td>
@@ -61,11 +62,11 @@
                     {{ req.status }}
                 </td>
                 <td>{{ req.comment }}</td>
-                <td class="{% if req.to_print_b|add:0 == 0 %}zuto
-                           {% elif req.to_print_b|add:0 > 0 %}zeleno
-                           {% elif req.to_print_b|add:0 < 0 %}crveno
-                           {% endif %}"><b>{{ req.to_print_b }}</b></td>
-                <td>{{ req.on_stock_b }}</td>
+                <td class="{% if req.to_print_r|add:0 == 0 %}zuto
+                           {% elif req.to_print_r|add:0 > 0 %}zeleno
+                           {% elif req.to_print_r|add:0 < 0 %}crveno
+                           {% endif %}"><b>{{ req.to_print_r }}</b></td>
+                <td>{{ req.on_stock_r }}</td>
 
                 <td>{{ req.created_at|date:"Y-m-d H:i" }}</td>
             </tr>
@@ -73,16 +74,16 @@
         </tbody>
     </table>
 </div>
-{% else  %}
+{% else %}
     {% if not request_data %}
-    <div class="container-fluid">
-        <div style="display: flex; align-items: center; justify-content: center;">
-            <h2 style="margin-right: 10px;">Barcode request table</h2>
-        </div>
+        <div class="container-fluid">
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <h2 style="margin-right: 10px;">RFID request table</h2>
+            </div>
 
-            Request table is empty
+                Request table is empty
+            </div>
         </div>
-    </div>
     {% endif %}
 {% endif %}
 
@@ -91,7 +92,7 @@
     <div class="row justify-content-center">
         <div class="col-md-6 text-center">
             <div class="panel panel-default">
-                <div class="panel-heading"><strong>Edit request</strong></div>
+                <div class="panel-heading"><strong>Edit RFID request</strong></div>
                 <br>
 
                     {% if success_msg %}
@@ -109,28 +110,26 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     {% endif %}
-
                 <br>
-<!--                    <a href="{% url 'preparation:barcode_request_action' 'error' request_data.id %}" class="btn btn-danger btn-sm">Set request as error</a>-->
-                    <a href="{% url 'preparation:barcode_request_action' 'error' request_data.id %}"
+
+                    <a href="{% url 'preparation:rfid_request_action' 'error' request_data.id %}"
                        class="btn btn-danger btn-sm"
                        onclick="return confirm('⚠️ Are you sure you want to mark this request as ERROR? ');">
                        Set request as error
                     </a>
                 &nbsp;&nbsp;
-                    {# <a href="{% url 'preparation:barcode_request_action' 'rfid' request_data.id %}" class="btn btn-info btn-sm">Confirm request for RFID labels</a> #}
-                &nbsp;&nbsp;
-                    <a href="{% url 'preparation:barcode_request_action' 'print' request_data.id %}" class="btn btn-primary btn-sm">Print request</a>
+                    <a href="{% url 'preparation:rfid_request_action' 'print' request_data.id %}" class="btn btn-primary btn-sm">Print request</a>
                 <br>
                 <hr>
 
-                <form method="POST" action="{% url 'preparation:barcode_requests' %}">
+                <form method="POST" action="{% url 'preparation:rfid_requests' %}">
                     {% csrf_token %}
                     <input type="hidden" name="id" value="{{ request_data.id }}" class="form-control">
 
                     <div class="panel-body mt-3">
                         <label id="qty">Qty/Količina:</label>
                         <input type="number" name="qty" class="form-control" value="{{ request_data.qty|default:'' }}" min="1" required>
+
                     </div>
                     <br>
 
@@ -150,7 +149,21 @@
     </div>
 </div>
 {% endif %}
+{% if success_msg %}
+                <div class="alert alert-success " role="alert">
+                    {{ success_msg }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
 
+            {% if errors %}
+                <div class="alert alert-danger " role="alert">
+                    {% for error in errors %}
+                        <div>{{ error }}</div>
+                    {% endfor %}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
 
 {% endblock %}
 
@@ -165,7 +178,7 @@
             pageLength: 100,
             lengthMenu: [10, 20, 50, 100, 500, 1000],
             responsive: true,
-            scrollCollapse: true,  // Allow table to shrink
+            scrollCollapse: true,
         });
 
         // Initialize FixedHeader

@@ -64,6 +64,11 @@
                 <th style="background-color: deepskyblue">C to print</th>
                 <th style="background-color: deepskyblue">C on stock</th>
                 <th style="background-color: deepskyblue">C in prod</th>
+                <th style="background-color: mediumpurple">R printed</th>
+                <th style="background-color: mediumpurple">R %</th>
+                <th style="background-color: mediumpurple">R to print</th>
+                <th style="background-color: mediumpurple">R on stock</th>
+                <th style="background-color: mediumpurple">R in prod</th>
 
             </tr>
         </thead>
@@ -105,6 +110,15 @@
                 <td>{{ pos.on_stock_c }}</td>
                 <td>{{ pos.request_c|default:"0" }}</td>
 
+                <td>{{ pos.stock_r }}</td>
+                <td>{{ pos.stock_percentage_r }}</td>
+                <td class="{% if pos.to_print_r|add:0 == 0 %}zuto
+                           {% elif pos.to_print_r|add:0 > 0 %}zeleno
+                           {% elif pos.to_print_r|add:0 < 0 %}crveno
+                           {% endif %}"><b>{{ pos.to_print_r }}</b>
+                </td>
+                <td>{{ pos.on_stock_r }}</td>
+                <td>{{ pos.request_r|default:"0" }}</td>
 
             </tr>
             {% endfor %}

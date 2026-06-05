@@ -74,6 +74,7 @@ def request_for_b_c(request, leader=None):
         # qty = int(request.POST.get('qty'))
         barcode = request.POST.get('barcode', '0')
         carelabel = request.POST.get('carelabel', '0')
+        rfid = request.POST.get('rfid', '0')
         comment = request.POST.get('comment', '')
 
         # Verify if PO exists and is not closed
@@ -148,8 +149,38 @@ def request_for_b_c(request, leader=None):
             else:
                 success_msg += "Zahtev za stranične etikete uspešno snimljen"
 
-        if carelabel == '0' and barcode == '0':
-            error_msg = "Nije označen ni barcode ni carelabel"
+        # Handle rfid
+        if rfid != '0':
+            duplicate = RfidRequests.objects.filter(
+                user_id=request.user.id,
+                ponum=po_num,
+                type="modul",
+                status='pending',
+                comment=comment,
+                created_at__gte=cutoff
+            ).exists()
+
+            if not duplicate:
+                try:
+                    RfidRequests.objects.create(
+                        po_id=po.id,
+                        user_id=request.user.id,
+                        ponum=po_num,
+                        size=po.size,
+                        module=request.user.username,
+                        leader=leader,
+                        type="modul",
+                        status='pending',
+                        comment=comment,
+                    )
+                    success_msg += "Zahtev za RFID etikete uspešno snimljen"
+                except Exception as e:
+                    error_msg += "Problem saving to RfidRequests table"
+            else:
+                success_msg += "Zahtev za RFID etikete uspešno snimljen"
+
+        if carelabel == '0' and barcode == '0' and rfid == '0':
+            error_msg = "Nije označen ni barcode ni carelabel ni rfid"
 
         # If there are no errors, logout and redirect to login page with success message
         if not error_msg:
@@ -285,12 +316,28 @@ def request_history(request, type, line):
 
         title = "Barcode Request History"
 
+    elif type == 'r':
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT r.ponum,r.size,r.qty, r.module,r.leader, r.status,
+                r.type, r.comment, r.created_at, r.updated_at,
+                pos.style, pos.color, pos.color_desc, pos.brand, pos.flash, pos.skeda
+                FROM rfid_requests r
+                JOIN pos ON r.ponum = pos.po
+                WHERE r.module = %s AND r.created_at >= DATEADD(year, -1, GETDATE())
+                ORDER BY r.created_at desc
+            """, [line])
+            columns = [col[0] for col in cursor.description]
+            history = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+        title = "RFID Request History"
+
     else:
         # history = CarelabelRequests.objects.filter(module=line,created_at__gte=one_year_ago)
         with connection.cursor() as cursor:
             cursor.execute("""
-                SELECT r.ponum,r.size,r.qty, r.module,r.leader, r.status, 
-                r.type, r.comment, r.created_at, r.updated_at, 
+                SELECT r.ponum,r.size,r.qty, r.module,r.leader, r.status,
+                r.type, r.comment, r.created_at, r.updated_at,
                 pos.style, pos.color, pos.color_desc, pos.brand, pos.flash, pos.skeda
                 FROM carelabel_requests r
                 JOIN pos ON r.ponum = pos.po

@@ -19,7 +19,8 @@ def _build_pos_list():
                 pos.po_new,
                 pos.total_order_qty,
                 ISNULL(bs.stock_b, 0)           AS qty_b_printed,
-                ISNULL(cs.stock_c, 0)           AS qty_c_printed
+                ISNULL(cs.stock_c, 0)           AS qty_c_printed,
+                ISNULL(rs.stock_r, 0)           AS qty_r_printed
             FROM pos
 
             LEFT JOIN [172.27.161.200].[posummary].[dbo].[pro] AS posum
@@ -37,6 +38,12 @@ def _build_pos_list():
                 FROM carelabel_stocks
                 GROUP BY po_id
             ) AS cs ON cs.po_id = pos.id
+
+            LEFT JOIN (
+                SELECT po_id, SUM(qty) AS stock_r
+                FROM rfid_stocks
+                GROUP BY po_id
+            ) AS rs ON rs.po_id = pos.id
 
             WHERE pos.closed_po = 'Open'
             ORDER BY pos.po ASC
@@ -167,6 +174,7 @@ def _build_pos_list():
         pos['total_target_qty'] = max(posumm_val, box_val)
         pos['c_delta'] = box_val - (pos.get('qty_c_printed') or 0)
         pos['b_delta'] = box_val - (pos.get('qty_b_printed') or 0)
+        pos['r_delta'] = box_val - (pos.get('qty_r_printed') or 0)
         match = truck_dict.get(po_new)
         if_pro_is_in_pkl_sugg = 'Yes' if match else 'No'
         if_po_has_bb_in_del_wip_fin = 'Yes' if po_new in bb_set else 'No'
@@ -177,9 +185,11 @@ def _build_pos_list():
         cut_val = int(match['will_be_cut']) if match else 0
         pos['c_priority'] = max(0, cut_val + pos['c_delta'])
         pos['b_priority'] = max(0, cut_val + pos['b_delta'])
+        pos['r_priority'] = max(0, cut_val + pos['r_delta'])
         target = pos['total_target_qty']
         pos['c_priority4'] = max(0, target - (pos.get('qty_c_printed') or 0))
         pos['b_priority4'] = max(0, target - (pos.get('qty_b_printed') or 0))
+        pos['r_priority4'] = max(0, target - (pos.get('qty_r_printed') or 0))
 
         def calc_priority(p123, p4):
             if p123 > min_req:
@@ -197,6 +207,7 @@ def _build_pos_list():
 
         pos['c_prio_label'] = calc_priority(pos['c_priority'], pos['c_priority4'])
         pos['b_prio_label'] = calc_priority(pos['b_priority'], pos['b_priority4'])
+        pos['r_prio_label'] = calc_priority(pos['r_priority'], pos['r_priority4'])
 
     return pos_list
 
@@ -254,7 +265,7 @@ def operators_list(request):
 
 @login_required
 def send_to_stock(request, item_id):
-    from core.models import JobManagementItem, JobManagementItemLog, Pos, BarcodeStocks, CarelabelStocks
+    from core.models import JobManagementItem, JobManagementItemLog, Pos, BarcodeStocks, CarelabelStocks, RfidStocks
 
     try:
         item = JobManagementItem.objects.get(id=item_id, status='ASSIGNED')
@@ -287,6 +298,13 @@ def send_to_stock(request, item_id):
                 po_id=pos_obj.id, user_id=request.user.id,
                 ponum=pos_obj.po, size=pos_obj.size,
                 qty=qty, type='new', comment=comment, machine=machine,
+            )
+        elif item.print_type == 'RFID' and pos_obj:
+            RfidStocks.objects.create(
+                po_id=pos_obj.id, user_id=request.user.id,
+                ponum=pos_obj.po, size=pos_obj.size,
+                qty=qty, qty_waste=qty_waste,
+                type='new', comment=comment, machine=machine,
             )
 
         JobManagementItemLog.objects.create(
@@ -356,7 +374,7 @@ def apply_jobs(request):
         location = pos.get('posumm_location')
         skeda = pos.get('posumm_skeda')
 
-        for print_type in ['CARELABEL', 'BARCODE']:
+        for print_type in ['CARELABEL', 'BARCODE', 'RFID']:
             pro_print_type_key = f"{pro}_{print_type}"
 
             # Skip if already exists with a non-NEW status
@@ -367,10 +385,14 @@ def apply_jobs(request):
                 prio_label = pos['b_prio_label']
                 qty_123 = pos['b_priority']
                 qty_4 = pos['b_priority4']
-            else:
+            elif print_type == 'CARELABEL':
                 prio_label = pos['c_prio_label']
                 qty_123 = pos['c_priority']
                 qty_4 = pos['c_priority4']
+            else:  # RFID
+                prio_label = pos['r_prio_label']
+                qty_123 = pos['r_priority']
+                qty_4 = pos['r_priority4']
 
             # Skip rows with no priority
             if prio_label == 'Nothing':
@@ -440,7 +462,7 @@ def print_job_item(request, item_id):
     PrintRequestLabels.objects.create(
         po_id=pos_data.get('po_id') or 0,
         po=po,
-        type='Barcode' if item.print_type == 'BARCODE' else 'Carelabel',
+        type='Barcode' if item.print_type == 'BARCODE' else ('Rfid' if item.print_type == 'RFID' else 'Carelabel'),
         style=pos_data.get('style'),
         color=pos_data.get('color'),
         size=pos_data.get('size'),

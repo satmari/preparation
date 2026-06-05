@@ -516,6 +516,7 @@ def give_to_the_line(request):
         modul = request.POST.get('modul')
         barcode = request.POST.get('barcode', '0')
         carelabel = request.POST.get('carelabel', '0')
+        rfid = request.POST.get('rfid', '0')
         comment = request.POST.get('comment', '')
 
         # Verify if PO exists and is not closed
@@ -594,8 +595,42 @@ def give_to_the_line(request):
                 except Exception as e:
                     error_msg = "Problem saving to CarelabelSeStocks table"
 
-        if carelabel == '0' and barcode == '0':
-            error_msg = "Nije oznacen ni barcode ni carelabel"
+        # Handle rfid
+        if rfid != '0':
+
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT SUM(qty) as rfid_se_stock
+                    FROM rfid_se_stocks
+                    WHERE ponum = %s AND status != 'to_receive'
+                """, [po_num])
+                row = cursor.fetchone()
+                rfid_se_stock = row[0] or 0
+
+            error_msg_r = ""
+            if rfid_se_stock - qty < 0:
+                error_msg_r += "Nema dovoljno RFID na stanju <br/>"
+
+            if error_msg_r == "":
+                try:
+                    RfidSEStocks.objects.create(
+                        po_id=po.id,
+                        user_id=request.user.id,
+                        ponum=po_num,
+                        size=po.size,
+                        qty=int(qty) * (-1),
+                        qty_to_receive=0,
+                        module=modul,
+                        type="in_line",
+                        status='stock',
+                        comment=comment,
+                    )
+                    success_msg += "RfidSeStocks uspesno snimljen."
+                except Exception as e:
+                    error_msg += "Problem saving to RfidSeStocks table"
+
+        if carelabel == '0' and barcode == '0' and rfid == '0':
+            error_msg = "Nije oznacen ni barcode ni carelabel ni rfid"
 
         # If there are no errors, pass success_msg to template
         if not error_msg:
@@ -648,6 +683,7 @@ def return_to_main(request):
         qty = int(request.POST.get('qty'))
         barcode = request.POST.get('barcode', '0')
         carelabel = request.POST.get('carelabel', '0')
+        rfid = request.POST.get('rfid', '0')
         comment = request.POST.get('comment', '')
 
         # Verify if PO exists and is not closed
@@ -776,8 +812,52 @@ def return_to_main(request):
                 except Exception as e:
                     error_msg = "Problem saving to CarelabelSeStocks table"
 
-        if carelabel == '0' and barcode == '0':
-            error_msg = "Nije oznacen ni barcode ni carelabel"
+        # Handle rfid
+        if rfid != '0':
+
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT SUM(qty) as rfid_se_stock
+                    FROM rfid_se_stocks
+                    WHERE ponum = %s AND status != 'to_receive'
+                """, [po_num])
+                row = cursor.fetchone()
+                rfid_se_stock = row[0] or 0
+
+            error_msg_r = ""
+            if rfid_se_stock - qty < 0:
+                error_msg_r += "Nema dovoljno RFID na stanju <br/>"
+
+            if error_msg_r == "":
+                try:
+                    RfidSEStocks.objects.create(
+                        po_id=po.id,
+                        user_id=request.user.id,
+                        ponum=po_num,
+                        size=po.size,
+                        qty=int(qty) * (-1),
+                        qty_to_receive=0,
+                        type="returned",
+                        status='stock',
+                        comment=comment,
+                    )
+                    RfidRequests.objects.create(
+                        po_id=po.id,
+                        user_id=request.user.id,
+                        ponum=po_num,
+                        size=po.size,
+                        qty=int(qty) * (-1),
+                        status='done',
+                        module='senta',
+                        type="return_se",
+                        comment=comment,
+                    )
+                    success_msg += "RfidSeStocks uspesno snimljen."
+                except Exception as e:
+                    error_msg += "Problem saving to RfidSeStocks table"
+
+        if carelabel == '0' and barcode == '0' and rfid == '0':
+            error_msg = "Nije oznacen ni barcode ni carelabel ni rfid"
 
         # If there are no errors, pass success_msg to template
         if not error_msg:
@@ -828,6 +908,7 @@ def reduce_from_stock(request):
         qty = int(request.POST.get('qty'))
         barcode = request.POST.get('barcode', '0')
         carelabel = request.POST.get('carelabel', '0')
+        rfid = request.POST.get('rfid', '0')
         comment = request.POST.get('comment', '')
 
         # Verify if PO exists and is not closed
@@ -908,8 +989,41 @@ def reduce_from_stock(request):
                 except Exception as e:
                     error_msg = "Problem saving to CarelabelSeStocks table"
 
-        if carelabel == '0' and barcode == '0':
-            error_msg = "Nije oznacen ni barcode ni carelabel"
+        # Handle rfid
+        if rfid != '0':
+
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT SUM(qty) as rfid_se_stock
+                    FROM rfid_se_stocks
+                    WHERE ponum = %s AND status != 'to_receive'
+                """, [po_num])
+                row = cursor.fetchone()
+                rfid_se_stock = row[0] or 0
+
+            error_msg_r = ""
+            if rfid_se_stock - qty < 0:
+                error_msg_r += "Nema dovoljno RFID na stanju <br/>"
+
+            if error_msg_r == "":
+                try:
+                    RfidSEStocks.objects.create(
+                        po_id=po.id,
+                        user_id=request.user.id,
+                        ponum=po_num,
+                        size=po.size,
+                        qty=int(qty) * (-1),
+                        qty_to_receive=0,
+                        type="reduce",
+                        status='stock',
+                        comment=comment,
+                    )
+                    success_msg += "RfidSeStocks uspesno snimljen."
+                except Exception as e:
+                    error_msg += "Problem saving to RfidSeStocks table"
+
+        if carelabel == '0' and barcode == '0' and rfid == '0':
+            error_msg = "Nije oznacen ni barcode ni carelabel ni rfid"
 
         # If there are no errors, pass success_msg to template
         if not error_msg:
@@ -968,6 +1082,7 @@ def back_from_module(request):
         qty = request.POST.get('qty')
         barcode = request.POST.get('barcode', '0')
         carelabel = request.POST.get('carelabel', '0')
+        rfid = request.POST.get('rfid', '0')
         modul = request.POST.get('modul')
         comment = request.POST.get('comment', '')
 
@@ -1032,8 +1147,28 @@ def back_from_module(request):
                 except Exception as e:
                     errors.append("Problem saving to CarelabelSEStocks table")
 
-        if carelabel == '0' and barcode == '0':
-            errors.append("Nije oznacen ni barcode ni carelabel")
+        # Handle rfid
+        if rfid != '0':
+
+            if not errors:
+                try:
+                    RfidSEStocks.objects.create(
+                        po_id=po.id,
+                        user_id=request.user.id,
+                        ponum=po_num,
+                        size=po.size,
+                        qty=int(qty),
+                        module=modul,
+                        type="in_line",
+                        status="stock",
+                        comment=comment,
+                    )
+                    success_msg += "RfidSEStocks uspesno snimljen."
+                except Exception as e:
+                    errors.append("Problem saving to RfidSEStocks table")
+
+        if carelabel == '0' and barcode == '0' and rfid == '0':
+            errors.append("Nije oznacen ni barcode ni carelabel ni rfid")
 
         # If there are no errors, pass success_msg to template
         if not errors:

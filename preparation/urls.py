@@ -8,6 +8,7 @@ urlpatterns = [
     path('preparation_dashboard/', views.preparation_dashboard, name='preparation_dashboard'),
 
     path('po_stock/', views.po_stock, name='po_stock'),
+    path('po_stock_new/', views.po_stock_new, name='po_stock_new'),
 
     path('barcode_requests/', views.barcode_requests, name='barcode_requests'),
     path('barcode_request_<str:action>/<int:id>/', views.barcode_requests, name='barcode_request_action'),
@@ -17,6 +18,9 @@ urlpatterns = [
 
     path('secondq_requests/', views.secondq_requests, name='secondq_requests'),
     path('secondq_request_<str:action>/<int:id>/', views.secondq_requests, name='secondq_request_action'),
+
+    path('rfid_requests/', views.rfid_requests, name='rfid_requests'),
+    path('rfid_request_<str:action>/<int:id>/', views.rfid_requests, name='rfid_request_action'),
 
     path('functions/', views.functions, name='functions'),
     path('add_to_stock/', views.add_to_stock, name='add_to_stock'),

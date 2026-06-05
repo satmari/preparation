@@ -47,7 +47,9 @@ def po_stock(request):
     bs.stock_b,
     br.request_b,
     cs.stock_c,
-    cr.request_c
+    cr.request_c,
+    rs.stock_r,
+    rr.request_r
 
 FROM pos
 
@@ -80,6 +82,19 @@ LEFT JOIN (
     WHERE status != 'error'
     GROUP BY po_id
 ) AS cr ON cr.po_id = pos.id
+
+LEFT JOIN (
+    SELECT po_id, SUM(qty) AS stock_r
+    FROM rfid_stocks
+    GROUP BY po_id
+) AS rs ON rs.po_id = pos.id
+
+LEFT JOIN (
+    SELECT po_id, SUM(qty) AS request_r
+    FROM rfid_requests
+    WHERE status != 'error'
+    GROUP BY po_id
+) AS rr ON rr.po_id = pos.id
 
 WHERE pos.closed_po = 'Open'
 
@@ -140,7 +155,119 @@ ORDER BY pos.po ASC, pos.size DESC""")
             row['on_stock_c'] = stock_c - request_c
             row['request_c'] = request_c
 
+            stock_r = row.get('stock_r') or 0
+            request_r = row.get('request_r') or 0
+            row['stock_percentage_r'] = round((stock_r / target_qty * 100), 1) if target_qty else 0
+            row['to_print_r'] = target_qty - stock_r
+            row['on_stock_r'] = stock_r - request_r
+            row['request_r'] = request_r
+
     return render(request, 'preparation/po_stock.html', {'data': data})
+
+def po_stock_new(request):
+    with connections['default'].cursor() as cursor:
+        cursor.execute("""
+SELECT
+    pos.id,
+    pos.po,
+    pos.po_new,
+    posum.location_all,
+    pos.size,
+    pos.style,
+    pos.color,
+    pos.color_desc,
+    pos.flash,
+    pos.brand,
+    pos.skeda,
+    pos.total_order_qty,
+    pos.no_lines_by_skeda,
+    pos.hangtag,
+    p.location,
+
+    ISNULL(bs.stock_b, 0) AS stock_b,
+    ISNULL(br.request_b, 0) AS request_b,
+    ISNULL(cs.stock_c, 0) AS stock_c,
+    ISNULL(cr.request_c, 0) AS request_c,
+    ISNULL(rs.stock_r, 0) AS stock_r,
+    ISNULL(rr.request_r, 0) AS request_r
+
+FROM pos
+
+LEFT JOIN prep_locations AS p ON p.id = pos.loc_id_su
+LEFT JOIN [172.27.161.200].[posummary].dbo.pro AS posum ON posum.po_new = pos.po_new
+
+LEFT JOIN (SELECT po_id, SUM(qty) AS stock_b FROM barcode_stocks GROUP BY po_id) AS bs ON bs.po_id = pos.id
+LEFT JOIN (SELECT po_id, SUM(qty) AS request_b FROM barcode_requests WHERE status != 'error' GROUP BY po_id) AS br ON br.po_id = pos.id
+LEFT JOIN (SELECT po_id, SUM(qty) AS stock_c FROM carelabel_stocks GROUP BY po_id) AS cs ON cs.po_id = pos.id
+LEFT JOIN (SELECT po_id, SUM(qty) AS request_c FROM carelabel_requests WHERE status != 'error' GROUP BY po_id) AS cr ON cr.po_id = pos.id
+LEFT JOIN (SELECT po_id, SUM(qty) AS stock_r FROM rfid_stocks GROUP BY po_id) AS rs ON rs.po_id = pos.id
+LEFT JOIN (SELECT po_id, SUM(qty) AS request_r FROM rfid_requests WHERE status != 'error' GROUP BY po_id) AS rr ON rr.po_id = pos.id
+
+WHERE pos.closed_po = 'Open'
+ORDER BY pos.po ASC, pos.size DESC
+        """)
+        lines = cursor.fetchall()
+        columns = [col[0] for col in cursor.description]
+        data = [dict(zip(columns, row)) for row in lines]
+
+    # inteos BB sum per po_new
+    inteos_dict = {}
+    try:
+        with connections['inteos_db'].cursor() as cursor:
+            cursor.execute("""
+                WITH Delivered AS (
+                    SELECT RIGHT('000000' + CAST(po AS VARCHAR(50)), 6) AS po6, SUM(qty) AS delivered_qty
+                    FROM [172.27.161.200].[bbStock].[dbo].[bbStock]
+                    WHERE status = 'DELIVERED'
+                    GROUP BY RIGHT('000000' + CAST(po AS VARCHAR(50)), 6)
+                ),
+                MainData AS (
+                    SELECT PO.POnum, SUM(BB.BoxQuant) AS box_qty
+                    FROM CNF_PO AS PO
+                    INNER JOIN CNF_BlueBox AS BB ON PO.INTKEY = BB.IntKeyPO
+                    WHERE PO.POnum LIKE '000%' AND BB.Bagno != 'LOST' AND ISNULL(PO.POClosed, 0) != 1
+                    GROUP BY PO.POnum, PO.POClosed
+                    UNION ALL
+                    SELECT PO.POnum, SUM(BB.BoxQuant) AS box_qty
+                    FROM [172.27.161.221\INTEOSKKA].[BdkCLZKKA].[dbo].[CNF_PO] AS PO
+                    INNER JOIN [172.27.161.221\INTEOSKKA].[BdkCLZKKA].[dbo].[CNF_BlueBox] AS BB ON PO.INTKEY = BB.IntKeyPO
+                    WHERE PO.POnum LIKE '000%' AND BB.Bagno != 'LOST' AND ISNULL(PO.POClosed, 0) != 1
+                    GROUP BY PO.POnum, PO.POClosed
+                )
+                SELECT POnum, SUM(box_qty) AS box_qty FROM MainData GROUP BY POnum
+            """)
+            inteos_dict = {str(row[0] or '')[-7:]: (row[1] or 0) for row in cursor.fetchall()}
+    except Exception:
+        pass
+
+    for row in data:
+        total_order_qty = row.get('total_order_qty') or 0
+        po_new = str(row.get('po_new') or '')
+        bb = inteos_dict.get(po_new, 0)
+        row['bb_sum'] = bb if bb else '-'
+        target = max(total_order_qty, bb)
+        row['target_qty'] = target
+
+        stock_b = row['stock_b']
+        request_b = row['request_b']
+        row['pct_b'] = round(stock_b / target * 100, 1) if target else 0
+        row['to_print_b'] = target - stock_b
+        row['on_stock_b'] = stock_b - request_b
+
+        stock_c = row['stock_c']
+        request_c = row['request_c']
+        row['pct_c'] = round(stock_c / target * 100, 1) if target else 0
+        row['to_print_c'] = target - stock_c
+        row['on_stock_c'] = stock_c - request_c
+
+        stock_r = row['stock_r']
+        request_r = row['request_r']
+        row['pct_r'] = round(stock_r / target * 100, 1) if target else 0
+        row['to_print_r'] = target - stock_r
+        row['on_stock_r'] = stock_r - request_r
+
+    return render(request, 'preparation/po_stock_new.html', {'data': data})
+
 
 #Request tables
 def barcode_requests(request, id=None, action=None):
@@ -511,6 +638,169 @@ ORDER BY
         'errors': errors
     })
 
+def rfid_requests(request, id=None, action=None):
+    success_msg = request.session.pop('success_msg', '')
+    errors = []
+
+    if request.method == 'POST':
+        id = request.POST.get('id')
+        qty = request.POST.get('qty')
+        comment = request.POST.get('comment')
+
+        try:
+            request_data = RfidRequests.objects.get(id=id)
+            request_data.qty = int(qty)
+            request_data.comment = comment
+            request_data.status = 'confirmed'
+            request_data.save()
+            success_msg = "Request confirmed successfully."
+        except RfidRequests.DoesNotExist:
+            errors.append("Request not found.")
+        except ValueError:
+            errors.append("Invalid quantity.")
+
+        if not errors:
+            request.session['success_msg'] = success_msg
+            return redirect('preparation:rfid_requests')
+
+    elif id is not None:
+        request_data = get_object_or_404(RfidRequests, id=id)
+
+        if action == "edit":
+            return render(request, 'preparation/rfid_requests.html', {
+                'id': id,
+                'request_data': request_data
+            })
+
+        elif action == "error":
+            request_data.status = 'error'
+            request_data.qty = 0
+            request_data.save()
+            success_msg = "Request canceled"
+
+        elif action == "print":
+            with connections['default'].cursor() as cursor:
+                cursor.execute("""SELECT r.po_id,r.user_id,r.ponum,r.size,r.qty,r.module,
+                        r.leader,r.status,r.type,r.comment,r.created_at,p.style,p.color
+                    FROM rfid_requests AS r
+                    JOIN pos AS p ON p.po = r.ponum
+                    WHERE r.id = %s
+                """, [id])
+                row = cursor.fetchone()
+                if not row:
+                    return HttpResponse("❌ Request not found.")
+                columns = [col[0] for col in cursor.description]
+                request_new = dict(zip(columns, row))
+
+            material_str = None
+            try:
+                with connections['trebovanje_db'].cursor() as cursor:
+                    cursor.execute("""
+                        SELECT wc, material
+                        FROM trebovanje.dbo.sap_coois_all
+                        WHERE po LIKE %s
+                          AND wc NOT IN ('WCPS','WC03I','WC03I_K','WC03I_Z','WC03O','WC03O_K','WC03O_Z')
+                          AND material NOT LIKE 'K%%'
+                          AND material NOT LIKE 'CUT%%'
+                        ORDER BY wc ASC
+                    """, ['%' + request_new['ponum']])
+                    mat_rows = cursor.fetchall()
+                if mat_rows:
+                    material_str = '   '.join(f"{r[0]}-{r[1]}" for r in mat_rows)
+            except Exception:
+                pass
+
+            from core.utils import get_composition_str
+            composition_str = get_composition_str(request_new['ponum'])
+
+            PrintRequestLabels.objects.create(
+                po_id=request_new['po_id'],
+                po=request_new['ponum'],
+                type='Rfid',
+                style=request_new.get('style'),
+                color=request_new.get('color'),
+                size=request_new.get('size'),
+                module=request_new.get('module'),
+                leader=request_new.get('leader'),
+                comment=request_new.get('comment'),
+                created=request_new['created_at'].strftime('%Y-%m-%d %H:%M') if request_new['created_at'] else '',
+                printer="Preparacija Zebra",
+                qty=request_new['qty'],
+                material=material_str,
+                composition=composition_str,
+            )
+            success_msg = "Request sent to printer."
+
+        elif action == "done":
+            request_data.status = 'done'
+            request_data.qty = 0
+            request_data.save()
+            success_msg = "RFID request confirmed successfully."
+
+    # Show table of requests
+    with connections['default'].cursor() as cursor:
+        cursor.execute("""
+            SELECT
+    r.id,
+    r.po_id,
+    r.user_id,
+    r.ponum,
+    r.size,
+    r.module,
+    r.leader,
+    r.status,
+    r.type,
+    r.comment,
+    r.qty,
+    r.created_at,
+    r.updated_at,
+    pos.total_order_qty,
+    pos.style,
+    pos.color,
+    pos.po_new,
+    ISNULL(rs.stock_qty, 0) AS stocks,
+    ISNULL(rr.request_qty, 0) AS requests
+FROM rfid_requests AS r
+JOIN pos ON pos.id = r.po_id
+
+LEFT JOIN (
+    SELECT po_id, SUM(qty) AS stock_qty
+    FROM rfid_stocks
+    GROUP BY po_id
+) AS rs ON rs.po_id = r.po_id
+
+LEFT JOIN (
+    SELECT po_id, SUM(qty) AS request_qty
+    FROM rfid_requests
+    WHERE status != 'error'
+    GROUP BY po_id
+) AS rr ON rr.po_id = r.po_id
+
+WHERE
+    (CAST(r.created_at AS DATE) = CAST(GETDATE() AS DATE) AND r.status NOT IN ('error'))
+    OR r.status = 'pending'
+ORDER BY
+    r.status DESC,
+    r.created_at ASC;
+""")
+        lines = cursor.fetchall()
+        columns = [col[0] for col in cursor.description]
+        data = [dict(zip(columns, row)) for row in lines]
+
+    for row in data:
+        total_order_qty = row.get('total_order_qty') or 0
+        stock_r = row.get('stocks') or 0
+        request_r = row.get('requests') or 0
+        row['to_print_r'] = total_order_qty - stock_r
+        row['on_stock_r'] = stock_r - request_r
+
+    return render(request, 'preparation/rfid_requests.html', {
+        'data': data,
+        'success_msg': success_msg,
+        'errors': errors
+    })
+
+
 def secondq_requests(request, id=None, action=None):
     success_msg = request.session.pop('success_msg', '')
     errors = []
@@ -721,8 +1011,10 @@ def add_to_stock(request):
         qty = int(request.POST.get('qty'))
         barcode = request.POST.get('barcode', '0')
         carelabel = request.POST.get('carelabel', '0')
+        rfid = request.POST.get('rfid', '0')
         machine = request.POST.get('machine')
         machine_c = request.POST.get('machine_c')
+        machine_r = request.POST.get('machine_r')
         comment = request.POST.get('comment', '')
         qty_waste = int(request.POST.get('qty_waste') or 0)
 
@@ -785,8 +1077,27 @@ def add_to_stock(request):
                 except Exception as e:
                     errors.append("Problem saving to CarelabelStocks table")
 
-        if carelabel == '0' and barcode == '0':
-            errors.append("Nije oznacen ni barcode ni carelabel")
+        # Handle rfid
+        if rfid != '0':
+            if not errors:
+                try:
+                    RfidStocks.objects.create(
+                        po_id=po.id,
+                        user_id=request.user.id,
+                        ponum=po_num,
+                        size=po.size,
+                        qty=qty,
+                        type="new",
+                        comment=comment,
+                        machine=machine_r,
+                        qty_waste=qty_waste
+                    )
+                    success_msg += "RfidStocks uspesno snimljen."
+                except Exception as e:
+                    errors.append("Problem saving to RfidStocks table")
+
+        if carelabel == '0' and barcode == '0' and rfid == '0':
+            errors.append("Nije oznacen ni barcode ni carelabel ni rfid")
 
         # If there are no errors, pass success_msg to template
         if not errors:
@@ -824,6 +1135,7 @@ def back_from_module(request):
         qty = request.POST.get('qty')
         barcode = request.POST.get('barcode', '0')
         carelabel = request.POST.get('carelabel', '0')
+        rfid = request.POST.get('rfid', '0')
         modul = request.POST.get('modul')
         comment = request.POST.get('comment', '')
 
@@ -888,8 +1200,28 @@ def back_from_module(request):
                 except Exception as e:
                     errors.append("Problem saving to CarelabelRequests table")
 
-        if carelabel == '0' and barcode == '0':
-            errors.append("Nije oznacen ni barcode ni carelabel")
+        # Handle rfid
+        if rfid != '0':
+
+            if not errors:
+                try:
+                    RfidRequests.objects.create(
+                        po_id=po.id,
+                        user_id=request.user.id,
+                        ponum=po_num,
+                        size=po.size,
+                        qty=int(qty) * (-1),
+                        module=modul,
+                        type="modul",
+                        status="back",
+                        comment=comment,
+                    )
+                    success_msg += "RfidRequests uspesno snimljen."
+                except Exception as e:
+                    errors.append("Problem saving to RfidRequests table")
+
+        if carelabel == '0' and barcode == '0' and rfid == '0':
+            errors.append("Nije oznacen ni barcode ni carelabel ni rfid")
 
         # If there are no errors, pass success_msg to template
         if not errors:
@@ -923,6 +1255,7 @@ def reduce_from_stock(request):
         qty = request.POST.get('qty')
         barcode = request.POST.get('barcode', '0')
         carelabel = request.POST.get('carelabel', '0')
+        rfid = request.POST.get('rfid', '0')
         comment = request.POST.get('comment', '')
 
         # Validate required fields
@@ -979,8 +1312,26 @@ def reduce_from_stock(request):
                 except Exception as e:
                     errors.append("Problem saving to CarelabelStocks table")
 
-        if carelabel == '0' and barcode == '0':
-            errors.append("Nije oznacen ni barcode ni carelabel")
+        # Handle rfid
+        if rfid != '0':
+
+            if not errors:
+                try:
+                    RfidStocks.objects.create(
+                        po_id=po.id,
+                        user_id=request.user.id,
+                        ponum=po_num,
+                        size=po.size,
+                        qty=int(qty) * (-1),
+                        type="undo",
+                        comment=comment,
+                    )
+                    success_msg += "RfidStocks uspesno snimljen."
+                except Exception as e:
+                    errors.append("Problem saving to RfidStocks table")
+
+        if carelabel == '0' and barcode == '0' and rfid == '0':
+            errors.append("Nije oznacen ni barcode ni carelabel ni rfid")
 
         # If there are no errors, pass success_msg to template
         if not errors:
@@ -1265,6 +1616,7 @@ def transfer_to_kikinda(request):
         qty = int(request.POST.get('qty'))
         barcode = request.POST.get('barcode', '0')
         carelabel = request.POST.get('carelabel', '0')
+        rfid = request.POST.get('rfid', '0')
         comment = request.POST.get('comment', '')
 
        # Verify if PO exists and is not closed
@@ -1387,8 +1739,62 @@ def transfer_to_kikinda(request):
                 except Exception as e:
                     error_msg += "Problem saving to CarelabelKIStocks table"
 
-        if carelabel == '0' and barcode == '0':
-            error_msg += "Nije oznacen ni barcode ni carelabel"
+        # Handle rfid
+        if rfid != '0':
+
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT SUM(qty) as rfid_stocks
+                    FROM rfid_stocks
+                    WHERE ponum = %s
+                """, [po_num])
+                row = cursor.fetchone()
+                rfid_stocks_qty = row[0] or 0
+
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT SUM(qty) as rfid_requests
+                    FROM rfid_requests
+                    WHERE ponum = %s AND status != 'error'
+                """, [po_num])
+                row = cursor.fetchone()
+                rfid_requests_qty = row[0] or 0
+
+            error_msg_r = ""
+            if rfid_stocks_qty - rfid_requests_qty - qty < 0:
+                error_msg_r += "Nema dovoljno RFID na stanju <br/>"
+
+            if error_msg_r == "":
+                try:
+                    RfidRequests.objects.create(
+                        po_id=po.id,
+                        user_id=request.user.id,
+                        ponum=po_num,
+                        size=po.size,
+                        qty=int(qty),
+                        status='done',
+                        module='kikinda',
+                        type="transfer_ki",
+                        comment=comment,
+                    )
+                    RfidKIStocks.objects.create(
+                        po_id=po.id,
+                        user_id=request.user.id,
+                        ponum=po_num,
+                        size=po.size,
+                        qty=int(qty),
+                        qty_to_receive=int(qty),
+                        module='PREP_SU',
+                        status='to_receive',
+                        type="transfer_ki",
+                        comment=comment,
+                    )
+                    success_msg += "RfidKIStocks uspesno snimljen."
+                except Exception as e:
+                    error_msg += "Problem saving to RfidKIStocks table"
+
+        if carelabel == '0' and barcode == '0' and rfid == '0':
+            error_msg += "Nije oznacen ni barcode ni carelabel ni rfid"
 
         # If there are no errors, pass success_msg to template
         if not error_msg:
@@ -1441,6 +1847,7 @@ def transfer_to_senta(request):
         qty = int(request.POST.get('qty'))
         barcode = request.POST.get('barcode', '0')
         carelabel = request.POST.get('carelabel', '0')
+        rfid = request.POST.get('rfid', '0')
         comment = request.POST.get('comment', '')
 
         # Verify if PO exists and is not closed
@@ -1562,6 +1969,63 @@ def transfer_to_senta(request):
                 except Exception as e:
                     error_msg += "Problem saving to CarelabelSeStocks table"
 
+        # Handle rfid
+        if rfid != '0':
+
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT SUM(qty) as rfid_stocks
+                    FROM rfid_stocks
+                    WHERE ponum = %s
+                """, [po_num])
+                row = cursor.fetchone()
+                rfid_stocks_qty = row[0] or 0
+
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT SUM(qty) as rfid_requests
+                    FROM rfid_requests
+                    WHERE ponum = %s AND status != 'error'
+                """, [po_num])
+                row = cursor.fetchone()
+                rfid_requests_qty = row[0] or 0
+
+            error_msg_r = ""
+            if rfid_stocks_qty - rfid_requests_qty - qty < 0:
+                error_msg_r += "Nema dovoljno RFID na stanju <br/>"
+
+            if error_msg_r == "":
+                try:
+                    RfidRequests.objects.create(
+                        po_id=po.id,
+                        user_id=request.user.id,
+                        ponum=po_num,
+                        size=po.size,
+                        qty=int(qty),
+                        status='done',
+                        module='senta',
+                        type="transfer_se",
+                        comment=comment,
+                    )
+                    RfidSEStocks.objects.create(
+                        po_id=po.id,
+                        user_id=request.user.id,
+                        ponum=po_num,
+                        size=po.size,
+                        qty=int(qty),
+                        qty_to_receive=int(qty),
+                        module='PREP_SU',
+                        status='to_receive',
+                        type="transfer_se",
+                        comment=comment,
+                    )
+                    success_msg += "RfidSEStocks uspesno snimljen."
+                except Exception as e:
+                    error_msg += "Problem saving to RfidSEStocks table"
+
+        if carelabel == '0' and barcode == '0' and rfid == '0':
+            error_msg += "Nije oznacen ni barcode ni carelabel ni rfid"
+
         # If there are no errors, pass success_msg to template
         if not error_msg:
             request.session['success_msg'] = success_msg
@@ -1605,6 +2069,7 @@ def manual_request(request):
         # print(qty)
         barcode = request.POST.get('barcode', '0')
         carelabel = request.POST.get('carelabel', '0')
+        rfid = request.POST.get('rfid', '0')
         modul = request.POST.get('modul')
         leader = request.POST.get('leader','')
         comment = request.POST.get('comment', '')
@@ -1668,8 +2133,29 @@ def manual_request(request):
                 except Exception as e:
                     errors.append("Problem saving to Carelabel manual Requests table")
 
-        if carelabel == '0' and barcode == '0':
-            errors.append("Nije oznacen ni barcode ni carelabel")
+        # Handle rfid
+        if rfid != '0':
+
+            if not errors:
+                try:
+                    RfidRequests.objects.create(
+                        po_id=po.id,
+                        user_id=request.user.id,
+                        ponum=po_num,
+                        size=po.size,
+                        qty=int(qty),
+                        module=modul,
+                        leader=leader,
+                        status=status,
+                        type="preparation",
+                        comment=comment,
+                    )
+                    success_msg += "RFID manual Requests uspesno snimljen."
+                except Exception as e:
+                    errors.append("Problem saving to RFID manual Requests table")
+
+        if carelabel == '0' and barcode == '0' and rfid == '0':
+            errors.append("Nije oznacen ni barcode ni carelabel ni rfid")
 
         # If there are no errors, pass success_msg to template
         if not errors:
@@ -2387,6 +2873,20 @@ def import_pos_data(request):
 
                                 # Create CarelabelStocks
                                 CarelabelStocks.objects.create(
+                                    po_id=po_id,
+                                    user_id=user_id,
+                                    ponum=po_new,
+                                    size=size,
+                                    qty=0,
+                                    module=None,
+                                    status=None,
+                                    type='insert',
+                                    comment=None,
+                                    machine=None
+                                )
+
+                                # Create RfidStocks
+                                RfidStocks.objects.create(
                                     po_id=po_id,
                                     user_id=user_id,
                                     ponum=po_new,

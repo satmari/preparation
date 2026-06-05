@@ -265,6 +265,85 @@ class CarelabelSEStocks(models.Model):
     class Meta:
         db_table = 'carelabel_se_stocks'
 
+class RfidStocks(models.Model):
+    id = models.AutoField(primary_key=True)
+    po_id = models.IntegerField()
+    user_id = models.IntegerField()
+    ponum = models.CharField(max_length=255, null=True, blank=True)
+    size = models.CharField(max_length=255, null=True, blank=True)
+    qty = models.IntegerField(null=True, blank=True)
+    module = models.CharField(max_length=255, null=True, blank=True)
+    status = models.CharField(max_length=255, null=True, blank=True)
+    type = models.CharField(max_length=255, null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
+    machine = models.TextField(null=True, blank=True)
+    qty_waste = models.IntegerField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'rfid_stocks'
+
+
+class RfidRequests(models.Model):
+    id = models.AutoField(primary_key=True)
+    po_id = models.IntegerField()
+    user_id = models.IntegerField()
+    ponum = models.CharField(max_length=255, null=True, blank=True)
+    size = models.CharField(max_length=255, null=True, blank=True)
+    qty = models.IntegerField(null=True, blank=True)
+    module = models.CharField(max_length=255, null=True, blank=True)
+    leader = models.CharField(max_length=255, null=True, blank=True)
+    status = models.CharField(max_length=255, null=True, blank=True)
+    type = models.CharField(max_length=255, null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'rfid_requests'
+
+
+class RfidKIStocks(models.Model):
+    id = models.AutoField(primary_key=True)
+    po_id = models.IntegerField()
+    user_id = models.IntegerField()
+    ponum = models.CharField(max_length=255, null=True, blank=True)
+    size = models.CharField(max_length=255, null=True, blank=True)
+    qty = models.IntegerField(null=True, blank=True)
+    qty_to_receive = models.IntegerField(null=True, blank=True)
+    module = models.CharField(max_length=255, null=True, blank=True)
+    status = models.CharField(max_length=255, null=True, blank=True)
+    type = models.CharField(max_length=255, null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
+    machine = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'rfid_ki_stocks'
+
+
+class RfidSEStocks(models.Model):
+    id = models.AutoField(primary_key=True)
+    po_id = models.IntegerField()
+    user_id = models.IntegerField()
+    ponum = models.CharField(max_length=255, null=True, blank=True)
+    size = models.CharField(max_length=255, null=True, blank=True)
+    qty = models.IntegerField(null=True, blank=True)
+    qty_to_receive = models.IntegerField(null=True, blank=True)
+    module = models.CharField(max_length=255, null=True, blank=True)
+    status = models.CharField(max_length=255, null=True, blank=True)
+    type = models.CharField(max_length=255, null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
+    machine = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'rfid_se_stocks'
+
+
 class PrepLocations(models.Model):
     id = models.AutoField(primary_key=True)
     location = models.CharField(max_length=255)
