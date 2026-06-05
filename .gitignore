@@ -12,3 +12,8 @@ __pycache__/
 # Django
 staticfiles/
 db.sqlite3
+
+# Documentation (internal)
+*.md
+CLAUDE.md
+SECURITY_RECAP.md
