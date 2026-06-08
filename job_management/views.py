@@ -374,7 +374,7 @@ def apply_jobs(request):
         location = pos.get('posumm_location')
         skeda = pos.get('posumm_skeda')
 
-        for print_type in ['CARELABEL', 'BARCODE', 'RFID']:
+        for print_type in ['CARELABEL', 'BARCODE']:
             pro_print_type_key = f"{pro}_{print_type}"
 
             # Skip if already exists with a non-NEW status

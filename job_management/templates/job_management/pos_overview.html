@@ -27,6 +27,7 @@
         <thead>
             <tr>
                 <th>PoSumm PRO</th>
+                <th>Skeda</th>
                 <th>PoSumm Qty</th>
                 <th>Sum Box Qty</th>
                 <th>Will be CUT and sent with next truck</th>
@@ -50,6 +51,7 @@
             {% for pos in pos_list %}
             <tr>
                 <td>{{ pos.posumm_pro|default:"closed in posummary" }}</td>
+                <td>{{ pos.posumm_skeda|default:"-" }}</td>
                 <td>{{ pos.posumm_qty|default:"-" }}</td>
                 <td>{{ pos.box_qty }}</td>
                 <td>{{ pos.will_be_cut }}</td>
