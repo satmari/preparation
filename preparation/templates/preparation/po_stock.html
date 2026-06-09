@@ -2,6 +2,16 @@
 
 {% load static %}
 {% block content %}
+<style>
+    th.col-skeda, td.col-skeda {
+        position: sticky;
+        z-index: 3;
+        background: #fff;
+        min-width: 90px;
+    }
+    th.col-skeda { z-index: 4; }
+    tr:nth-child(even) td.col-skeda { background: #f2f2f2; }
+</style>
 <div class="container-fluid">
     <div style="display: flex; align-items: center; justify-content: center;">
         <h2 style="margin-right: 10px;">Stock table</h2>
@@ -48,7 +58,7 @@
                 <th>Color Des</th>
                 <th>Flash</th>
                 <th>Brand</th>
-                <th>Skeda</th>
+                <th class="col-skeda">Skeda</th>
                 <th>Hangtag</th>
                 <th>Num lines</th>
                 <th>Po loc</th>
@@ -64,11 +74,6 @@
                 <th style="background-color: deepskyblue">C to print</th>
                 <th style="background-color: deepskyblue">C on stock</th>
                 <th style="background-color: deepskyblue">C in prod</th>
-                <th style="background-color: mediumpurple">R printed</th>
-                <th style="background-color: mediumpurple">R %</th>
-                <th style="background-color: mediumpurple">R to print</th>
-                <th style="background-color: mediumpurple">R on stock</th>
-                <th style="background-color: mediumpurple">R in prod</th>
 
             </tr>
         </thead>
@@ -83,7 +88,7 @@
                 <td>{{ pos.color_desc }}</td>
                 <td>{{ pos.flash }}</td>
                 <td>{{ pos.brand }}</td>
-                <td>{{ pos.skeda }}</td>
+                <td class="col-skeda">{{ pos.skeda }}</td>
                 <td>{{ pos.hangtag }}</td>
                 <td>{{ pos.no_lines_by_skeda }}</td>
                 <td>{{ pos.location}}</td>
@@ -110,15 +115,6 @@
                 <td>{{ pos.on_stock_c }}</td>
                 <td>{{ pos.request_c|default:"0" }}</td>
 
-                <td>{{ pos.stock_r }}</td>
-                <td>{{ pos.stock_percentage_r }}</td>
-                <td class="{% if pos.to_print_r|add:0 == 0 %}zuto
-                           {% elif pos.to_print_r|add:0 > 0 %}zeleno
-                           {% elif pos.to_print_r|add:0 < 0 %}crveno
-                           {% endif %}"><b>{{ pos.to_print_r }}</b>
-                </td>
-                <td>{{ pos.on_stock_r }}</td>
-                <td>{{ pos.request_r|default:"0" }}</td>
 
             </tr>
             {% endfor %}
@@ -132,18 +128,31 @@
 {% block scripts %}
 <script>
     $(document).ready(function() {
-        // Initialize DataTable
         var table = $('#pos-table').DataTable({
             paging: true,
             ordering: true,
             searching: true,
             pageLength: 10,
             lengthMenu: [10, 20, 50, 100, 500, 1000],
-            responsive: true,
+            responsive: false,
+            scrollX: true,
             scrollCollapse: true,
         });
 
-        // Initialize FixedHeader
+        function setSkedaSticky() {
+            var skedaCol = table.column('.col-skeda:first');
+            var skedaIdx = skedaCol.index();
+            var leftOffset = 0;
+            for (var i = 0; i < skedaIdx; i++) {
+                if (table.column(i).visible()) {
+                    leftOffset += $(table.column(i).header()).outerWidth();
+                }
+            }
+            $(table.column(skedaIdx).header()).css('left', leftOffset + 'px');
+            table.column(skedaIdx).nodes().to$().css('left', leftOffset + 'px');
+        }
+
+        setSkedaSticky();
         new $.fn.dataTable.FixedHeader(table);
     });
 </script>
